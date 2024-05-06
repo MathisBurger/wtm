@@ -57,7 +57,7 @@ class CheckInOutService
         $checkIn = new WorktimePeriod();
         $checkIn->setEmployee($employee);
         $employee->addPeriod($checkIn);
-        $checkIn->setEndTime(new DateTime());
+        $checkIn->setStartTime(new DateTime());
         $this->entityManager->persist($checkIn);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
