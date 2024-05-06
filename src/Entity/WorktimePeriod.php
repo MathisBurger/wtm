@@ -23,7 +23,7 @@ class WorktimePeriod extends AbstractEntity
     /**
      * The end time of worktime period
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $endTime = null;
 
     /**

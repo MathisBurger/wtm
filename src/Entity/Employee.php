@@ -231,7 +231,7 @@ class Employee extends AbstractEntity
     /**
      * Gets all periods
      *
-     * @return Collection All periods
+     * @return Collection<WorktimePeriod> All periods
      */
     public function getPeriods(): Collection
     {
