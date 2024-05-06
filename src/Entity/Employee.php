@@ -173,6 +173,19 @@ class Employee extends AbstractEntity
     }
 
     /**
+     * Gets the formatted target working time begin
+     *
+     * @return string|null
+     */
+    public function getTargetWorkingTimeBeginFormatted(): ?string
+    {
+        if ($this->getTargetWorkingTimeBegin()) {
+            return $this->targetWorkingTimeBegin->format("H:i");
+        }
+        return null;
+    }
+
+    /**
      * Sets the target working time begin
      *
      * @param float $targetWorkingTimeBegin The target working time
@@ -193,6 +206,19 @@ class Employee extends AbstractEntity
     public function getTargetWorkingTimeEnd(): ?DateTimeInterface
     {
         return $this->targetWorkingTimeEnd;
+    }
+
+    /**
+     * Gets the formatted target working time end
+     *
+     * @return string|null
+     */
+    public function getTargetWorkingTimeEndFormatted(): ?string
+    {
+        if ($this->getTargetWorkingTimeEnd()) {
+            return $this->targetWorkingTimeEnd->format("H:i");
+        }
+        return null;
     }
 
     /**

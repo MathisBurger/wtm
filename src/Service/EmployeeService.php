@@ -42,6 +42,11 @@ class EmployeeService
                         throw new Exception("Bitte geben sie in diesem Fall alle Werte an");
                     }
                 }
+                $employee->setUsername(strtolower($employee->getUsername()));
+                $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
+                if ($exists) {
+                    throw new EmployeeException("Dieser Mitarbeiter existiert bereits");
+                }
                 $this->entityManager->persist($employee);
                 $this->entityManager->flush();
                 return $employee;

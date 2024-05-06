@@ -38,9 +38,9 @@ class EmployeeType extends AbstractType
                 'required' => false,
                 'label' => 'Variabel angestellt',
             ]);
-        $builder->add('targetWorkingHours', NumberType::class, ['required' => true, 'label' => 'Wochenarbeitszeit']);
-        $builder->add('targetWorkingTimeBegin', TimeType::class, ['required' => true, 'label' => 'Arbeitsbeginn']);
-        $builder->add('targetWorkingTimeEnd', TimeType::class, ['required' => true, 'label' => 'Arbeitsende']);
+        $builder->add('targetWorkingHours', NumberType::class, ['required' => false, 'label' => 'Wochenarbeitszeit']);
+        $builder->add('targetWorkingTimeBegin', TimeType::class, ['required' => false, 'label' => 'Arbeitsbeginn']);
+        $builder->add('targetWorkingTimeEnd', TimeType::class, ['required' => false, 'label' => 'Arbeitsende']);
         $builder->add('submit', SubmitType::class, ['label' => 'Speichern']);
     }
 

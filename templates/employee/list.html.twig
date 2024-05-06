@@ -17,12 +17,16 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
+            {% for employee in employees %}
+                <tr>
+                    <th scope="row">{{ employee.getId() }}</th>
+                    <td>{{ employee.getUsername() }}</td>
+                    <td>{{ employee.getFirstName() }}</td>
+                    <td>{{ employee.getLastName() }}</td>
+                    <td>{{ employee.getTargetWorkingHours() }}</td>
+                    <td>{{ employee.getTargetWorkingTimeBeginFormatted() }} - {{ employee.getTargetWorkingTimeBeginFormatted() }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
