@@ -37,10 +37,26 @@ class EmployeeType extends AbstractType
             ->add('targetWorkingPresent', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Variabel angestellt',
+                'attr' => ['id' => 'targetWorkingPresent'],
             ]);
-        $builder->add('targetWorkingHours', NumberType::class, ['required' => false, 'label' => 'Wochenarbeitszeit']);
-        $builder->add('targetWorkingTimeBegin', TimeType::class, ['required' => false, 'label' => 'Arbeitsbeginn']);
-        $builder->add('targetWorkingTimeEnd', TimeType::class, ['required' => false, 'label' => 'Arbeitsende']);
+        $builder->add('targetWorkingHours', NumberType::class, [
+            'required' => false,
+            'label' => 'Wochenarbeitszeit',
+            'attr' => ['id' => 'targetWorkingHours', 'style' => 'display: none;'],
+            'label_attr' => ['id' => 'targetWorkingHoursLabel', 'style' => 'display: none;'],
+        ]);
+        $builder->add('targetWorkingTimeBegin', TimeType::class, [
+            'required' => false,
+            'label' => 'Arbeitsbeginn',
+            'attr' => ['id' => 'targetWorkingTimeBegin', 'style' => 'display: none;'],
+            'label_attr' => ['id' => 'targetWorkingTimeBeginLabel', 'style' => 'display: none;'],
+        ]);
+        $builder->add('targetWorkingTimeEnd', TimeType::class, [
+            'required' => false,
+            'label' => 'Arbeitsende',
+            'attr' => ['id' => 'targetWorkingTimeEnd', 'style' => 'display: none;'],
+            'label_attr' => ['id' => 'targetWorkingTimeEndLabel', 'style' => 'display: none;'],
+        ]);
         $builder->add('submit', SubmitType::class, ['label' => 'Speichern']);
     }
 
