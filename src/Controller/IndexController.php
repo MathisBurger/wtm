@@ -25,7 +25,7 @@ class IndexController extends AbstractController
         if ($count === 0) {
             return $this->redirect('/setup-application');
         }
-        return new Response();
+        return $this->render('landing/index.html.twig', []);
     }
 
 }
