@@ -1,0 +1,14 @@
+{%  extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Setup application</h1>
+        <div class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+        </div>
+        {% if errorMessage is not null %}
+
+        {% endif %}
+        {{ form(form) }}
+    </div>
+{% endblock %}

@@ -19,11 +19,11 @@ class IndexController extends AbstractController
     /**
      * Index route
      */
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'app_index', methods: ['GET'])]
     public function index(): Response {
         $count = $this->userRepository->count();
         if ($count === 0) {
-            return $this->redirectToRoute('setup_application');
+            return $this->redirect('/setup-application');
         }
         return new Response();
     }
