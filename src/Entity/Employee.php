@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,6 +50,16 @@ class Employee extends AbstractEntity
      */
     #[ORM\Column]
     private ?float $targetWorkingTimeEnd = null;
+
+    /**
+     * All working periods of the user
+     */
+    #[ORM\OneToMany(targetEntity: WorktimePeriod::class, mappedBy: 'employee')]
+    private Collection $periods;
+
+    public function __construct() {
+        $this->periods = new ArrayCollection();
+    }
 
     /**
      * If the user has target working enabled
@@ -213,6 +225,42 @@ class Employee extends AbstractEntity
     {
         $this->targetWorkingPresent = $targetWorkingPresent;
 
+        return $this;
+    }
+
+    /**
+     * Gets all periods
+     *
+     * @return Collection All periods
+     */
+    public function getPeriods(): Collection
+    {
+        return $this->periods;
+    }
+
+    /**
+     * Adds a new period to employee
+     *
+     * @param WorktimePeriod $period The new period
+     * @return $this The updated entity
+     */
+    public function addPeriod(WorktimePeriod $period): self {
+        if (!$this->periods->contains($period)) {
+            $this->periods->add($period);
+        }
+        return $this;
+    }
+
+    /**
+     * Removes a period from employee
+     *
+     * @param WorktimePeriod $period The period that should be removed
+     * @return $this The updated entity
+     */
+    public function removePeriod(WorktimePeriod $period): self {
+        if ($this->periods->contains($period)) {
+            $this->periods->removeElement($period);
+        }
         return $this;
     }
 }
