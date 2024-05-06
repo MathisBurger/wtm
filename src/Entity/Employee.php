@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * The employee entity that contains all data
  */
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 class Employee extends AbstractEntity
 {
 
@@ -54,6 +55,12 @@ class Employee extends AbstractEntity
     private ?DateTimeInterface $targetWorkingTimeEnd = null;
 
     /**
+     * If the user has target working enabled
+     */
+    #[ORM\Column]
+    private ?bool $targetWorkingPresent = null;
+
+    /**
      * All working periods of the user
      */
     #[ORM\OneToMany(targetEntity: WorktimePeriod::class, mappedBy: 'employee')]
@@ -62,12 +69,6 @@ class Employee extends AbstractEntity
     public function __construct() {
         $this->periods = new ArrayCollection();
     }
-
-    /**
-     * If the user has target working enabled
-     */
-    #[ORM\Column]
-    private ?bool $targetWorkingPresent = null;
 
     /**
      * Gets the username
