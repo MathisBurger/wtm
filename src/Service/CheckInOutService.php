@@ -54,12 +54,10 @@ class CheckInOutService
         if ($currentCheckIn !== false && $currentCheckIn->getEndTime() === null) {
             return self::ALREADY_CHECKED_IN;
         }
-        $dateTime = new DateTime();
         $checkIn = new WorktimePeriod();
         $checkIn->setEmployee($employee);
         $employee->addPeriod($checkIn);
-        $checkIn->setStartTime(CheckInOutService::getFloatHoursFromDate($dateTime));
-        $checkIn->setDate($dateTime);
+        $checkIn->setEndTime(new DateTime());
         $this->entityManager->persist($checkIn);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
@@ -83,26 +81,9 @@ class CheckInOutService
         if ($currentCheckIn === false || $currentCheckIn->getEndTime() !== null) {
             return self::NOT_CHECKED_IN;
         }
-        $currentCheckIn->setStartTime(CheckInOutService::getFloatHoursFromDate(new DateTime()));
+        $currentCheckIn->setEndTime(new DateTime());
         $this->entityManager->persist($currentCheckIn);
         $this->entityManager->flush();
         return self::SUCCESS;
     }
-
-
-    /**
-     * Converts datetime to hour float
-     *
-     * @param DateTime $dateTime The datetime
-     * @return float The hour float
-     */
-    public static function getFloatHoursFromDate(DateTime $dateTime): float
-    {
-        $hourString = $dateTime->format('H');
-        $minuteString = $dateTime->format('i');
-        $hours = floatval($hourString);
-        $minutes = floatval($minuteString) / 60 * 100 / 10;
-        return $hours + $minutes;
-    }
-
 }

@@ -17,20 +17,14 @@ class WorktimePeriod extends AbstractEntity
     /**
      * The start time of worktime period
      */
-    #[ORM\Column]
-    private ?float $startTime = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?DateTimeInterface $startTime = null;
 
     /**
      * The end time of worktime period
      */
-    #[ORM\Column(nullable: true)]
-    private ?float $endTime = null;
-
-    /**
-     * The date of the worktime period
-     */
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?DateTimeInterface $date = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?DateTimeInterface $endTime = null;
 
     /**
      * The employee that is refered to this period
@@ -43,7 +37,7 @@ class WorktimePeriod extends AbstractEntity
      *
      * @return float|null The start time
      */
-    public function getStartTime(): ?float
+    public function getStartTime(): ?DateTimeInterface
     {
         return $this->startTime;
     }
@@ -54,7 +48,7 @@ class WorktimePeriod extends AbstractEntity
      * @param float $startTime The new start time
      * @return $this The updated entity
      */
-    public function setStartTime(float $startTime): self
+    public function setStartTime(DateTimeInterface $startTime): self
     {
         $this->startTime = $startTime;
 
@@ -66,7 +60,7 @@ class WorktimePeriod extends AbstractEntity
      *
      * @return float|null The end time
      */
-    public function getEndTime(): ?float
+    public function getEndTime(): ?DateTimeInterface
     {
         return $this->endTime;
     }
@@ -77,32 +71,9 @@ class WorktimePeriod extends AbstractEntity
      * @param float $endTime The new end time
      * @return $this The updated entity
      */
-    public function setEndTime(float $endTime): self
+    public function setEndTime(DateTimeInterface $endTime): self
     {
         $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * Gets the date
-     *
-     * @return DateTimeInterface|null The date
-     */
-    public function getDate(): ?DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    /**
-     * Sets the date
-     *
-     * @param DateTimeInterface $date The new date
-     * @return $this The updated entity
-     */
-    public function setDate(DateTimeInterface $date): self
-    {
-        $this->date = $date;
 
         return $this;
     }
