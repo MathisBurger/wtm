@@ -24,6 +24,11 @@ class CheckInOutService
     public const ALREADY_CHECKED_IN = "already_checked_in";
 
     /**
+     * Returned if user already checked in
+     */
+    public const NOT_CHECKED_IN = "not_checked_in";
+
+    /**
      * Returned if action was successful
      */
     public const SUCCESS = "success";
@@ -57,6 +62,29 @@ class CheckInOutService
         $checkIn->setDate($dateTime);
         $this->entityManager->persist($checkIn);
         $this->entityManager->persist($employee);
+        $this->entityManager->flush();
+        return self::SUCCESS;
+    }
+
+    /**
+     * Checks out the current user
+     *
+     * @param string $username The username of the user
+     * @return string The checkout string
+     */
+    public function checkOut(string $username): string
+    {
+        $employee = $this->employeeRepository->findOneBy(['username' => $username]);
+        if ($employee === null) {
+            return self::USER_DOES_NOT_EXIST;
+        }
+        /** @var WorktimePeriod|false $currentCheckIn */
+        $currentCheckIn = $employee->getPeriods()->last();
+        if ($currentCheckIn === false || $currentCheckIn->getEndTime() !== null) {
+            return self::NOT_CHECKED_IN;
+        }
+        $currentCheckIn->setStartTime(CheckInOutService::getFloatHoursFromDate(new DateTime()));
+        $this->entityManager->persist($currentCheckIn);
         $this->entityManager->flush();
         return self::SUCCESS;
     }

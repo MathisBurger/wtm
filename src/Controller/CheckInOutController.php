@@ -44,7 +44,7 @@ class CheckInOutController extends AbstractController
                     'detailed' => 'Sie sind nicht als Nutzer im System registriert. Melden sie sich bitte bei ihrem Administrator für weitere Informationen'
                 ]);
         }
-        return $this->render('checkInOut/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'is-danger']);
+        return $this->render('checkInOut/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'is-danger', 'detailed' => '']);
     }
 
     /**
@@ -53,7 +53,28 @@ class CheckInOutController extends AbstractController
     #[Route('/api/v1/check-out/{username}', name: 'api_v1_check_out')]
     public function checkOut(string $username): Response
     {
-        return new Response();
+        $resp = $this->checkInOutService->checkOut(strtolower($username));
+        switch ($resp) {
+            case CheckInOutService::SUCCESS:
+                return $this->render('checkInOut/message.html.twig', [
+                    'message' => 'CheckOut erfolgreich',
+                    'messageStatus' => 'is-success',
+                    'detailed' => 'Sie wurden erfolgreich abgemeldet. Bitte melden Sie sich vor der Arbeit wieder an, damit die Daten optimal verarbeitet werden können'
+                ]);
+            case CheckInOutService::NOT_CHECKED_IN:
+                return $this->render('checkInOut/message.html.twig', [
+                    'message' => 'Sie sind nicht eingeloggt',
+                    'messageStatus' => 'is-danger',
+                    'detailed' => 'Sie sind noch nicht angemeldet. Bitte melden sie sich zuerst an, bevor sie sich erneut abmelden. Sollten sie Probleme haben melden sie sich bitte bei ihrem Administrator'
+                ]);
+            case CheckInOutService::USER_DOES_NOT_EXIST:
+                return $this->render('checkInOut/message.html.twig', [
+                    'message' => 'Der angegebene Nutzer existiert nicht',
+                    'messageStatus' => 'is-danger',
+                    'detailed' => 'Sie sind nicht als Nutzer im System registriert. Melden sie sich bitte bei ihrem Administrator für weitere Informationen'
+                ]);
+        }
+        return $this->render('checkInOut/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'is-danger', 'detailed' => '']);
     }
 
 
