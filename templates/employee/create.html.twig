@@ -15,17 +15,23 @@
             if (e.target.checked) {
                 document.getElementById('targetWorkingHoursLabel').style = "display: block";
                 document.getElementById('employee_targetWorkingHours').style = "display: block";
+                document.getElementById('employee_targetWorkingHours').required = true;
                 document.getElementById('targetWorkingTimeBeginLabel').style = "display: block";
                 document.getElementById('employee_targetWorkingTimeBegin').style = "display: block";
+                document.getElementById('employee_targetWorkingTimeBegin').required = true;
                 document.getElementById('targetWorkingTimeEndLabel').style = "display: block";
                 document.getElementById('employee_targetWorkingTimeEnd').style = "display: block";
+                document.getElementById('employee_targetWorkingTimeEnd').required = true;
             } else {
                 document.getElementById('targetWorkingHoursLabel').style = "display: none";
                 document.getElementById('employee_targetWorkingHours').style = "display: none";
+                document.getElementById('employee_targetWorkingHours').required = false;
                 document.getElementById('targetWorkingTimeBeginLabel').style = "display: none";
                 document.getElementById('employee_targetWorkingTimeBegin').style = "display: none";
+                document.getElementById('employee_targetWorkingTimeBegin').required = false;
                 document.getElementById('targetWorkingTimeEndLabel').style = "display: none";
                 document.getElementById('employee_targetWorkingTimeEnd').style = "display: none";
+                document.getElementById('employee_targetWorkingTimeEnd').required = false;
             }
         })
     </script>
