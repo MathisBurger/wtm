@@ -3,11 +3,10 @@
 {% block body %}
     <div class="container">
         <h1>Setup application</h1>
-        <div class="alert alert-danger" role="alert">
-            {{ errorMessage }}
-        </div>
         {% if errorMessage is not null %}
-
+            <div class="alert alert-danger" role="alert">
+                {{ errorMessage }}
+            </div>
         {% endif %}
         {{ form(form) }}
     </div>

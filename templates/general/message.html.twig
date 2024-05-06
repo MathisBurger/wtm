@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="alert {{ messageStatus }}" role="alert">
-        {{ message }}
+    <div class="container">
+        <div class="alert {{ messageStatus }}" role="alert" style="margin-top: 10vh">
+            {{ message }}
+        </div>
     </div>
 {% endblock %}
