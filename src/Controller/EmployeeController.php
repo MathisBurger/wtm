@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee;
 use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
@@ -37,7 +38,10 @@ class EmployeeController extends AbstractController
     public function createEmployee(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $form = $this->createForm(EmployeeType::class);
+        $form = $this->createForm(EmployeeType::class, new Employee(), [
+            'action' => $this->generateUrl('employee_create'),
+            'method' => 'POST',
+        ]);
         $form->handleRequest($request);
         if (!$form->isSubmitted()) {
             return $this->render('employee/create.html.twig', [
@@ -54,11 +58,6 @@ class EmployeeController extends AbstractController
                 ]);
             }
             return $this->redirectToRoute('employee_details', ['id' => $result->getId()]);
-        } catch (EmployeeException $e) {
-            return $this->render('employee/create.html.twig', [
-                'form' => $this->createForm(EmployeeType::class),
-                'error' => 'Das Formular wurde nicht richtig ausgefüllt.'
-            ]);
         } catch (Exception $e) {
             return $this->render('employee/create.html.twig', [
                 'form' => $form,

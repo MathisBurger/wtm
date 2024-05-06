@@ -33,19 +33,20 @@ class EmployeeService
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var Employee $employee */
                 $employee = $form->getData();
-                if (
-                    $employee->isTargetWorkingPresent()
-                    && ($employee->getTargetWorkingHours() === null
-                    || $employee->getTargetWorkingTimeBegin() === null
-                    || $employee->getTargetWorkingTimeEnd() === null)
-                ) {
-                    $this->entityManager->persist($employee);
-                    $this->entityManager->flush();
-                    return $employee;
+                if ($employee->isTargetWorkingPresent()) {
+                    if (
+                        $employee->getTargetWorkingHours() === null
+                        || $employee->getTargetWorkingTimeBegin() === null
+                        || $employee->getTargetWorkingTimeEnd() === null
+                    ) {
+                        throw new Exception("Bitte geben sie in diesem Fall alle Werte an");
+                    }
                 }
-                throw new EmployeeException("Data missing");
+                $this->entityManager->persist($employee);
+                $this->entityManager->flush();
+                return $employee;
             }
-            return null;
+            throw new Exception($form->getErrors()[0]->getMessage());
         } catch (Exception $e) {
             throw $e;
         }

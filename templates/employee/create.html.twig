@@ -3,6 +3,11 @@
 {% block body %}
     <div class="container">
         <h1>Mitarbeiter anlegen</h1>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
         {{ form(form) }}
     </div>
 {% endblock %}
