@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <article class="message {{ messageStatus }}">
+            <div class="message-header">
+                <p>{{ message }}</p>
+            </div>
+            <div class="message-body">
+                {{ detailed }}
+            </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}
