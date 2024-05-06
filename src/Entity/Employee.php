@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,20 +38,20 @@ class Employee extends AbstractEntity
     /**
      * The target working hours
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $targetWorkingHours = null;
 
     /**
      * Target working time begin
      */
-    #[ORM\Column]
-    private ?float $targetWorkingTimeBegin = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $targetWorkingTimeBegin = null;
 
     /**
      * Target working time end
      */
-    #[ORM\Column]
-    private ?float $targetWorkingTimeEnd = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $targetWorkingTimeEnd = null;
 
     /**
      * All working periods of the user
@@ -164,7 +166,7 @@ class Employee extends AbstractEntity
      *
      * @return float|null target working time begin
      */
-    public function getTargetWorkingTimeBegin(): ?float
+    public function getTargetWorkingTimeBegin(): ?DateTimeInterface
     {
         return $this->targetWorkingTimeBegin;
     }
@@ -175,7 +177,7 @@ class Employee extends AbstractEntity
      * @param float $targetWorkingTimeBegin The target working time
      * @return $this The updated entity
      */
-    public function setTargetWorkingTimeBegin(float $targetWorkingTimeBegin): self
+    public function setTargetWorkingTimeBegin(?DateTimeInterface $targetWorkingTimeBegin): self
     {
         $this->targetWorkingTimeBegin = $targetWorkingTimeBegin;
 
@@ -187,7 +189,7 @@ class Employee extends AbstractEntity
      *
      * @return float|null The target working time end
      */
-    public function getTargetWorkingTimeEnd(): ?float
+    public function getTargetWorkingTimeEnd(): ?DateTimeInterface
     {
         return $this->targetWorkingTimeEnd;
     }
@@ -198,7 +200,7 @@ class Employee extends AbstractEntity
      * @param float $targetWorkingTimeEnd The target working end
      * @return $this The updated entity
      */
-    public function setTargetWorkingTimeEnd(float $targetWorkingTimeEnd): self
+    public function setTargetWorkingTimeEnd(?DateTimeInterface $targetWorkingTimeEnd): self
     {
         $this->targetWorkingTimeEnd = $targetWorkingTimeEnd;
 

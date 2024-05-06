@@ -48,8 +48,8 @@ class PreinitEmployeeCommand extends Command
         $employee->setLastName($lastName);
         $employee->setTargetWorkingHours(0.0);
         $employee->setTargetWorkingPresent(false);
-        $employee->setTargetWorkingTimeBegin(0.0);
-        $employee->setTargetWorkingTimeEnd(0.0);
+        $employee->setTargetWorkingTimeBegin(null);
+        $employee->setTargetWorkingTimeEnd(null);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
         $io->success("Employee added successfully");
