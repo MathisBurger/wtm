@@ -25,6 +25,7 @@ class IndexController extends AbstractController
         if ($count === 0) {
             return $this->redirect('/setup-application');
         }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('landing/index.html.twig', []);
     }
 
