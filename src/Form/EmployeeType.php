@@ -36,7 +36,7 @@ class EmployeeType extends AbstractType
             ])
             ->add('targetWorkingPresent', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Variabel angestellt',
+                'label' => 'Fest angestellt',
                 'attr' => ['id' => 'targetWorkingPresent'],
             ]);
         $builder->add('targetWorkingHours', NumberType::class, [
