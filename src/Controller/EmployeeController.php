@@ -13,6 +13,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -27,7 +28,10 @@ class EmployeeController extends AbstractController
     ) {}
 
     #[Route('/employees/details/{id}', name: 'employee_details')]
-    public function viewDetails(int $id): Response
+    public function viewDetails(
+        int $id,
+        #[MapQueryParameter] ?string $tab
+    ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $employee = $this->employeeRepository->find($id);
@@ -38,7 +42,8 @@ class EmployeeController extends AbstractController
             ]);
         }
         return $this->render('employee/details.html.twig', [
-            'username' => $employee->getUsername(),
+            'employee' => $employee,
+            'tab' => $tab,
             'periods' => $employee->getPeriods()->filter(
                 fn (WorktimePeriod $p) => $p->getStartTime()->format("m") === (new \DateTime())->format("m")
             )

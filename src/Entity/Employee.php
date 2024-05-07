@@ -343,6 +343,19 @@ class Employee extends AbstractEntity
     }
 
     /**
+     * Gets the restricted start time string
+     *
+     * @return string|null The string
+     */
+    public function getRestrictedStartTimeString(): ?string
+    {
+        if ($this->getRestrictedStartTime()) {
+            return $this->getRestrictedStartTime()->format("H:i");
+        }
+        return null;
+    }
+
+    /**
      * Sets the restricted start time
      *
      * @param DateTimeInterface|null $restrictedStartTime The new restricted start time
@@ -361,6 +374,19 @@ class Employee extends AbstractEntity
     public function getRestrictedEndTime(): ?DateTimeInterface
     {
         return $this->restrictedEndTime;
+    }
+
+    /**
+     * Gets the restricted end time string
+     *
+     * @return string|null The string
+     */
+    public function getRestrictedEndTimeString(): ?string
+    {
+        if ($this->getRestrictedEndTime()) {
+            return $this->getRestrictedEndTime()->format("H:i");
+        }
+        return null;
     }
 
     /**

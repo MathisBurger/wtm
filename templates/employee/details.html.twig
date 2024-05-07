@@ -2,33 +2,58 @@
 
 {% block body %}
     <div class="container">
-        <h1>{{ username }}</h1>
-        <div class="row">
-            <div class="col col-md-6">
-                <h3>Arbeitszeiten (aktueller Monat)</h3>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Datum</th>
-                        <th scope="col">Start</th>
-                        <th scope="col">Ende</th>
-                        <th scope="col">Gesamtzeit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for period in periods %}
+        <h1>{{ employee.getFirstName() }} {{ employee.getLastName() }} ({{ employee.getUsername() }})</h1>
+        <ul class="nav nav-tabs mt-5">
+            <li class="nav-item">
+                <a class="nav-link {{ tab == null ? 'active' : ''}}">Allgemein</a>
+            </li>
+        </ul>
+        {% if tab == "holiday" %}
+        {% else %}
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <h3>Allgemeine Informationen</h3>
+                    <ul>
+                        <li><b>Urlaubstage:</b> {{ employee.getHolidays() }}</li>
+                        {% if employee.getRestrictedStartTimeString() %}
+                            <li><b>Eingeschränke Startzeit:</b> {{ employee.getRestrictedStartTimeString() }} Uhr</li>
+                        {% endif %}
+                        {% if employee.getRestrictedEndTimeString() %}
+                            <li><b>Eingeschränke Endzeit:</b> {{ employee.getRestrictedEndTimeString() }} Uhr</li>
+                        {% endif %}
+                        {% if employee.isTargetWorkingPresent() %}
+                            <li><b>Sollstunden (Woche):</b> {{ employee.getTargetWorkingHours() }}</li>
+                            <li><b>Arbeitsbeginn:</b> {{ employee.getTargetWorkingTimeBeginFormatted() }} Uhr</li>
+                            <li><b>Arbeitsende:</b> {{ employee.getTargetWorkingTimeEndFormatted() }} Uhr</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col col-md-6">
+                    <h3>Arbeitszeiten (aktueller Monat)</h3>
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <th scope="row">{{ period.getId() }}</th>
-                            <td>{{ period.getDate() }}</td>
-                            <td>{{ period.getStartTimeString() }}</td>
-                            <td>{{ period.getEndTimeString() }}</td>
-                            <td>{{ period.getTimeDiff() }}</td>
+                            <th scope="col">#</th>
+                            <th scope="col">Datum</th>
+                            <th scope="col">Start</th>
+                            <th scope="col">Ende</th>
+                            <th scope="col">Gesamtzeit</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for period in periods %}
+                            <tr>
+                                <th scope="row">{{ period.getId() }}</th>
+                                <td>{{ period.getDate() }}</td>
+                                <td>{{ period.getStartTimeString() }}</td>
+                                <td>{{ period.getEndTimeString() }}</td>
+                                <td>{{ period.getTimeDiff() }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
