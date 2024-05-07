@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * The employee entity that contains all data
  */
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME_EMPLOYEE', fields: ['username'])]
 class Employee extends AbstractEntity
 {
 
@@ -65,6 +65,18 @@ class Employee extends AbstractEntity
      */
     #[ORM\Column(options: ["default" => 0])]
     private ?int $holidays = null;
+
+    /**
+     * Restricted start time for check in and check out
+     */
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $restrictedStartTime = null;
+
+    /**
+     * Restricted start time for check in and check out
+     */
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $restrictedEndTime = null;
 
     /**
      * All working periods of the user
@@ -317,6 +329,48 @@ class Employee extends AbstractEntity
      */
     public function setHolidays(int $holidays): self {
         $this->holidays = $holidays;
+        return $this;
+    }
+
+    /**
+     * Gets the restricted start time
+     *
+     * @return DateTimeInterface|null The restricted start time
+     */
+    public function getRestrictedStartTime(): ?DateTimeInterface
+    {
+        return $this->restrictedStartTime;
+    }
+
+    /**
+     * Sets the restricted start time
+     *
+     * @param DateTimeInterface|null $restrictedStartTime The new restricted start time
+     * @return $this The updated entity
+     */
+    public function setRestrictedStartTime(?DateTimeInterface $restrictedStartTime): self {
+        $this->restrictedStartTime = $restrictedStartTime;
+        return $this;
+    }
+
+    /**
+     * Gets the restricted end time
+     *
+     * @return DateTimeInterface|null The restricted end time
+     */
+    public function getRestrictedEndTime(): ?DateTimeInterface
+    {
+        return $this->restrictedEndTime;
+    }
+
+    /**
+     * Sets the restricted end time
+     *
+     * @param DateTimeInterface|null $restrictedEndTime The new restricted end time
+     * @return $this The updated entity
+     */
+    public function setRestrictedEndTime(?DateTimeInterface $restrictedEndTime): self {
+        $this->restrictedEndTime = $restrictedEndTime;
         return $this;
     }
 }

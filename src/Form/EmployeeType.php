@@ -38,6 +38,14 @@ class EmployeeType extends AbstractType
                 'required' => true,
                 'label' => 'Urlaubstage (Jahr)',
             ])
+            ->add('restrictedStartTime', TimeType::class, [
+                'required' => false,
+                'label' => 'Eingeschränkte Startzeit',
+            ])
+            ->add('restrictedEndTime', TimeType::class, [
+                'required' => false,
+                'label' => 'Eingeschränkte Endzeit',
+            ])
             ->add('targetWorkingPresent', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Fest angestellt',
