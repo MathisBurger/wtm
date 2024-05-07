@@ -61,6 +61,12 @@ class Employee extends AbstractEntity
     private ?bool $targetWorkingPresent = null;
 
     /**
+     * The amount of holidays the user has
+     */
+    #[ORM\Column(options: ["default" => 0])]
+    private ?int $holidays = null;
+
+    /**
      * All working periods of the user
      */
     #[ORM\OneToMany(targetEntity: WorktimePeriod::class, mappedBy: 'employee')]
@@ -290,6 +296,27 @@ class Employee extends AbstractEntity
         if ($this->periods->contains($period)) {
             $this->periods->removeElement($period);
         }
+        return $this;
+    }
+
+    /**
+     * Gets the holidays of the user
+     *
+     * @return int|null The amount of holidays
+     */
+    public function getHolidays(): ?int
+    {
+        return $this->holidays;
+    }
+
+    /**
+     * Sets the holidays of the user
+     *
+     * @param int $holidays The amount of holidays
+     * @return $this The updated entity
+     */
+    public function setHolidays(int $holidays): self {
+        $this->holidays = $holidays;
         return $this;
     }
 }

@@ -34,6 +34,10 @@ class EmployeeType extends AbstractType
                 'required' => true,
                 'label' => 'Nachname',
             ])
+            ->add('holidays', NumberType::class, [
+                'required' => true,
+                'label' => 'Urlaubstage (Jahr)',
+            ])
             ->add('targetWorkingPresent', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Fest angestellt',
