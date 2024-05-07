@@ -86,4 +86,23 @@ class CheckInOutService
         $this->entityManager->flush();
         return self::SUCCESS;
     }
+
+    /**
+     * Gets the required action the user has to perform
+     *
+     * @param string $username The username of the user
+     * @return string The action / error message
+     */
+    public function getRequiredAction(string $username): string {
+        $employee = $this->employeeRepository->findOneBy(['username' => $username]);
+        if ($employee === null) {
+            return self::USER_DOES_NOT_EXIST;
+        }
+        /** @var WorktimePeriod|false $currentCheckIn */
+        $currentCheckIn = $employee->getPeriods()->last();
+        if ($currentCheckIn === false || $currentCheckIn->getEndTime() !== null) {
+            return 'checkIn';
+        }
+        return 'checkOut';
+    }
 }

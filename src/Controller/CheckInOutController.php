@@ -71,5 +71,24 @@ class CheckInOutController extends AbstractController
         return $this->render('general/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger']);
     }
 
+    /**
+     * Gets the required action
+     */
+    #[Route('/api/v1/required-action/{username}', name: 'api_v1_required_action')]
+    public function getCurrentAction(string $username): Response
+    {
+        return new Response($this->checkInOutService->getRequiredAction($username));
+    }
 
+    /**
+     * Provides rdp not allowed message
+     */
+    #[Route('/api/v1/rdpNotAllowed', name: 'api_v1_rdp_not_allowed')]
+    public function rdpNotAllowed(): Response
+    {
+        return $this->render('general/message.html.twig', [
+            'message' => 'Sie können sich nicht aus dem Homeoffice anmelden.',
+            'messageStatus' => 'alert-danger'
+        ]);
+    }
 }
