@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\WorktimePeriod;
 use App\Repository\EmployeeRepository;
 use DateTime;
+use DateTimeInterface;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -33,6 +35,16 @@ class CheckInOutService
      */
     public const SUCCESS = "success";
 
+    /**
+     * Is returned on early login
+     */
+    public const EARLY_LOGIN = "early_login";
+
+    /**
+     * Is returned on early login
+    */
+    public const EARLY_LOGOUT = "early_logout";
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EmployeeRepository $employeeRepository
@@ -53,6 +65,9 @@ class CheckInOutService
         $currentCheckIn = $employee->getPeriods()->last();
         if ($currentCheckIn !== false && $currentCheckIn->getEndTime() === null) {
             return self::ALREADY_CHECKED_IN;
+        }
+        if ($employee->getRestrictedStartTime() !== null && self::compareBefore($employee->getRestrictedStartTime())) {
+            return self::EARLY_LOGIN;
         }
         $checkIn = new WorktimePeriod();
         $checkIn->setEmployee($employee);
@@ -81,6 +96,9 @@ class CheckInOutService
         if ($currentCheckIn === false || $currentCheckIn->getEndTime() !== null) {
             return self::NOT_CHECKED_IN;
         }
+        if ($employee->getRestrictedEndTime() && self::compareBefore($employee->getRestrictedEndTime())) {
+            return self::EARLY_LOGOUT;
+        }
         $currentCheckIn->setEndTime(new DateTime());
         $this->entityManager->persist($currentCheckIn);
         $this->entityManager->flush();
@@ -104,5 +122,19 @@ class CheckInOutService
             return 'checkIn';
         }
         return 'checkOut';
+    }
+
+    /**
+     * Compares date before
+     *
+     * @param DateTimeInterface $date1 Date
+     * @return bool Result
+     */
+    private static function compareBefore(DateTimeInterface $date1): bool
+    {
+         $now = new DateTime();
+         $now->setDate(1970,1,1);
+         $timestamp = $now->getTimestamp();
+         return $timestamp < $date1->getTimestamp();
     }
 }

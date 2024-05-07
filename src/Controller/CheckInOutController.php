@@ -40,6 +40,11 @@ class CheckInOutController extends AbstractController
                     'message' => 'Der angegebene Nutzer existiert nicht',
                     'messageStatus' => 'alert-danger'
                 ]);
+            case CheckInOutService::EARLY_LOGIN:
+                return $this->render('general/message.html.twig', [
+                    'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor ihrer regulären Arbeitszeit einstempeln dürfen.',
+                    'messageStatus' => 'alert-danger'
+                ]);
         }
         return $this->render('general/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger']);
     }
@@ -66,6 +71,11 @@ class CheckInOutController extends AbstractController
                 return $this->render('general/message.html.twig', [
                     'message' => 'Der angegebene Nutzer existiert nicht',
                     'messageStatus' => 'alert-danger',
+                ]);
+            case CheckInOutService::EARLY_LOGOUT:
+                return $this->render('general/message.html.twig', [
+                    'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor Ende ihrer regulären Arbeitszeit ausstempeln dürfen.',
+                    'messageStatus' => 'alert-danger'
                 ]);
         }
         return $this->render('general/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger']);

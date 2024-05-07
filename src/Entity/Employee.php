@@ -173,7 +173,7 @@ class Employee extends AbstractEntity
      * @param float $targetWorkingHours The target hours
      * @return $this The updated entity
      */
-    public function setTargetWorkingHours(float $targetWorkingHours): self
+    public function setTargetWorkingHours(?float $targetWorkingHours): self
     {
         $this->targetWorkingHours = $targetWorkingHours;
 
