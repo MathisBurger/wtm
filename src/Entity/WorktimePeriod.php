@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WorktimePeriodRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -98,5 +99,46 @@ class WorktimePeriod extends AbstractEntity
     {
        $this->employee = $employee;
        return $this;
+    }
+
+    /**
+     * Gets the date as string
+     *
+     * @return string Date as string
+     */
+    public function getDate(): string
+    {
+        return $this->startTime->format('d.m.Y');
+    }
+
+    /**
+     * Gets the start time as string
+     *
+     * @return string Start time as string
+     */
+    public function getStartTimeString(): string
+    {
+        return $this->startTime->format('H:i');
+    }
+
+    /**
+     * Gets the end time as string
+     *
+     * @return string End time as string
+     */
+    public function getEndTimeString(): string
+    {
+        if ($this->endTime) {
+            return $this->endTime->format('H:i');
+        }
+        return "-";
+    }
+
+    public function getTimeDiff(): string
+    {
+        if ($this->endTime) {
+            return $this->startTime->diff($this->endTime)->format('%H:%I');
+        }
+        return $this->startTime->diff(new DateTime())->format('%H:%I');
     }
 }

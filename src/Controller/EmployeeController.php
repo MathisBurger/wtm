@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Employee;
+use App\Entity\WorktimePeriod;
 use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
@@ -28,7 +29,20 @@ class EmployeeController extends AbstractController
     #[Route('/employees/details/{id}', name: 'employee_details')]
     public function viewDetails(int $id): Response
     {
-        return new Response();
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $employee = $this->employeeRepository->find($id);
+        if (!$employee) {
+            return $this->render('general/message.html.twig', [
+                'message' => 'Unbekannter Nutzer',
+                'messageStatus' => 'alert-danger'
+            ]);
+        }
+        return $this->render('employee/details.html.twig', [
+            'username' => $employee->getUsername(),
+            'periods' => $employee->getPeriods()->filter(
+                fn (WorktimePeriod $p) => $p->getStartTime()->format("m") === (new \DateTime())->format("m")
+            )
+        ]);
     }
 
     /**
