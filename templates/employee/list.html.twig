@@ -14,6 +14,7 @@
                 <th scope="col">Nachname</th>
                 <th scope="col">Wochen-Soll (Stunden)</th>
                 <th scope="col">Regulärzeiten</th>
+                <th scope="col">Aktionen</th>
             </tr>
             </thead>
             <tbody>
@@ -25,6 +26,11 @@
                     <td>{{ employee.getLastName() }}</td>
                     <td>{{ employee.getTargetWorkingHours() }}</td>
                     <td>{{ employee.getTargetWorkingTimeBeginFormatted() }} - {{ employee.getTargetWorkingTimeBeginFormatted() }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ path("employee_update", {id: employee.getId()}) }}" class="btn btn-primary">Bearbeiten</a>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

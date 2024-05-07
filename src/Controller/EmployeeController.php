@@ -44,24 +44,63 @@ class EmployeeController extends AbstractController
         ]);
         $form->handleRequest($request);
         if (!$form->isSubmitted()) {
-            return $this->render('employee/create.html.twig', [
+            return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => null,
+                'title' => 'Mitarbeiter anlegen'
             ]);
         }
         try {
             $result = $this->employeeService->createEmployee($form);
             if ($result === null) {
-                return $this->render('employee/create.html.twig', [
+                return $this->render('employee/createUpdate.html.twig', [
                     'form' => $form,
-                    'error' => 'Das Formular wurde nicht richtig ausgefüllt.'
+                    'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
+                    'title' => 'Mitarbeiter anlegen'
                 ]);
             }
             return $this->redirectToRoute('employee_details', ['id' => $result->getId()]);
         } catch (Exception $e) {
-            return $this->render('employee/create.html.twig', [
+            return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'title' => 'Mitarbeiter anlegen'
+            ]);
+        }
+    }
+
+    /**
+     * Update employee
+     */
+    #[Route('/employees/update/{id}', name: 'employee_update', methods: ['GET', 'POST'])]
+    public function updateEmployee(Request $request, int $id): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $exists = $this->employeeRepository->find($id);
+        $form = $this->createForm(EmployeeType::class, new Employee(), ['data' => $exists]);
+        $form->handleRequest($request);
+        if (!$form->isSubmitted()) {
+            return $this->render('employee/createUpdate.html.twig', [
+                'form' => $form,
+                'error' => null,
+                'title' => 'Mitarbeiter bearbeiten'
+            ]);
+        }
+        try {
+            $result = $this->employeeService->updateEmployee($form);
+            if ($result === null) {
+                return $this->render('employee/createUpdate.html.twig', [
+                    'form' => $form,
+                    'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
+                    'title' => 'Mitarbeiter bearbeiten'
+                ]);
+            }
+            return $this->redirectToRoute('employee_details', ['id' => $result->getId()]);
+        } catch (Exception $e) {
+            return $this->render('employee/createUpdate.html.twig', [
+                'form' => $form,
+                'error' => $e->getMessage(),
+                'title' => 'Mitarbeiter bearbeiten'
             ]);
         }
     }

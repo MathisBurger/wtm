@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="container">
-        <h1>Mitarbeiter anlegen</h1>
+        <h1>{{ title }}</h1>
         {% if error %}
             <div class="alert alert-danger" role="alert">
                 {{ error }}
@@ -11,7 +11,8 @@
         {{ form(form) }}
     </div>
     <script>
-        document.getElementById('employee_targetWorkingPresent').addEventListener('change', (e) => {
+
+        const logic = (e) => {
             if (e.target.checked) {
                 document.getElementById('targetWorkingHoursLabel').style = "display: block";
                 document.getElementById('employee_targetWorkingHours').style = "display: block";
@@ -33,6 +34,10 @@
                 document.getElementById('employee_targetWorkingTimeEnd').style = "display: none";
                 document.getElementById('employee_targetWorkingTimeEnd').required = false;
             }
-        })
+        };
+        document.getElementById('employee_targetWorkingPresent').addEventListener('change', logic);
+        if (document.getElementById('employee_targetWorkingPresent').checked) {
+            logic({target: {checked: true}});
+        }
     </script>
 {% endblock %}

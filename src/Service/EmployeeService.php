@@ -56,4 +56,47 @@ class EmployeeService
             throw $e;
         }
     }
+
+    /**
+     * Updates a employee
+     *
+     * @param FormInterface $form The actual form
+     * @return Employee|null The updated employee
+     * @throws Exception
+     */
+    public function updateEmployee(FormInterface $form): ?Employee {
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var Employee $employee */
+                $employee = $form->getData();
+                if ($employee->isTargetWorkingPresent()) {
+                    if (
+                        $employee->getTargetWorkingHours() === null
+                        || $employee->getTargetWorkingTimeBegin() === null
+                        || $employee->getTargetWorkingTimeEnd() === null
+                    ) {
+                        throw new Exception("Bitte geben sie in diesem Fall alle Werte an");
+                    }
+                }
+                $employee->setUsername(strtolower($employee->getUsername()));
+                $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
+                if (!$exists) {
+                    throw new EmployeeException("Dieser Mitarbeiter existiert nicht");
+                }
+                $exists->setUsername($employee->getUsername());
+                $exists->setFirstName($employee->getFirstName());
+                $exists->setLastName($employee->getLastName());
+                $exists->setTargetWorkingPresent($employee->isTargetWorkingPresent());
+                $exists->setTargetWorkingHours($employee->getTargetWorkingHours());
+                $exists->setTargetWorkingTimeBegin($employee->getTargetWorkingTimeBegin());
+                $exists->setTargetWorkingTimeEnd($employee->getTargetWorkingTimeEnd());
+                $this->entityManager->persist($exists);
+                $this->entityManager->flush();
+                return $employee;
+            }
+            throw new Exception($form->getErrors()[0]->getMessage());
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 }
