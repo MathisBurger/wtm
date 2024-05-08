@@ -2,13 +2,10 @@
 
 namespace App\Updater;
 
-use Github\Client;
-use PHPUnit\Util\Exception;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpClient\HttplugClient;
 
 /**
  * Software updater class that handles internal software updates
@@ -35,16 +32,28 @@ class Updater
         if (isset($_ENV['IS_DOCKER']) && $_ENV['IS_DOCKER'] === 'true') {
             return false;
         }
+        $latestRelease = $this->getLatestRelease();
+        return $latestRelease['tag_name'] != $this->getSoftwareVersionFromFile();
+    }
+
+    /**
+     * Gets the latest release
+     *
+     * @return string
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getLatestRelease(): array
+    {
         $latestRelease = $this->cache->getItem("latest_release");
         if (!$latestRelease->isHit()) {
             $raw = $this->callAPI('GET', 'https://api.github.com/repos/MathisBurger/wtm/releases/latest');
             $json = json_decode($raw, true);
             $latestRelease->expiresAfter(10);
-            $latestRelease->set($json['tag_name']);
+            $latestRelease->set($json);
             $this->cache->save($latestRelease);
-            return $this->getNewUpdateAvailable();
+            return $this->getLatestRelease();
         }
-        return $latestRelease->get() != $this->getSoftwareVersionFromFile();
+        return $latestRelease->get();
     }
 
     /**

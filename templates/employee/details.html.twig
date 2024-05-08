@@ -1,7 +1,7 @@
 {% extends 'navbarBase.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mt-5">
         <h1>{{ employee.getFirstName() }} {{ employee.getLastName() }} ({{ employee.getUsername() }})</h1>
         <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
             Sondertag anlegen
