@@ -57,7 +57,11 @@
                 let loc = document.location.href.split('/software/update/perform')[0];
                 fetch(loc).then((res) => {
                     if (res.ok) {
-                        window.location.replace(loc);
+                        res.text().then((data) => {
+                            if (data.indexOf('<html') > -1) {
+                                window.location.replace(loc);
+                            }
+                        })
                     }
                 })
             }, 1000)
