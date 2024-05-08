@@ -12,7 +12,8 @@ rm -r "wtm-$1/.env.test"
 rm -r "wtm-$1/initEnv.sh"
 rm -r "wtm-$1/phpunit.xml.dist"
 rm -r "wtm-$1/updateSoftware.sh"
-#mv "./wtm-$1/*" .
-#rm -r "wtm-$1"
-#composer install
-#php bin/console doctrine:migrations:migrate --no-interaction
+rm -r "v$1.zip"
+mv ./wtm-$1/* .
+rm -r "wtm-$1"
+composer install
+php bin/console doctrine:migrations:migrate --no-interaction
