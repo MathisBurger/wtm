@@ -37,4 +37,15 @@ class SoftwareUpdateController extends AbstractController
             'content' => $updateInfo['body']
         ]);
     }
+
+    /**
+     * Performs the actual software update
+     *
+     * @return Response
+     */
+    #[Route('/software/update/perform', name: 'software_update_perform')]
+    public function performUpdate(): Response
+    {
+        return $this->render('software/perform.html.twig', []);
+    }
 }
