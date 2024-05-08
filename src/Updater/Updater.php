@@ -40,7 +40,7 @@ class Updater
             $raw = $this->callAPI('GET', 'https://api.github.com/repos/MathisBurger/wtm/releases/latest');
             $json = json_decode($raw, true);
             $latestRelease->expiresAfter(10);
-            $latestRelease->set($json['html_url']);
+            $latestRelease->set($json['tag_name']);
             $this->cache->save($latestRelease);
             return $this->getNewUpdateAvailable();
         }
