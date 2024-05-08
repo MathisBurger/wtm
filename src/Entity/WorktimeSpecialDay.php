@@ -42,6 +42,9 @@ class WorktimeSpecialDay extends AbstractEntity
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
+    #[ORM\ManyToOne(targetEntity: Employee::class,inversedBy: "worktimeSpecialDays")]
+    private ?Employee $employee = null;
+
     /**
      * Gets the reason for the special day
      *
@@ -108,6 +111,27 @@ class WorktimeSpecialDay extends AbstractEntity
     {
         $this->notes = $notes;
 
+        return $this;
+    }
+
+    /**
+     * Gets the employee
+     *
+     * @return Employee|null The employee
+     */
+    public function getEmployee(): ?Employee {
+        return $this->employee;
+    }
+
+    /**
+     * Sets the employee
+     *
+     * @param Employee|null $employee The new employee
+     * @return $this The updated entity
+     */
+    public function setEmployee(?Employee $employee): self
+    {
+        $this->employee = $employee;
         return $this;
     }
 }

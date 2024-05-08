@@ -84,8 +84,15 @@ class Employee extends AbstractEntity
     #[ORM\OneToMany(targetEntity: WorktimePeriod::class, mappedBy: 'employee')]
     private Collection $periods;
 
+    /**
+     * All special worktime days
+     */
+    #[ORM\OneToMany(targetEntity: WorktimeSpecialDay::class, mappedBy: 'employee')]
+    private Collection $worktimeSpecialDays;
+
     public function __construct() {
         $this->periods = new ArrayCollection();
+        $this->worktimeSpecialDays = new ArrayCollection();
     }
 
     /**
@@ -397,6 +404,41 @@ class Employee extends AbstractEntity
      */
     public function setRestrictedEndTime(?DateTimeInterface $restrictedEndTime): self {
         $this->restrictedEndTime = $restrictedEndTime;
+        return $this;
+    }
+
+    /**
+     * Gets all worktime special days
+     *
+     * @return Collection The collection
+     */
+    public function getWorktimeSpecialDays(): Collection {
+        return $this->worktimeSpecialDays;
+    }
+
+    /**
+     * Adds a new special day
+     *
+     * @param WorktimeSpecialDay $worktimeSpecialDay The special day
+     * @return $this The updated entity
+     */
+    public function addWorktimeSpecialDay(WorktimeSpecialDay $worktimeSpecialDay): self {
+        if (!$this->worktimeSpecialDays->contains($worktimeSpecialDay)) {
+            $this->worktimeSpecialDays->add($worktimeSpecialDay);
+        }
+        return $this;
+    }
+
+    /**
+     * Removes a special worktime day
+     *
+     * @param WorktimeSpecialDay $worktimeSpecialDay The special day to remove
+     * @return $this The updated entity
+     */
+    public function removeWorktimeSpecialDay(WorktimeSpecialDay $worktimeSpecialDay): self {
+        if ($this->worktimeSpecialDays->contains($worktimeSpecialDay)) {
+            $this->worktimeSpecialDays->removeElement($worktimeSpecialDay);
+        }
         return $this;
     }
 }

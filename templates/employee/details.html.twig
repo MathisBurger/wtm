@@ -3,6 +3,9 @@
 {% block body %}
     <div class="container">
         <h1>{{ employee.getFirstName() }} {{ employee.getLastName() }} ({{ employee.getUsername() }})</h1>
+        <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
+            Sondertag anlegen
+        </a>
         <ul class="nav nav-tabs mt-5">
             <li class="nav-item">
                 <a class="nav-link {{ tab == null ? 'active' : ''}}">Allgemein</a>
