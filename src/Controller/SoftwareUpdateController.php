@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -16,7 +18,8 @@ class SoftwareUpdateController extends AbstractController
 {
 
     public function __construct(
-        private readonly Updater $updater
+        private readonly Updater $updater,
+        private readonly KernelInterface $kernel
     ) {}
 
     /**
@@ -46,6 +49,16 @@ class SoftwareUpdateController extends AbstractController
     #[Route('/software/update/perform', name: 'software_update_perform')]
     public function performUpdate(): Response
     {
+        if (!$this->updater->getNewUpdateAvailable()) {
+            return $this->render('general/message.html.twig', [
+                'message' => 'Software is already up to date',
+                'messageStatus' => 'alert-success'
+            ]);
+        }
+        $updateInfo = $this->updater->getLatestRelease();
+        $process = Process::fromShellCommandline('nohup ./updateSoftware.sh ' . $updateInfo['tag_name'] . ' &');
+        $process->setWorkingDirectory($this->kernel->getProjectDir());
+        //$process->run();
         return $this->render('software/perform.html.twig', []);
     }
 }
