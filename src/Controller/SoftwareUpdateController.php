@@ -60,11 +60,9 @@ class SoftwareUpdateController extends AbstractController
         if (str_starts_with($version, 'v')) {
             $version = ltrim($version, 'v');
         }
-        var_dump("Hello World");
-        var_dump($version);
-
         $process = Process::fromShellCommandline('nohup ./updateSoftware.sh ' . $version . '> foo.out 2> foo.err < /dev/null &');
         $process->setWorkingDirectory($this->kernel->getProjectDir());
+        var_dump($process->getCommandLine());
         $process->run();
         return $this->render('software/perform.html.twig', []);
     }
