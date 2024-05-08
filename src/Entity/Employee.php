@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -440,5 +441,24 @@ class Employee extends AbstractEntity
             $this->worktimeSpecialDays->removeElement($worktimeSpecialDay);
         }
         return $this;
+    }
+
+    /**
+     * Gets all leftover holidays
+     *
+     * @return int|null All left holidays
+     */
+    public function getHolidaysLeft(): ?int
+    {
+        if ($this->getHolidays()) {
+            $existingHolidays = $this->getWorktimeSpecialDays()
+                ->filter(
+                    fn (WorktimeSpecialDay $d) =>
+                        $d->getDate()->format("Y") === (new DateTime())->format("Y")
+                        && $d->getReason() === WorktimeSpecialDay::REASON_HOLIDAY
+                );
+            return $this->getHolidays() - $existingHolidays->count();
+        }
+        return null;
     }
 }
