@@ -1,6 +1,6 @@
 sleep 10
 rm -r assets bin config migrations public src templates translations var vendor composer.json composer.lock importmap.php LICENSE README.md SOFTWARE_VERSION symfony.lock .gitignore
-wget "https://github.com/MathisBurger/wtm/archive/refs/tags/$1.zip"
+wget "https://github.com/MathisBurger/wtm/archive/refs/tags/v$1.zip"
 unzip "$1.zip"
 rm -r "wtm-$1/desktop"
 rm -r "wtm-$1/.github"
