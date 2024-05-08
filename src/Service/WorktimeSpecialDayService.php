@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\WorktimeSpecialDay;
 use App\Repository\EmployeeRepository;
+use App\Repository\WorktimeSpecialDayRepository;
 use App\RestApi\HolidayApiFactory;
 use App\RestApi\HolidayApiInterface;
 use DateTime;
@@ -19,7 +20,8 @@ class WorktimeSpecialDayService
 
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly WorktimeSpecialDayRepository $worktimeSpecialDayRepository,
     ){
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -32,7 +34,7 @@ class WorktimeSpecialDayService
      * @return void
      * @throws Exception The exception thrown on error
      */
-    public function createSpecialDays(int $id, FormInterface $form)
+    public function createSpecialDays(int $id, FormInterface $form): void
     {
         $employee = $this->employeeRepository->find($id);
         if (!$employee) {
@@ -88,6 +90,23 @@ class WorktimeSpecialDayService
         $this->entityManager->flush();
     }
 
-
-
+    /**
+     * Deletes a special day
+     *
+     * @param int $id The ID of the special day
+     * @return int The ID of the employee
+     * @throws Exception
+     */
+    public function deleteSpecialDays(int $id): int
+    {
+        $day = $this->worktimeSpecialDayRepository->find($id);
+        if (!$day) {
+            throw new Exception("Der Sondertag existiert nicht.");
+        }
+        $day->getEmployee()->removeWorktimeSpecialDay($day);
+        $this->entityManager->persist($day->getEmployee());
+        $this->entityManager->remove($day);
+        $this->entityManager->flush();
+        return $day->getEmployee()->getId();
+    }
 }

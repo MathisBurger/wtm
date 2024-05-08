@@ -46,4 +46,18 @@ class WorktimeSpecialDayController extends AbstractController
         return $this->redirectToRoute('employee_details', ['id' => $id]);
     }
 
+    /**
+     * Deletes a special day
+     */
+    #[Route('/employee/deleteSpecialDay/{id}', name: 'worktime_specialday_delete')]
+    public function deleteSpecialDay(int $id): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        try {
+            $employeeId = $this->worktimeSpecialDayService->deleteSpecialDays($id);
+            return $this->redirectToRoute('employee_details', ['id' => $employeeId]);
+        } catch (Exception $e) {}
+        return new Response();
+    }
+
 }

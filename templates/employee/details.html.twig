@@ -26,6 +26,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Datum</th>
                         <th scope="col">Notizen</th>
+                        <th scope="col">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -34,6 +35,9 @@
                             <th scope="row">{{ holiday.getId() }}</th>
                             <td>{{ holiday.getDateString() }}</td>
                             <td>{{ holiday.getNotes() }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">Löschen</a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -48,6 +52,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Datum</th>
                         <th scope="col">Notizen</th>
+                        <th scope="col">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,6 +61,9 @@
                             <th scope="row">{{ illnessDay.getId() }}</th>
                             <td>{{ illnessDay.getDateString() }}</td>
                             <td>{{ illnessDay.getNotes() }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">Löschen</a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
