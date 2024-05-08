@@ -16,4 +16,7 @@ rm -r "v$1.zip"
 mv ./wtm-$1/* .
 rm -r "wtm-$1"
 composer install
+php bin/console cache:clear
+php bin/console assets:install public
+php bin/console importmap:install
 php bin/console doctrine:migrations:migrate --no-interaction
