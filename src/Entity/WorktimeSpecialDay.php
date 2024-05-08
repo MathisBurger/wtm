@@ -134,4 +134,17 @@ class WorktimeSpecialDay extends AbstractEntity
         $this->employee = $employee;
         return $this;
     }
+
+    /**
+     * Gets the date formatted as string
+     *
+     * @return string The date string
+     */
+    public function getDateString(): string
+    {
+        if (null === $this->date) {
+            return "";
+        }
+        return $this->date->format('d.m.y');
+    }
 }

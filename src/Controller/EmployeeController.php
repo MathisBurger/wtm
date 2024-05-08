@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Employee;
 use App\Entity\WorktimePeriod;
+use App\Entity\WorktimeSpecialDay;
 use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
+use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,6 +48,15 @@ class EmployeeController extends AbstractController
             'tab' => $tab,
             'periods' => $employee->getPeriods()->filter(
                 fn (WorktimePeriod $p) => $p->getStartTime()->format("m") === (new \DateTime())->format("m")
+            ),
+            'holidays' => $employee->getWorktimeSpecialDays()->filter(
+                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_HOLIDAY && (
+                    $d->getDate()->format("Y") === (new \DateTime())->format("Y")
+                        || $d->getDate()->format("Y") === (new \DateTime())->add(new DateInterval('P1Y'))->format("Y")
+                    )
+            ),
+            'illnessDays' => $employee->getWorktimeSpecialDays()->filter(
+                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === (new \DateTime())->format("Y")
             )
         ]);
     }

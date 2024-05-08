@@ -8,10 +8,59 @@
         </a>
         <ul class="nav nav-tabs mt-5">
             <li class="nav-item">
-                <a class="nav-link {{ tab == null ? 'active' : ''}}">Allgemein</a>
+                <a class="nav-link {{ tab == null ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}">Allgemein</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ tab == "holiday" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=holiday">Urlaub</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ tab == "illness" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=illness">Krankheit</a>
             </li>
         </ul>
         {% if tab == "holiday" %}
+            <div class="mt-2">
+                <h1>Urlaubstage</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Notizen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for holiday in holidays %}
+                        <tr>
+                            <th scope="row">{{ holiday.getId() }}</th>
+                            <td>{{ holiday.getDateString() }}</td>
+                            <td>{{ holiday.getNotes() }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elseif tab == "illness" %}
+            <div class="mt-2">
+                <h1>Krankheitstage</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Notizen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for illnessDay in illnessDays %}
+                        <tr>
+                            <th scope="row">{{ illnessDay.getId() }}</th>
+                            <td>{{ illnessDay.getDateString() }}</td>
+                            <td>{{ illnessDay.getNotes() }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <div class="row mt-2">
                 <div class="col-md-6">
