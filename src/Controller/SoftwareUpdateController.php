@@ -58,7 +58,7 @@ class SoftwareUpdateController extends AbstractController
         $updateInfo = $this->updater->getLatestRelease();
         $process = Process::fromShellCommandline('nohup ./updateSoftware.sh ' . $updateInfo['tag_name'] . ' &');
         $process->setWorkingDirectory($this->kernel->getProjectDir());
-        //$process->run();
+        $process->run();
         return $this->render('software/perform.html.twig', []);
     }
 }

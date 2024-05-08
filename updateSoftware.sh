@@ -16,4 +16,3 @@ mv "wtm-$1/*" ./
 rm "wtm-$1"
 composer install
 php bin/console doctrine:migrations:migrate --no-interaction
-echo "hallo"
