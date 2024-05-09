@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "desktop",
+    "productName": "Zeiterfassung (WTM)",
     "version": "1.0.1"
   },
   "tauri": {

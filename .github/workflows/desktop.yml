@@ -29,11 +29,16 @@ jobs:
         run: |
           cd desktop
           yarn install
-
+      - id: wtm
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: MathisBurger
+          repo: wtm
+          excludes: prerelease, draft
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: ./desktop
-          releaseId: 154853154
+          releaseId: ${{ steps.wtm.outputs.id }}
           args: ${{ matrix.args }}
