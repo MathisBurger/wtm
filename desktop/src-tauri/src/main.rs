@@ -40,7 +40,7 @@ fn is_rdp() -> bool {
         .stdout(Stdio::piped())
         .output()
         .expect("Cannot check for rdp sessions");
-    let content = String::from_utf8_lossy(&output.stdout).unwrap();
+    let content = String::from_utf8_lossy(&output.stdout);
     return content.contains("tcp-rdp#");
 }
 
