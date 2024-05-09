@@ -2,8 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::env;
-use url::Url;
-use url_open::UrlOpen;
+use std::process::{Command, Stdio};
 
 fn get_url() -> String {
     if env::var("APP_MODE").is_ok() && env::var("APP_MODE").unwrap() == "dev" {
@@ -22,6 +21,27 @@ fn get_username() -> String {
         Ok(v) => v,
         Err(_e) => env::var("USER").unwrap(),
     };
+}
+
+fn is_windows() -> bool {
+    if cfg!(windows) {
+        return true;
+    }
+    return false;
+}
+
+#[tauri::command]
+fn is_rdp() -> bool {
+    if !is_windows() {
+        return false;
+    }
+    let output = Command::new("qwinsta")
+        .args(["/"])
+        .stdout(Stdio::piped())
+        .output()
+        .expect("Cannot check for rdp sessions");
+    let content = String::from_utf8(output.stdout).unwrap();
+    return content.contains("tcp-rdp#");
 }
 
 #[tauri::command]
@@ -59,7 +79,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_current_action,
             check_in,
-            check_out
+            check_out,
+            is_rdp
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

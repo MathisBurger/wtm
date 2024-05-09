@@ -8,6 +8,13 @@ function App() {
   const [message, setMessage] = useState<MessageProps | null>(null);
 
   async function getCurrentAction() {
+    if (await invoke("is_rdp")) {
+      setMessage({
+        message: "Sie können sich nicht aus der Ferne über RDP einstempeln.",
+        messageStatus: "alert-danger",
+      });
+      return;
+    }
     let result = await invoke("get_current_action");
     setCurrentAction(result as string);
   }
