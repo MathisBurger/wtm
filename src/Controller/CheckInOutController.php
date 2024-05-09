@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\CheckInOutService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -21,64 +22,80 @@ class CheckInOutController extends AbstractController
      * Performs check in action
      */
     #[Route('/api/v1/check-in/{username}', name: 'api_v1_check_in')]
-    public function checkIn(string $username): Response
+    public function checkIn(
+        string $username,
+        #[MapQueryParameter] ?string $format
+    ): Response
     {
         $resp = $this->checkInOutService->checkIn(strtolower($username));
         switch ($resp) {
             case CheckInOutService::SUCCESS:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'CheckIn erfolgreich',
                     'messageStatus' => 'alert-success',
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::ALREADY_CHECKED_IN:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Sie sind bereits eingeloggt',
                     'messageStatus' => 'alert-danger'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::USER_DOES_NOT_EXIST:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Der angegebene Nutzer existiert nicht',
                     'messageStatus' => 'alert-danger'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::EARLY_LOGIN:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor ihrer regulären Arbeitszeit einstempeln dürfen.',
                     'messageStatus' => 'alert-danger'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
         }
-        return $this->render('general/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger']);
+        $args = ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger'];
+        return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
     }
 
     /**
      * Performs check out action
      */
     #[Route('/api/v1/check-out/{username}', name: 'api_v1_check_out')]
-    public function checkOut(string $username): Response
+    public function checkOut(
+        string $username,
+        #[MapQueryParameter] ?string $format
+    ): Response
     {
         $resp = $this->checkInOutService->checkOut(strtolower($username));
         switch ($resp) {
             case CheckInOutService::SUCCESS:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'CheckOut erfolgreich',
                     'messageStatus' => 'alert-success'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::NOT_CHECKED_IN:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Sie sind nicht eingeloggt',
                     'messageStatus' => 'alert-danger'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::USER_DOES_NOT_EXIST:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Der angegebene Nutzer existiert nicht',
                     'messageStatus' => 'alert-danger',
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::EARLY_LOGOUT:
-                return $this->render('general/message.html.twig', [
+                $args = [
                     'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor Ende ihrer regulären Arbeitszeit ausstempeln dürfen.',
                     'messageStatus' => 'alert-danger'
-                ]);
+                ];
+                return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
         }
-        return $this->render('general/message.html.twig', ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger']);
+        $args = ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger'];
+        return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
     }
 
     /**
@@ -94,11 +111,14 @@ class CheckInOutController extends AbstractController
      * Provides rdp not allowed message
      */
     #[Route('/api/v1/rdpNotAllowed', name: 'api_v1_rdp_not_allowed')]
-    public function rdpNotAllowed(): Response
+    public function rdpNotAllowed(
+        #[MapQueryParameter] ?string $format
+    ): Response
     {
-        return $this->render('general/message.html.twig', [
+        $args = [
             'message' => 'Sie können sich nicht aus dem Homeoffice anmelden.',
             'messageStatus' => 'alert-danger'
-        ]);
+        ];
+        return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
     }
 }
