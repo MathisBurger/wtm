@@ -18,7 +18,7 @@ fn get_username() -> String {
 #[tauri::command]
 fn get_current_action() -> String {
     let username = get_username();
-    let formatted_url = format!("https://localhost:8000/api/v1/required-action/{username}");
+    let formatted_url = format!("http://zeiterfassung.ad.dreessen.biz/api/v1/required-action/{username}");
     let resp = reqwest::blocking::get(formatted_url).expect("Request blocked");
     let text = resp.text().expect("Cannot get text");
     return text;
@@ -27,14 +27,14 @@ fn get_current_action() -> String {
 #[tauri::command]
 fn check_in() {
     let username = get_username();
-    let formatted_url = format!("https://localhost:8000/api/v1/check-in/{username}");
+    let formatted_url = format!("http://zeiterfassung.ad.dreessen.biz/api/v1/check-in/{username}");
     Url::parse(&formatted_url).unwrap().open();
 }
 
 #[tauri::command]
 fn check_out() {
     let username = get_username();
-    let formatted_url = format!("https://localhost:8000/api/v1/check-out/{username}");
+    let formatted_url = format!("http://zeiterfassung.ad.dreessen.biz/api/v1/check-out/{username}");
     Url::parse(&formatted_url).unwrap().open();
 }
 
