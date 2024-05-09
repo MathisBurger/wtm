@@ -57,7 +57,7 @@ function App() {
       {currentAction === "checkOut" && (
         <button onClick={checkOut}>Ausstempeln</button>
       )}
-      {currentAction !== "checkIn" && currentAction !== "checkOut" && (
+      {currentAction !== "checkIn" && currentAction !== "checkOut" && currentAction !== "" && (
         <Message message={currentAction} messageStatus="alert-danger" />
       )}
     </div>
