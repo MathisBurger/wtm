@@ -41,7 +41,7 @@ fn is_rdp() -> bool {
         .output()
         .expect("Cannot check for rdp sessions");
     let content = String::from_utf8_lossy(&output.stdout);
-    return content.contains("tcp-rdp#");
+    return content.contains("rdp-tcp#");
 }
 
 #[tauri::command]
