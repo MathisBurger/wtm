@@ -102,6 +102,12 @@
         document.getElementsByClassName("isTimeEmployed")[0].addEventListener('change', () => {
             handleDisable();
         })
+        if (location.href.indexOf("/update/") > -1) {
+            document.getElementById("employee_username").disabled = true;
+        }
+        document.getElementsByTagName("form")[0].addEventListener('submit', (e) => {
+            document.getElementById("employee_username").disabled = false;
+        })
 
     </script>
 {% endblock %}

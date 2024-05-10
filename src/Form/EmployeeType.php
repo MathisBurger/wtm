@@ -29,8 +29,7 @@ class EmployeeType extends AbstractType
             ->add('username', TextType::class, [
                 'required' => true,
                 'attr' => [
-                    'id' => 'username',
-                    'disabled' => $options['data']->getUsername() !== null
+                    'id' => 'username'
                 ],
                 'label' => 'Benutzername',
             ])

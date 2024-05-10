@@ -145,18 +145,18 @@ class CheckInOutService
         }
         $lowestDiff = PHP_INT_MAX;
         /** @var ConfiguredWorktime $lowest */
-        $lowest = $configured->first();
+        $lowest = null;
 
         /** @var ConfiguredWorktime $config */
         foreach ($configured->toArray() as $config) {
             $diff = $time->getTimestamp() - $config->getRegularStartTime()->getTimestamp();
-            if ($diff < 0) continue;
+            if ($diff > 0) continue;
             if ($diff < $lowestDiff) {
                 $lowestDiff = $diff;
                 $lowest = $config;
             }
         }
-        if ($lowest->getRestrictedStartTime()) {
+        if ($lowest && $lowest->getRestrictedStartTime()) {
             return !self::compareBefore($lowest->getRestrictedStartTime());
         }
         return true;
@@ -186,7 +186,7 @@ class CheckInOutService
         /** @var ConfiguredWorktime $config */
         foreach ($configured->toArray() as $config) {
             $diff = $time->getTimestamp() - $config->getRegularEndTime()->getTimestamp();
-            if ($diff < 0) continue;
+            if ($diff > 0) continue;
             if ($diff < $lowestDiff) {
                 $lowestDiff = $diff;
                 $lowest = $config;
