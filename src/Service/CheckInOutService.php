@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\ConfiguredWorktime;
+use App\Entity\Employee;
 use App\Entity\WorktimePeriod;
 use App\Repository\EmployeeRepository;
 use DateTime;
@@ -66,7 +68,7 @@ class CheckInOutService
         if ($currentCheckIn !== false && $currentCheckIn->getEndTime() === null) {
             return self::ALREADY_CHECKED_IN;
         }
-        if ($employee->getRestrictedStartTime() !== null && self::compareBefore($employee->getRestrictedStartTime())) {
+        if ($employee->isTimeEmployed() && !self::canCheckIn($employee)) {
             return self::EARLY_LOGIN;
         }
         $checkIn = new WorktimePeriod();
@@ -96,7 +98,7 @@ class CheckInOutService
         if ($currentCheckIn === false || $currentCheckIn->getEndTime() !== null) {
             return self::NOT_CHECKED_IN;
         }
-        if ($employee->getRestrictedEndTime() && self::compareBefore($employee->getRestrictedEndTime())) {
+        if ($employee->isTimeEmployed() && !self::canCheckOut($employee)) {
             return self::EARLY_LOGOUT;
         }
         $currentCheckIn->setEndTime(new DateTime());
@@ -122,6 +124,78 @@ class CheckInOutService
             return 'checkIn';
         }
         return 'checkOut';
+    }
+
+    /**
+     * Checks if a user can check in
+     *
+     * @param Employee $employee The employee
+     * @return bool If can check in
+     */
+    private static function canCheckIn(Employee $employee): bool
+    {
+        $time = new DateTime();
+        $today = strtoupper($time->format('l'));
+        $time->setDate(1970,1,1);
+        $configured = $employee->getConfiguredWorktimes()->filter(
+            fn (ConfiguredWorktime $c) => $c->getDayName() === $today
+        );
+        if ($configured->count() === 0) {
+            return true;
+        }
+        $lowestDiff = PHP_INT_MAX;
+        /** @var ConfiguredWorktime $lowest */
+        $lowest = $configured->first();
+
+        /** @var ConfiguredWorktime $config */
+        foreach ($configured->toArray() as $config) {
+            $diff = $time->getTimestamp() - $config->getRegularStartTime()->getTimestamp();
+            if ($diff < 0) continue;
+            if ($diff < $lowestDiff) {
+                $lowestDiff = $diff;
+                $lowest = $config;
+            }
+        }
+        if ($lowest->getRestrictedStartTime()) {
+            return !self::compareBefore($lowest->getRestrictedStartTime());
+        }
+        return true;
+    }
+
+    /**
+     * Checks if a user can check out
+     *
+     * @param Employee $employee The employee
+     * @return bool If can check out
+     */
+    private static function canCheckOut(Employee $employee): bool
+    {
+        $time = new DateTime();
+        $today = strtoupper($time->format('l'));
+        $time->setDate(1970,1,1);
+        $configured = $employee->getConfiguredWorktimes()->filter(
+            fn (ConfiguredWorktime $c) => $c->getDayName() === $today
+        );
+        if ($configured->count() === 0) {
+            return true;
+        }
+        $lowestDiff = PHP_INT_MAX;
+        /** @var ConfiguredWorktime $lowest */
+        $lowest = $configured->first();
+
+        /** @var ConfiguredWorktime $config */
+        foreach ($configured->toArray() as $config) {
+            $diff = $time->getTimestamp() - $config->getRegularEndTime()->getTimestamp();
+            if ($diff < 0) continue;
+            if ($diff < $lowestDiff) {
+                $lowestDiff = $diff;
+                $lowest = $config;
+            }
+        }
+        if ($lowest->getRestrictedEndTime()) {
+            return !self::compareBefore($lowest->getRestrictedEndTime());
+        }
+        return true;
     }
 
     /**
