@@ -24,6 +24,7 @@ class EmployeeType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'required' => true,
+                'attr' => ['id' => 'username'],
                 'label' => 'Benutzername',
             ])
             ->add('firstName', TextType::class, [

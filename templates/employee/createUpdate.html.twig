@@ -39,5 +39,8 @@
         if (document.getElementById('employee_targetWorkingPresent').checked) {
             logic({target: {checked: true}});
         }
+        if (window.location.href.indexOf("/update/") > -1) {
+            document.getElementById("employee_username").disabled = true;
+        }
     </script>
 {% endblock %}
