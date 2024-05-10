@@ -56,9 +56,10 @@ class CheckInOutService
      * Checks in a user
      *
      * @param string $username The username
+     * @param string|null $loginDevice The login device
      * @return string The result string
      */
-    public function checkIn(string $username): string {
+    public function checkIn(string $username, ?string $loginDevice): string {
         $employee = $this->employeeRepository->findOneBy(['username' => $username]);
         if ($employee === null) {
             return self::USER_DOES_NOT_EXIST;
@@ -75,6 +76,7 @@ class CheckInOutService
         $checkIn->setEmployee($employee);
         $employee->addPeriod($checkIn);
         $checkIn->setStartTime(new DateTime());
+        $checkIn->setLoginDevice($loginDevice);
         $this->entityManager->persist($checkIn);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
@@ -85,9 +87,10 @@ class CheckInOutService
      * Checks out the current user
      *
      * @param string $username The username of the user
+     * @param string|null $logoutDevice The logout device
      * @return string The checkout string
      */
-    public function checkOut(string $username): string
+    public function checkOut(string $username, ?string $logoutDevice): string
     {
         $employee = $this->employeeRepository->findOneBy(['username' => $username]);
         if ($employee === null) {
@@ -102,6 +105,7 @@ class CheckInOutService
             return self::EARLY_LOGOUT;
         }
         $currentCheckIn->setEndTime(new DateTime());
+        $currentCheckIn->setLogoutDevice($logoutDevice);
         $this->entityManager->persist($currentCheckIn);
         $this->entityManager->flush();
         return self::SUCCESS;

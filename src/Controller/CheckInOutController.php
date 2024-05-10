@@ -24,10 +24,11 @@ class CheckInOutController extends AbstractController
     #[Route('/api/v1/check-in/{username}', name: 'api_v1_check_in')]
     public function checkIn(
         string $username,
-        #[MapQueryParameter] ?string $format
+        #[MapQueryParameter] ?string $format,
+        #[MapQueryParameter] ?string $device
     ): Response
     {
-        $resp = $this->checkInOutService->checkIn(strtolower($username));
+        $resp = $this->checkInOutService->checkIn(strtolower($username), $device);
         switch ($resp) {
             case CheckInOutService::SUCCESS:
                 $args = [
@@ -64,10 +65,11 @@ class CheckInOutController extends AbstractController
     #[Route('/api/v1/check-out/{username}', name: 'api_v1_check_out')]
     public function checkOut(
         string $username,
-        #[MapQueryParameter] ?string $format
+        #[MapQueryParameter] ?string $format,
+        #[MapQueryParameter] ?string $device
     ): Response
     {
-        $resp = $this->checkInOutService->checkOut(strtolower($username));
+        $resp = $this->checkInOutService->checkOut(strtolower($username), $device);
         switch ($resp) {
             case CheckInOutService::SUCCESS:
                 $args = [

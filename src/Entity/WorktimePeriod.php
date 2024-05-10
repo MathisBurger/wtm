@@ -28,6 +28,18 @@ class WorktimePeriod extends AbstractEntity
     private ?DateTimeInterface $endTime = null;
 
     /**
+     * The login device
+     */
+    #[ORM\Column(nullable: true)]
+    private ?string $loginDevice = null;
+
+    /**
+     * The logout device
+     */
+    #[ORM\Column(nullable: true)]
+    private ?string $logoutDevice = null;
+
+    /**
      * The employee that is refered to this period
      */
     #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'periods')]
@@ -141,5 +153,49 @@ class WorktimePeriod extends AbstractEntity
             return $this->startTime->diff($this->endTime)->format('%H:%I');
         }
         return $this->startTime->diff(new DateTime())->format('%H:%I');
+    }
+
+    /**
+     * Gets the login device
+     *
+     * @return string|null The device
+     */
+    public function getLoginDevice(): ?string
+    {
+        return $this->loginDevice;
+    }
+
+    /**
+     * Sets the login device
+     *
+     * @param string|null $device The device
+     * @return $this The updated entity
+     */
+    public function setLoginDevice(?string $device): self
+    {
+        $this->loginDevice = $device;
+        return $this;
+    }
+
+    /**
+     * Gets the logout device
+     *
+     * @return string|null The device
+     */
+    public function getLogoutDevice(): ?string
+    {
+        return $this->logoutDevice;
+    }
+
+    /**
+     * Sets the logout device
+     *
+     * @param string|null $device The device
+     * @return $this The updated entity
+     */
+    public function setLogoutDevice(?string $device): self
+    {
+        $this->logoutDevice = $device;
+        return $this;
     }
 }
