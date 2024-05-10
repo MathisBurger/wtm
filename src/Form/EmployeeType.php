@@ -2,9 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\ConfiguredWorktime;
 use App\Entity\Employee;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,44 +43,21 @@ class EmployeeType extends AbstractType
                 'required' => true,
                 'label' => 'Urlaubstage (Jahr)',
             ])
-            ->add('restrictedStartTime', TimeType::class, [
-                'required' => false,
-                'label' => 'Eingeschränkte Startzeit',
-            ])
-            ->add('restrictedEndTime', TimeType::class, [
-                'required' => false,
-                'label' => 'Eingeschränkte Endzeit',
-            ])
-            ->add('targetWorkingPresent', CheckboxType::class, [
-                'required' => false,
-                'label' => 'Fest angestellt',
-                'attr' => ['id' => 'targetWorkingPresent'],
+            ->add('configuredWorktimes', CollectionType::class, [
+                'label' => false,
+                'entry_type' => ConfiguredWorktimeType::class,
+                'allow_add' => true,
+                'prototype' => true,
+                'entry_options' => ['label' => false],
+                'prototype_data' => new ConfiguredWorktime(),
             ]);
-        $builder->add('targetWorkingHours', NumberType::class, [
-            'required' => false,
-            'label' => 'Wochenarbeitszeit',
-            'attr' => ['id' => 'targetWorkingHours', 'style' => 'display: none;'],
-            'label_attr' => ['id' => 'targetWorkingHoursLabel', 'style' => 'display: none;'],
-        ]);
-        $builder->add('targetWorkingTimeBegin', TimeType::class, [
-            'required' => false,
-            'label' => 'Arbeitsbeginn',
-            'attr' => ['id' => 'targetWorkingTimeBegin', 'style' => 'display: none;'],
-            'label_attr' => ['id' => 'targetWorkingTimeBeginLabel', 'style' => 'display: none;'],
-        ]);
-        $builder->add('targetWorkingTimeEnd', TimeType::class, [
-            'required' => false,
-            'label' => 'Arbeitsende',
-            'attr' => ['id' => 'targetWorkingTimeEnd', 'style' => 'display: none;'],
-            'label_attr' => ['id' => 'targetWorkingTimeEndLabel', 'style' => 'display: none;'],
-        ]);
         $builder->add('submit', SubmitType::class, ['label' => 'Speichern']);
     }
 
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => Employee::class,
+            'data_class' => Employee::class
         ]);
     }
 }

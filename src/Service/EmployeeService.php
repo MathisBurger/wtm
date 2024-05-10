@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\ConfiguredWorktime;
 use App\Entity\Employee;
 use App\Exception\EmployeeException;
 use App\Repository\EmployeeRepository;
@@ -34,20 +35,19 @@ class EmployeeService
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var Employee $employee */
                 $employee = $form->getData();
-                if ($employee->isTargetWorkingPresent()) {
-                    if (
-                        $employee->getTargetWorkingHours() === null
-                        || $employee->getTargetWorkingTimeBegin() === null
-                        || $employee->getTargetWorkingTimeEnd() === null
-                    ) {
-                        throw new Exception("Bitte geben sie in diesem Fall alle Werte an");
-                    }
-                }
                 $employee->setUsername(strtolower($employee->getUsername()));
                 $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
                 if ($exists) {
                     throw new EmployeeException("Dieser Mitarbeiter existiert bereits");
                 }
+
+                $this->entityManager->persist($employee);
+                /** @var ConfiguredWorktime $worktime */
+                foreach ($employee->getConfiguredWorktimes()->toArray() as $worktime) {
+                    $worktime->setEmployee($employee);
+                    $this->entityManager->persist($worktime);
+                }
+                $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
                 $this->entityManager->persist($employee);
                 $this->entityManager->flush();
                 return $employee;
@@ -70,27 +70,21 @@ class EmployeeService
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var Employee $employee */
                 $employee = $form->getData();
-                if ($employee->isTargetWorkingPresent()) {
-                    if (
-                        $employee->getTargetWorkingHours() === null
-                        || $employee->getTargetWorkingTimeBegin() === null
-                        || $employee->getTargetWorkingTimeEnd() === null
-                    ) {
-                        throw new Exception("Bitte geben sie in diesem Fall alle Werte an");
-                    }
-                }
                 $employee->setUsername(strtolower($employee->getUsername()));
                 $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
                 if (!$exists) {
                     throw new EmployeeException("Dieser Mitarbeiter existiert nicht");
                 }
+                $exists->setConfiguredWorktimes($employee->getConfiguredWorktimes());
                 $exists->setUsername($employee->getUsername());
                 $exists->setFirstName($employee->getFirstName());
                 $exists->setLastName($employee->getLastName());
-                $exists->setTargetWorkingPresent($employee->isTargetWorkingPresent());
-                $exists->setTargetWorkingHours($employee->getTargetWorkingHours());
-                $exists->setTargetWorkingTimeBegin($employee->getTargetWorkingTimeBegin());
-                $exists->setTargetWorkingTimeEnd($employee->getTargetWorkingTimeEnd());
+                /** @var ConfiguredWorktime $worktime */
+                foreach ($exists->getConfiguredWorktimes()->toArray() as $worktime) {
+                    $worktime->setEmployee($employee);
+                    $this->entityManager->persist($worktime);
+                }
+                $exists->setTargetWorkingHours(self::sumUpWeeklyWorktime($exists));
                 $this->entityManager->persist($exists);
                 $this->entityManager->flush();
                 return $employee;
@@ -115,5 +109,22 @@ class EmployeeService
         }
         $this->entityManager->remove($employee);
         $this->entityManager->flush();
+    }
+
+    /**
+     * Sums up the weekly worktime of an employee
+     *
+     * @param Employee $employee The employee
+     * @return float The sum
+     */
+    private static function sumUpWeeklyWorktime(Employee $employee): float
+    {
+        $sum = 0;
+        /** @var ConfiguredWorktime $worktime */
+        foreach ($employee->getConfiguredWorktimes()->toArray() as $worktime) {
+            $interval = $worktime->getRegularEndTime()->diff($worktime->getRegularStartTime());
+            $sum += $interval->h + ($interval->i / 60);
+        }
+        return $sum;
     }
 }

@@ -1,5 +1,6 @@
 {% extends 'navbarBase.html.twig' %}
 
+
 {% block body %}
     <div class="container mt-5">
         <h1>{{ title }}</h1>
@@ -8,42 +9,81 @@
                 {{ error }}
             </div>
         {% endif %}
-        {{ form(form) }}
+        {{ form_start(form) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.firstName) }}
+                {{ form_row(form.lastName) }}
+                {{ form_row(form.holidays) }}
+                <h6>Arbeitszeiten</h6>
+                <ul class="tags"
+                    data-index="{{ form.configuredWorktimes|length > 0 ? form.configuredWorktimes|last.vars.name + 1 : 0 }}"
+                    data-prototype="{{ form_widget(form.configuredWorktimes.vars.prototype)|e('html_attr') }}"
+                >
+                    {% for row in form.configuredWorktimes %}
+                        <li style="list-style-type: none;">
+                            {{ form_row(row) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+        <button type="button" class="btn btn-sm btn-primary add_item_link" data-collection-holder-class="tags" style="margin-bottom: 2em">Arbeitszeit hinzufügen</button>
+        {{ form_end(form) }}
         {% if isUpdate %}
             <a href="{{ path("employee_delete", {id: employee.getId()}) }}" class="btn btn-sm btn-danger">Löschen</a>
         {% endif %}
     </div>
     <script>
+        function addFormToCollection(e) {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
-        const logic = (e) => {
-            if (e.target.checked) {
-                document.getElementById('targetWorkingHoursLabel').style = "display: block";
-                document.getElementById('employee_targetWorkingHours').style = "display: block";
-                document.getElementById('employee_targetWorkingHours').required = true;
-                document.getElementById('targetWorkingTimeBeginLabel').style = "display: block";
-                document.getElementById('employee_targetWorkingTimeBegin').style = "display: block";
-                document.getElementById('employee_targetWorkingTimeBegin').required = true;
-                document.getElementById('targetWorkingTimeEndLabel').style = "display: block";
-                document.getElementById('employee_targetWorkingTimeEnd').style = "display: block";
-                document.getElementById('employee_targetWorkingTimeEnd').required = true;
-            } else {
-                document.getElementById('targetWorkingHoursLabel').style = "display: none";
-                document.getElementById('employee_targetWorkingHours').style = "display: none";
-                document.getElementById('employee_targetWorkingHours').required = false;
-                document.getElementById('targetWorkingTimeBeginLabel').style = "display: none";
-                document.getElementById('employee_targetWorkingTimeBegin').style = "display: none";
-                document.getElementById('employee_targetWorkingTimeBegin').required = false;
-                document.getElementById('targetWorkingTimeEndLabel').style = "display: none";
-                document.getElementById('employee_targetWorkingTimeEnd').style = "display: none";
-                document.getElementById('employee_targetWorkingTimeEnd').required = false;
+            const item = document.createElement('li');
+            item.style = "list-style-type: none;";
+            const fieldset = document.createElement('fieldset');
+            fieldset.innerHTML = collectionHolder
+                .dataset
+                .prototype
+                .replace(
+                    /__name__/g,
+                    collectionHolder.dataset.index
+                );
+            item.append(fieldset);
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index++;
+            document
+                .querySelectorAll('ul.tags li')
+                .forEach((tag) => {
+                    addTagFormDeleteLink(tag)
+                })
+        }
+        function addTagFormDeleteLink(item) {
+            const div = document.createElement('div');
+            div.className = "col-md-2";
+            div.style = "display:flex; align-items: flex-end; justify-content: flex-start";
+            const removeFormButton = document.createElement('button');
+            removeFormButton.innerText = 'Löschen';
+            removeFormButton.className = "btn btn-sm btn-danger"
+
+            div.append(removeFormButton);
+            if (item.children[0].children[0].children.length === 5) {
+                item.children[0].children[0].append(div);
             }
-        };
-        document.getElementById('employee_targetWorkingPresent').addEventListener('change', logic);
-        if (document.getElementById('employee_targetWorkingPresent').checked) {
-            logic({target: {checked: true}});
+
+
+            removeFormButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                // remove the li for the tag form
+                item.remove();
+            });
         }
-        if (window.location.href.indexOf("/update/") > -1) {
-            document.getElementById("employee_username").disabled = true;
-        }
+        document
+            .querySelectorAll('.add_item_link')
+            .forEach(btn => {
+                btn.addEventListener("click", addFormToCollection)
+            });
+        document
+            .querySelectorAll('ul.tags li')
+            .forEach((tag) => {
+                addTagFormDeleteLink(tag)
+            })
     </script>
 {% endblock %}

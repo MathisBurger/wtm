@@ -44,40 +44,10 @@ class Employee extends AbstractEntity
     private ?float $targetWorkingHours = null;
 
     /**
-     * Target working time begin
-     */
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $targetWorkingTimeBegin = null;
-
-    /**
-     * Target working time end
-     */
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $targetWorkingTimeEnd = null;
-
-    /**
-     * If the user has target working enabled
-     */
-    #[ORM\Column]
-    private ?bool $targetWorkingPresent = null;
-
-    /**
      * The amount of holidays the user has
      */
     #[ORM\Column(options: ["default" => 0])]
     private ?int $holidays = null;
-
-    /**
-     * Restricted start time for check in and check out
-     */
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $restrictedStartTime = null;
-
-    /**
-     * Restricted start time for check in and check out
-     */
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $restrictedEndTime = null;
 
     /**
      * All working periods of the user
@@ -91,9 +61,16 @@ class Employee extends AbstractEntity
     #[ORM\OneToMany(targetEntity: WorktimeSpecialDay::class, mappedBy: 'employee')]
     private Collection $worktimeSpecialDays;
 
+    /**
+     * All configured worktimes
+     */
+    #[ORM\OneToMany(targetEntity: ConfiguredWorktime::class, mappedBy: 'employee', cascade: ["persist"])]
+    private Collection $configuredWorktimes;
+
     public function __construct() {
         $this->periods = new ArrayCollection();
         $this->worktimeSpecialDays = new ArrayCollection();
+        $this->configuredWorktimes = new ArrayCollection();
     }
 
     /**
@@ -189,101 +166,6 @@ class Employee extends AbstractEntity
     }
 
     /**
-     * Gets the target working time begin
-     *
-     * @return float|null target working time begin
-     */
-    public function getTargetWorkingTimeBegin(): ?DateTimeInterface
-    {
-        return $this->targetWorkingTimeBegin;
-    }
-
-    /**
-     * Gets the formatted target working time begin
-     *
-     * @return string|null
-     */
-    public function getTargetWorkingTimeBeginFormatted(): ?string
-    {
-        if ($this->getTargetWorkingTimeBegin()) {
-            return $this->targetWorkingTimeBegin->format("H:i");
-        }
-        return null;
-    }
-
-    /**
-     * Sets the target working time begin
-     *
-     * @param float $targetWorkingTimeBegin The target working time
-     * @return $this The updated entity
-     */
-    public function setTargetWorkingTimeBegin(?DateTimeInterface $targetWorkingTimeBegin): self
-    {
-        $this->targetWorkingTimeBegin = $targetWorkingTimeBegin;
-
-        return $this;
-    }
-
-    /**
-     * Gets the target working time end
-     *
-     * @return float|null The target working time end
-     */
-    public function getTargetWorkingTimeEnd(): ?DateTimeInterface
-    {
-        return $this->targetWorkingTimeEnd;
-    }
-
-    /**
-     * Gets the formatted target working time end
-     *
-     * @return string|null
-     */
-    public function getTargetWorkingTimeEndFormatted(): ?string
-    {
-        if ($this->getTargetWorkingTimeEnd()) {
-            return $this->targetWorkingTimeEnd->format("H:i");
-        }
-        return null;
-    }
-
-    /**
-     * Sets the target working time end
-     *
-     * @param float $targetWorkingTimeEnd The target working end
-     * @return $this The updated entity
-     */
-    public function setTargetWorkingTimeEnd(?DateTimeInterface $targetWorkingTimeEnd): self
-    {
-        $this->targetWorkingTimeEnd = $targetWorkingTimeEnd;
-
-        return $this;
-    }
-
-    /**
-     * Checks if target working time is enabled
-     *
-     * @return bool|null If enabled
-     */
-    public function isTargetWorkingPresent(): ?bool
-    {
-        return $this->targetWorkingPresent;
-    }
-
-    /**
-     * Sets if the target working time
-     *
-     * @param bool $targetWorkingPresent The status
-     * @return $this The updated entity
-     */
-    public function setTargetWorkingPresent(bool $targetWorkingPresent): self
-    {
-        $this->targetWorkingPresent = $targetWorkingPresent;
-
-        return $this;
-    }
-
-    /**
      * Gets all periods
      *
      * @return Collection<WorktimePeriod> All periods
@@ -341,74 +223,6 @@ class Employee extends AbstractEntity
     }
 
     /**
-     * Gets the restricted start time
-     *
-     * @return DateTimeInterface|null The restricted start time
-     */
-    public function getRestrictedStartTime(): ?DateTimeInterface
-    {
-        return $this->restrictedStartTime;
-    }
-
-    /**
-     * Gets the restricted start time string
-     *
-     * @return string|null The string
-     */
-    public function getRestrictedStartTimeString(): ?string
-    {
-        if ($this->getRestrictedStartTime()) {
-            return $this->getRestrictedStartTime()->format("H:i");
-        }
-        return null;
-    }
-
-    /**
-     * Sets the restricted start time
-     *
-     * @param DateTimeInterface|null $restrictedStartTime The new restricted start time
-     * @return $this The updated entity
-     */
-    public function setRestrictedStartTime(?DateTimeInterface $restrictedStartTime): self {
-        $this->restrictedStartTime = $restrictedStartTime;
-        return $this;
-    }
-
-    /**
-     * Gets the restricted end time
-     *
-     * @return DateTimeInterface|null The restricted end time
-     */
-    public function getRestrictedEndTime(): ?DateTimeInterface
-    {
-        return $this->restrictedEndTime;
-    }
-
-    /**
-     * Gets the restricted end time string
-     *
-     * @return string|null The string
-     */
-    public function getRestrictedEndTimeString(): ?string
-    {
-        if ($this->getRestrictedEndTime()) {
-            return $this->getRestrictedEndTime()->format("H:i");
-        }
-        return null;
-    }
-
-    /**
-     * Sets the restricted end time
-     *
-     * @param DateTimeInterface|null $restrictedEndTime The new restricted end time
-     * @return $this The updated entity
-     */
-    public function setRestrictedEndTime(?DateTimeInterface $restrictedEndTime): self {
-        $this->restrictedEndTime = $restrictedEndTime;
-        return $this;
-    }
-
-    /**
      * Gets all worktime special days
      *
      * @return Collection The collection
@@ -460,5 +274,53 @@ class Employee extends AbstractEntity
             return $this->getHolidays() - $existingHolidays->count();
         }
         return null;
+    }
+
+    /**
+     * Gets the configured worktimes
+     *
+     * @return Collection The worktimes
+     */
+    public function getConfiguredWorktimes(): Collection
+    {
+        return $this->configuredWorktimes;
+    }
+
+    /**
+     * Sets the configured worktimes
+     *
+     * @param Collection $worktimes The worktimes
+     * @return $this The updated entity
+     */
+    public function setConfiguredWorktimes(Collection $worktimes): self
+    {
+        $this->configuredWorktimes = $worktimes;
+        return $this;
+    }
+
+    /**
+     * Adds a new configured worktime
+     *
+     * @param ConfiguredWorktime $configuredWorktime The new time
+     * @return $this The updated entity
+     */
+    public function addConfiguredWorktime(ConfiguredWorktime $configuredWorktime): self
+    {
+        $this->configuredWorktimes->add($configuredWorktime);
+        return $this;
+    }
+
+    /**
+     * Removes a configured worktime
+     *
+     * @param ConfiguredWorktime $configuredWorktime The removed worktime
+     * @return $this The updated entity
+     */
+    public function removeConfiguredWorktime(ConfiguredWorktime $configuredWorktime): self
+    {
+        if ($this->configuredWorktimes->contains($configuredWorktime)) {
+            $this->configuredWorktimes->removeElement($configuredWorktime);
+        }
+        return $this;
     }
 }
