@@ -13,7 +13,6 @@
                 <th scope="col">Vorname</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">Wochen-Soll (Stunden)</th>
-                <th scope="col">Regulärzeiten</th>
                 <th scope="col">Aktionen</th>
             </tr>
             </thead>
@@ -25,7 +24,6 @@
                     <td>{{ employee.getFirstName() }}</td>
                     <td>{{ employee.getLastName() }}</td>
                     <td>{{ employee.getTargetWorkingHours() }}</td>
-                    <td>{{ employee.getTargetWorkingTimeBeginFormatted() }} - {{ employee.getTargetWorkingTimeBeginFormatted() }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="{{ path("employee_details", {id: employee.getId()}) }}" class="btn btn-sm btn-primary">Details</a>

@@ -1,0 +1,100 @@
+<div class="row">
+    {% if this.dayExists("MONDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Montag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("MONDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("TUESDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Dienstag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("TUESDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("WEDNESDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Mittwoch</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("WEDNESDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("THURSDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Donnerstag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("THURSDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("FRIDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Freitag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("FRIDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("SATURDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Samstag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("SATURDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if this.dayExists("SUNDAY") %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-content" style="padding: 10px">
+                    <b>Sonntag</b>
+                    <ul>
+                        {% for element in this.getWorktimesForDay("SUNDAY") %}
+                            <li>{{ this.getWorktimeString(element) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

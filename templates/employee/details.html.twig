@@ -78,18 +78,12 @@
                         {% if employee.getHolidaysLeft() %}
                             <li><b>Übrige Urlaubstage:</b> {{ employee.getHolidaysLeft() }}</li>
                         {% endif %}
-                        {% if employee.getRestrictedStartTimeString() %}
-                            <li><b>Eingeschränke Startzeit:</b> {{ employee.getRestrictedStartTimeString() }} Uhr</li>
-                        {% endif %}
-                        {% if employee.getRestrictedEndTimeString() %}
-                            <li><b>Eingeschränke Endzeit:</b> {{ employee.getRestrictedEndTimeString() }} Uhr</li>
-                        {% endif %}
-                        {% if employee.isTargetWorkingPresent() %}
+                        {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
                             <li><b>Sollstunden (Woche):</b> {{ employee.getTargetWorkingHours() }}</li>
-                            <li><b>Arbeitsbeginn:</b> {{ employee.getTargetWorkingTimeBeginFormatted() }} Uhr</li>
-                            <li><b>Arbeitsende:</b> {{ employee.getTargetWorkingTimeEndFormatted() }} Uhr</li>
                         {% endif %}
                     </ul>
+                    <h5>Arbeitszeiten:</h5>
+                    {{ component('WorkTimePlan', {worktimes: employee.getConfiguredWorktimes()}) }}
                 </div>
                 <div class="col col-md-6">
                     <h3>Arbeitszeiten (aktueller Monat)</h3>
