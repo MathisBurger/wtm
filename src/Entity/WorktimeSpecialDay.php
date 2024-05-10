@@ -42,7 +42,8 @@ class WorktimeSpecialDay extends AbstractEntity
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
-    #[ORM\ManyToOne(targetEntity: Employee::class,inversedBy: "worktimeSpecialDays")]
+    #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: "worktimeSpecialDays")]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'cascade')]
     private ?Employee $employee = null;
 
     /**

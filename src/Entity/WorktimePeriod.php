@@ -31,6 +31,7 @@ class WorktimePeriod extends AbstractEntity
      * The employee that is refered to this period
      */
     #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'periods')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'cascade')]
     private ?Employee $employee = null;
 
     /**

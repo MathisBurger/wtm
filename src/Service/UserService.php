@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
@@ -26,10 +27,9 @@ class UserService
     /**
      * Creates the admin user
      *
-     * @param string $username The username of the user
-     * @param string $password The password of the user
-     * @param string $repeatPassword The repeated password of the user
+     * @param FormInterface $form
      * @return void
+     * @throws FormException
      */
     public function createAdminUser(FormInterface $form)
     {

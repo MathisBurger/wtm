@@ -77,7 +77,8 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => null,
-                'title' => 'Mitarbeiter anlegen'
+                'title' => 'Mitarbeiter anlegen',
+                'isUpdate' => false
             ]);
         }
         try {
@@ -86,7 +87,8 @@ class EmployeeController extends AbstractController
                 return $this->render('employee/createUpdate.html.twig', [
                     'form' => $form,
                     'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
-                    'title' => 'Mitarbeiter anlegen'
+                    'title' => 'Mitarbeiter anlegen',
+                    'isUpdate' => false
                 ]);
             }
             return $this->redirectToRoute('employee_details', ['id' => $result->getId()]);
@@ -94,7 +96,8 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => $e->getMessage(),
-                'title' => 'Mitarbeiter anlegen'
+                'title' => 'Mitarbeiter anlegen',
+                'isUpdate' => false
             ]);
         }
     }
@@ -113,7 +116,9 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => null,
-                'title' => 'Mitarbeiter bearbeiten'
+                'title' => 'Mitarbeiter bearbeiten',
+                'isUpdate' => true,
+                'employee' => $exists
             ]);
         }
         try {
@@ -122,7 +127,9 @@ class EmployeeController extends AbstractController
                 return $this->render('employee/createUpdate.html.twig', [
                     'form' => $form,
                     'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
-                    'title' => 'Mitarbeiter bearbeiten'
+                    'title' => 'Mitarbeiter bearbeiten',
+                    'isUpdate' => true,
+                    'employee' => $exists
                 ]);
             }
             return $this->redirectToRoute('employee_details', ['id' => $result->getId()]);
@@ -130,9 +137,22 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => $e->getMessage(),
-                'title' => 'Mitarbeiter bearbeiten'
+                'title' => 'Mitarbeiter bearbeiten',
+                'isUpdate' => true,
+                'employee' => $exists
             ]);
         }
+    }
+
+    /**
+     * Deletes an employee
+     */
+    #[Route('/employees/delete/{id}', name: 'employee_delete', methods: ['GET'])]
+    public function deleteEmployee(int $id): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->employeeService->deleteEmployee($id);
+        return $this->redirectToRoute('employee_list');
     }
 
     #[Route('/employees', name: 'employee_list')]

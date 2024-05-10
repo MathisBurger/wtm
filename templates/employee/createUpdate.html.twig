@@ -9,6 +9,9 @@
             </div>
         {% endif %}
         {{ form(form) }}
+        {% if isUpdate %}
+            <a href="{{ path("employee_delete", {id: employee.getId()}) }}" class="btn btn-sm btn-danger">Löschen</a>
+        {% endif %}
     </div>
     <script>
 

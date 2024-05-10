@@ -9,6 +9,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Service that handles employee actions
@@ -98,5 +99,20 @@ class EmployeeService
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Deletes an existing employee from the database
+     *
+     * @param int $id The ID of the employee
+     * @return void
+     */
+    public function deleteEmployee(int $id): void
+    {
+        $employee = $this->employeeRepository->find($id);
+        if (!$employee) {
+            throw new NotFoundHttpException("Employee not found");
+        }
+        $this->entityManager->remove($employee);
     }
 }
