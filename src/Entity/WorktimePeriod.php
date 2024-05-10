@@ -160,9 +160,9 @@ class WorktimePeriod extends AbstractEntity
      *
      * @return string|null The device
      */
-    public function getLoginDevice(): ?string
+    public function getLoginDevice(): string
     {
-        return $this->loginDevice;
+        return $this->loginDevice ?? "-";
     }
 
     /**
@@ -182,9 +182,9 @@ class WorktimePeriod extends AbstractEntity
      *
      * @return string|null The device
      */
-    public function getLogoutDevice(): ?string
+    public function getLogoutDevice(): string
     {
-        return $this->logoutDevice;
+        return $this->logoutDevice ?? "-";
     }
 
     /**
