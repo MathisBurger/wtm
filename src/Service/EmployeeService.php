@@ -47,7 +47,12 @@ class EmployeeService
                     $worktime->setEmployee($employee);
                     $this->entityManager->persist($worktime);
                 }
-                $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
+                if (!$employee->isTimeEmployed()) {
+                    $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
+                } else {
+                    $employee->setTargetWorkingHours(null);
+                }
+
                 $this->entityManager->persist($employee);
                 $this->entityManager->flush();
                 return $employee;
@@ -76,15 +81,19 @@ class EmployeeService
                     throw new EmployeeException("Dieser Mitarbeiter existiert nicht");
                 }
                 $exists->setConfiguredWorktimes($employee->getConfiguredWorktimes());
-                $exists->setUsername($employee->getUsername());
                 $exists->setFirstName($employee->getFirstName());
                 $exists->setLastName($employee->getLastName());
+                $exists->setIsTimeEmployed($employee->isTimeEmployed());
                 /** @var ConfiguredWorktime $worktime */
                 foreach ($exists->getConfiguredWorktimes()->toArray() as $worktime) {
                     $worktime->setEmployee($employee);
                     $this->entityManager->persist($worktime);
                 }
-                $exists->setTargetWorkingHours(self::sumUpWeeklyWorktime($exists));
+                if (!$exists->isTimeEmployed()) {
+                    $exists->setTargetWorkingHours(self::sumUpWeeklyWorktime($exists));
+                } else {
+                    $exists->setTargetWorkingHours(null);
+                }
                 $this->entityManager->persist($exists);
                 $this->entityManager->flush();
                 return $employee;

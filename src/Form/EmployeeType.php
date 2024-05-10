@@ -28,7 +28,10 @@ class EmployeeType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'required' => true,
-                'attr' => ['id' => 'username'],
+                'attr' => [
+                    'id' => 'username',
+                    'disabled' => $options['data']->getUsername() !== null
+                ],
                 'label' => 'Benutzername',
             ])
             ->add('firstName', TextType::class, [
@@ -42,6 +45,10 @@ class EmployeeType extends AbstractType
             ->add('holidays', NumberType::class, [
                 'required' => true,
                 'label' => 'Urlaubstage (Jahr)',
+            ])
+            ->add('isTimeEmployed', CheckboxType::class, [
+                'required' => false,
+                'label' => 'ist Zeitangestellter',
             ])
             ->add('configuredWorktimes', CollectionType::class, [
                 'label' => false,

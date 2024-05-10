@@ -14,6 +14,7 @@
                 {{ form_row(form.firstName) }}
                 {{ form_row(form.lastName) }}
                 {{ form_row(form.holidays) }}
+                {{ form_row(form.isTimeEmployed) }}
                 <h6>Arbeitszeiten</h6>
                 <ul class="tags"
                     data-index="{{ form.configuredWorktimes|length > 0 ? form.configuredWorktimes|last.vars.name + 1 : 0 }}"

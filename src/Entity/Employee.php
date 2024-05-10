@@ -50,6 +50,12 @@ class Employee extends AbstractEntity
     private ?int $holidays = null;
 
     /**
+     * If the employee is time employed
+     */
+    #[ORM\Column(nullable: false, options: ["default" => false])]
+    private bool $isTimeEmployed = false;
+
+    /**
      * All working periods of the user
      */
     #[ORM\OneToMany(targetEntity: WorktimePeriod::class, mappedBy: 'employee')]
@@ -162,6 +168,28 @@ class Employee extends AbstractEntity
     {
         $this->targetWorkingHours = $targetWorkingHours;
 
+        return $this;
+    }
+
+    /**
+     * Gets is time employed
+     *
+     * @return bool is time employed
+     */
+    public function isTimeEmployed(): bool
+    {
+        return $this->isTimeEmployed;
+    }
+
+    /**
+     * Sets is time employed
+     *
+     * @param bool $isTimeEmployed Is time employed
+     * @return $this The updated entity
+     */
+    public function setIsTimeEmployed(bool $isTimeEmployed): self
+    {
+        $this->isTimeEmployed = $isTimeEmployed;
         return $this;
     }
 
