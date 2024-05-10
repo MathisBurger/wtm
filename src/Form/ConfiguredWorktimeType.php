@@ -40,12 +40,12 @@ class ConfiguredWorktimeType extends AbstractType
             ])
             ->add('restrictedStartTime', TimeType::class, [
                 'label' => 'eingeschränkte Startzeit',
-                'row_attr' => ['class' => 'col-md-2'],
+                'row_attr' => ['class' => 'col-md-2 restrictedTime'],
                 'required' => false
             ])
             ->add('restrictedEndTime', TimeType::class, [
                 'label' => 'eingeschränkte Endzeit',
-                'row_attr' => ['class' => 'col-md-2'],
+                'row_attr' => ['class' => 'col-md-2 restrictedTime'],
                 'required' => false
             ]);
     }

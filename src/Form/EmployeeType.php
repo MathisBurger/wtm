@@ -49,6 +49,7 @@ class EmployeeType extends AbstractType
             ->add('isTimeEmployed', CheckboxType::class, [
                 'required' => false,
                 'label' => 'ist Zeitangestellter',
+                'attr' => ['class' => 'isTimeEmployed']
             ])
             ->add('configuredWorktimes', CollectionType::class, [
                 'label' => false,

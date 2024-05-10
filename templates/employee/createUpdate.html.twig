@@ -54,7 +54,8 @@
                 .querySelectorAll('ul.tags li')
                 .forEach((tag) => {
                     addTagFormDeleteLink(tag)
-                })
+                });
+            handleDisable();
         }
         function addTagFormDeleteLink(item) {
             const div = document.createElement('div');
@@ -76,15 +77,31 @@
                 item.remove();
             });
         }
+        function handleDisable() {
+            for (let el of document.getElementsByClassName("restrictedTime")) {
+                if (!document.getElementsByClassName("isTimeEmployed")[0].checked) {
+                    el.children[1].disabled = true;
+                } else {
+                    el.children[1].disabled = false;
+                }
+            }
+        }
+
         document
             .querySelectorAll('.add_item_link')
             .forEach(btn => {
                 btn.addEventListener("click", addFormToCollection)
             });
+
         document
             .querySelectorAll('ul.tags li')
             .forEach((tag) => {
                 addTagFormDeleteLink(tag)
             })
+        handleDisable();
+        document.getElementsByClassName("isTimeEmployed")[0].addEventListener('change', () => {
+            handleDisable();
+        })
+
     </script>
 {% endblock %}
