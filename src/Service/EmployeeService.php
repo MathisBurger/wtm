@@ -114,5 +114,6 @@ class EmployeeService
             throw new NotFoundHttpException("Employee not found");
         }
         $this->entityManager->remove($employee);
+        $this->entityManager->flush();
     }
 }
