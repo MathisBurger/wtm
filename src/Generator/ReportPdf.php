@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Generator;
+
+use TCPDF;
+
+class ReportPdf extends TCPDF
+{
+    private string $period = '';
+
+    public function Header() {
+        // Logo
+        $image_file = 'icon.png';
+        $this->Image($image_file, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // Set font
+        $this->SetFont('helvetica', 'B', 20);
+        // Title
+        $this->Cell(0, 15, 'Monatsbericht (' . $this->period . ')', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+    }
+
+    public function handleCreation(string $html, string $period): void
+    {
+        $this->period = $period;
+        $this->SetCreator(PDF_CREATOR);
+        $this->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+        $this->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', 30));
+        $this->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $this->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $this->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $this->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $this->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $this->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $this->SetFont('dejavusans', '', 10);
+        $this->AddPage();
+        $this->writeHTML($html, true, false, true, false, '');
+    }
+}

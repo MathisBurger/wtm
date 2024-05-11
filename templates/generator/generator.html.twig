@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for employee in employees %}
+        <h1>{{ periods[employee][0]["fullName"] }}</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Startzeit</th>
+                    <th>Endzeit</th>
+                    <th>Notizen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in periods[employee] %}
+                    <tr>
+                        <td>{{ entry["date"] }}</td>
+                        <td>{{ entry["startTime"] }}</td>
+                        <td>{{ entry["endTime"] }}</td>
+                        <td>{{ entry["notes"] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+{% endblock %}

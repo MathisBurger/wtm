@@ -49,7 +49,7 @@ class WorktimePeriod extends AbstractEntity
     /**
      * Gets the start time of period
      *
-     * @return float|null The start time
+     * @return DateTimeInterface|null The start time
      */
     public function getStartTime(): ?DateTimeInterface
     {
