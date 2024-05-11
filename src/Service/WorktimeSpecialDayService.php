@@ -71,6 +71,7 @@ class WorktimeSpecialDayService
             }
             $this->entityManager->persist($employee);
             $this->entityManager->flush();
+            return;
         }
         if (
             $formData['reason'] === WorktimeSpecialDay::REASON_HOLIDAY
