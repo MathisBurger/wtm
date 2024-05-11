@@ -5,7 +5,7 @@
     <div class="container mt-5">
         <h1>Software Update: {{ tagName }}</h1>
         <p>
-            {{ content }}
+            {{ content | raw }}
         </p>
         <a class="btn btn-danger" href="{{ path("software_update_perform") }}">Software aktualisieren</a>
     </div>
