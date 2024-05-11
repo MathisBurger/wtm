@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
+ * @deprecated This command should not be used anymore, because it
+ * uses an old version of the database schema and the functionality is implemented
+ * by the web-interface already
+ *
  * The pre init command for first data collection to add all users
  */
 #[AsCommand(name: 'worktime:employee:add')]
@@ -26,10 +30,11 @@ class PreinitEmployeeCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
     }
+
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -47,9 +52,6 @@ class PreinitEmployeeCommand extends Command
         $employee->setFirstName($firstName);
         $employee->setLastName($lastName);
         $employee->setTargetWorkingHours(0.0);
-        $employee->setTargetWorkingPresent(false);
-        $employee->setTargetWorkingTimeBegin(null);
-        $employee->setTargetWorkingTimeEnd(null);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
         $io->success("Employee added successfully");

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\WorktimePeriodRepository;
 use App\Service\GeneratorService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,6 +38,7 @@ class ReportController extends AbstractController
 
     /**
      * Generates a report
+     * @throws Exception
      */
     #[Route('/api/report/{period}', name: 'report_generate')]
     public function generateReport(string $period)

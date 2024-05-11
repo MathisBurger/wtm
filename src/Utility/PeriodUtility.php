@@ -2,6 +2,10 @@
 
 namespace App\Utility;
 
+use App\Entity\Employee;
+use App\Entity\WorktimePeriod;
+use DateTime;
+
 /**
  * Utility handling period
  */

@@ -19,31 +19,31 @@ class WorktimeSpecialDaySkeletonType extends AbstractType
         $builder
             ->add('reason', ChoiceType::class, [
                 'choices' => [
-                    'Urlaub' => WorktimeSpecialDay::REASON_HOLIDAY,
-                    'Krankheit' => WorktimeSpecialDay::REASON_ILLNESS
+                    'form.specialDay.reasonOptions.holiday' => WorktimeSpecialDay::REASON_HOLIDAY,
+                    'form.specialDay.reasonOptions.illness' => WorktimeSpecialDay::REASON_ILLNESS
                 ],
                 'required' => true,
-                'label' => 'Grund'
+                'label' => 'form.specialDay.label.reason'
             ])
             ->add('startDate', DateType::class, [
                 'attr' => ['id' => 'startDate'],
-                'label' => 'Startdatum',
+                'label' => 'form.specialDay.label.startDate',
                 'required' => true,
             ])
             ->add('isMuliDay', CheckboxType::class, [
-                'label' => 'Mehrtägig',
+                'label' => 'form.specialDay.label.isMultiDay',
                 'required' => false,
             ])
             ->add('endDate', DateType::class, [
                 'attr' => ['id' => 'endDate'],
                 'label_attr' => ['id' => 'endDateLabel'],
-                'label' => 'Enddatum'
+                'label' => 'form.specialDay.label.endDate'
             ])
             ->add('notes', TextareaType::class, [
-                'label' => 'Notes',
+                'label' => 'form.specialDay.label.notes',
                 'required' => false,
             ])
-            ->add('submit', SubmitType::class, ['label' => 'Anlegen']);
+            ->add('submit', SubmitType::class, ['label' => 'form.specialDay.label.submit']);
     }
 
 }

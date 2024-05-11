@@ -10,6 +10,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service handling for check in and check out
@@ -49,7 +50,8 @@ class CheckInOutService
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly EmployeeRepository $employeeRepository
+        private readonly EmployeeRepository $employeeRepository,
+        private readonly TranslatorInterface $translator
     ){}
 
     /**
@@ -120,7 +122,7 @@ class CheckInOutService
     public function getRequiredAction(string $username): string {
         $employee = $this->employeeRepository->findOneBy(['username' => $username]);
         if ($employee === null) {
-            return self::USER_DOES_NOT_EXIST;
+            return $this->translator->trans('messages.unknownUserDesktop');
         }
         /** @var WorktimePeriod|false $currentCheckIn */
         $currentCheckIn = $employee->getPeriods()->last();

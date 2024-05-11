@@ -1,3 +1,116 @@
 specialDay:
   HOLIDAY: Urlaub
   ILLNESS: Krankheit
+messages:
+  unknownUserDesktop: Sie wurden noch nicht im System registriert. Bitte wenden sie sich an den Administrator.
+  cannotProcess: Anfrage konnte nicht verarbeitet werden
+  userDoesNotExist: Der angegebene Nutzer existiert nicht
+  notTimeEmployed: nicht zeitangestellt
+  invalidPeriod: Falsche Periode angegeben
+  userAlreadyExists: Dieser Mitarbeiter existiert bereits
+  rdpNotAllowed: Sie können sich nicht aus dem Homeoffice anmelden.
+  unknownUser: Unbekannter Nutzer
+  softwareAlreadyUpToDate: Die Software ist bereits auf dem neusten Stand.
+  welcomeText: Willkommen in der Arbeitszeitmanagement Software Worktime! Wir wünschen ihnen viel Spaß und frohes Schaffen!
+  checkIn:
+    successful: Check-in erfolgreich
+    alreadyLoggedIn: Sie sind bereits eingeloggt
+    earlyLogin: Der Administrator hat festgelegt, dass sie sich nicht vor ihrer regulären Arbeitszeit einstempeln dürfen.
+  checkOut:
+    successful: CheckOut erfolgreich
+    notLoggedIn: Sie sind nicht eingeloggt
+    earlyLogout: Der Administrator hat festgelegt, dass sie sich nicht vor Ende ihrer regulären Arbeitszeit ausstempeln dürfen.
+
+actions:
+  logout: Abmelden
+  softwareUpdate: Neues Softwareupdate
+  delete: Löschen
+  addWorkTime: Arbeitszeit hinzufügen
+  createSpecialDay: Sondertag anlegen
+  details: Details
+  edit: Bearbeiten
+  open: Öffnen
+  updateSoftware: Software aktualisieren
+
+tab:
+  general: Allgemein
+  holiday: Urlaub
+  illness: Krankheit
+
+title:
+  workTimeManagement: Arbeitszeitmanagement
+  createEmployee: Mitarbeiter anlegen
+  editEmployee: Mitarbeiter bearbeiten
+  employees: Mitarbeiter
+  reports: Monatsberichte
+  holidays: Urlaubstage
+  illnessDays: Krankheitstage
+  generalInformation: Allgemeine Informationen
+  login: Anmelden
+
+table:
+  date: Datum
+  notes: Notizen
+  actions: Aktionen
+  startTime: Start
+  endTime: Ende
+  totalTime: Gesamtzeit
+  loginFrom: Login von
+  logoffFrom: Logout von
+  username: Benutzername
+  firstName: Vorname
+  lastName: Nachname
+  targetTimeWeek: Wochen-Soll (Stunden)
+  timePeriod: Zeitraum
+
+list:
+  holidays: Urlaubstage
+  holidaysLeft: Übrige Urlaubstage
+  targetHours: Sollstunden (Woche)
+  overtimeTransfer: Sollstunden (Übertrag)
+  overtime: Überstunden
+  overtimeTotal: Überstunden (Gesamt)
+  workTimes: Arbeitszeiten (aktueller Monat)
+
+error:
+  invalidForm: Das Formular wurde nicht richtig ausgefüllt.
+  alreadySetUp: Die Anwendung wurde bereits eingerichtet
+  tooFewHolidays: Nicht mehr ausreichend Urlaubstage verfügbar.
+  specialDayDoesNotExist: Der Sondertag existiert nicht.
+
+form:
+  configuredWorktime:
+    dayName:
+      monday: Montag
+      tuesday: Dienstag
+      wednesday: Mittwoch
+      thursday: Donnerstag
+      friday: Freitag
+      saturday: Samstag
+      sunday: Sonntag
+    label:
+      day: Tag
+      regularStartTime: Startzeit
+      regularEndTime: Endzeit
+      restrictedStartTime: Eingeschränkte Startzeit
+      restrictedEndTime: Eingeschränkte Endzeit
+  employee:
+    label:
+      username: Benutzername
+      firstName: Vorname
+      lastName: Nachname
+      holidays: Urlaubstage (Jahr)
+      isTimeEmployed: ist Zeitangestellter
+      submit: Speichern
+      workTimes: Arbeitszeiten
+  specialDay:
+    label:
+      reason: Grund
+      startDate: Startdatum
+      endDate: Enddatum
+      isMultiDay: Mehrtägig
+      notes: Notizen
+      submit: Anlegen
+    reasonOptions:
+      holiday: Urlaub
+      illness: Krankheit

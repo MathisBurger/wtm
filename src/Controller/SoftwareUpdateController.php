@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller for software updates
@@ -19,7 +20,8 @@ class SoftwareUpdateController extends AbstractController
 
     public function __construct(
         private readonly Updater $updater,
-        private readonly KernelInterface $kernel
+        private readonly KernelInterface $kernel,
+        private readonly TranslatorInterface $translator
     ) {}
 
     /**
@@ -28,9 +30,10 @@ class SoftwareUpdateController extends AbstractController
     #[Route('/software/update', name: 'software_update_view')]
     public function updatePage(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$this->updater->getNewUpdateAvailable()) {
             return $this->render('general/message.html.twig', [
-                'message' => 'Software is already up to date',
+                'message' => $this->translator->trans('messages.softwareAlreadyUpToDate'),
                 'messageStatus' => 'alert-success'
             ]);
         }
@@ -49,9 +52,10 @@ class SoftwareUpdateController extends AbstractController
     #[Route('/software/update/perform', name: 'software_update_perform')]
     public function performUpdate(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$this->updater->getNewUpdateAvailable()) {
             return $this->render('general/message.html.twig', [
-                'message' => 'Software is already up to date',
+                'message' => $this->translator->trans('messages.softwareAlreadyUpToDate'),
                 'messageStatus' => 'alert-success'
             ]);
         }
@@ -62,7 +66,6 @@ class SoftwareUpdateController extends AbstractController
         }
         $process = Process::fromShellCommandline('nohup ./updateSoftware.sh ' . $version . '> foo.out 2> foo.err < /dev/null &');
         $process->setWorkingDirectory($this->kernel->getProjectDir());
-        //var_dump($process->getCommandLine());
         $process->run();
         return $this->render('software/perform.html.twig', []);
     }

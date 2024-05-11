@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service that handles employee actions
@@ -20,7 +21,8 @@ class EmployeeService
 
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator
     ){}
 
     /**
@@ -31,36 +33,19 @@ class EmployeeService
      * @throws Exception
      */
     public function createEmployee(FormInterface $form): ?Employee {
-        try {
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var Employee $employee */
-                $employee = $form->getData();
-                $employee->setUsername(strtolower($employee->getUsername()));
-                $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
-                if ($exists) {
-                    throw new EmployeeException("Dieser Mitarbeiter existiert bereits");
-                }
-
-                $this->entityManager->persist($employee);
-                /** @var ConfiguredWorktime $worktime */
-                foreach ($employee->getConfiguredWorktimes()->toArray() as $worktime) {
-                    $worktime->setEmployee($employee);
-                    $this->entityManager->persist($worktime);
-                }
-                if ($employee->isTimeEmployed()) {
-                    $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
-                } else {
-                    $employee->setTargetWorkingHours(null);
-                }
-
-                $this->entityManager->persist($employee);
-                $this->entityManager->flush();
-                return $employee;
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Employee $employee */
+            $employee = $form->getData();
+            $employee->setUsername(strtolower($employee->getUsername()));
+            $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
+            if ($exists) {
+                throw new EmployeeException(
+                    $this->translator->trans('form.userAlreadyExists')
+                );
             }
-            throw new Exception($form->getErrors()[0]->getMessage());
-        } catch (Exception $e) {
-            throw $e;
+            return $this->persistEmployee($employee);
         }
+        throw new Exception($form->getErrors()[0]->getMessage());
     }
 
     /**
@@ -71,37 +56,23 @@ class EmployeeService
      * @throws Exception
      */
     public function updateEmployee(FormInterface $form): ?Employee {
-        try {
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var Employee $employee */
-                $employee = $form->getData();
-                $employee->setUsername(strtolower($employee->getUsername()));
-                $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
-                if (!$exists) {
-                    throw new EmployeeException("Dieser Mitarbeiter existiert nicht");
-                }
-                $exists->setConfiguredWorktimes($employee->getConfiguredWorktimes());
-                $exists->setFirstName($employee->getFirstName());
-                $exists->setLastName($employee->getLastName());
-                $exists->setIsTimeEmployed($employee->isTimeEmployed());
-                /** @var ConfiguredWorktime $worktime */
-                foreach ($exists->getConfiguredWorktimes()->toArray() as $worktime) {
-                    $worktime->setEmployee($employee);
-                    $this->entityManager->persist($worktime);
-                }
-                if ($exists->isTimeEmployed()) {
-                    $exists->setTargetWorkingHours(self::sumUpWeeklyWorktime($exists));
-                } else {
-                    $exists->setTargetWorkingHours(null);
-                }
-                $this->entityManager->persist($exists);
-                $this->entityManager->flush();
-                return $employee;
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Employee $employee */
+            $employee = $form->getData();
+            $employee->setUsername(strtolower($employee->getUsername()));
+            $exists = $this->employeeRepository->findOneBy(['username' => $employee->getUsername()]);
+            if (!$exists) {
+                throw new EmployeeException(
+                    $this->translator->trans('messages.userDoesNotExist')
+                );
             }
-            throw new Exception($form->getErrors()[0]->getMessage());
-        } catch (Exception $e) {
-            throw $e;
+            $exists->setConfiguredWorktimes($employee->getConfiguredWorktimes());
+            $exists->setFirstName($employee->getFirstName());
+            $exists->setLastName($employee->getLastName());
+            $exists->setIsTimeEmployed($employee->isTimeEmployed());
+            return $this->persistEmployee($employee);
         }
+        throw new Exception($form->getErrors()[0]->getMessage());
     }
 
     /**
@@ -118,6 +89,31 @@ class EmployeeService
         }
         $this->entityManager->remove($employee);
         $this->entityManager->flush();
+    }
+
+    /**
+     * Persists the employee
+     *
+     * @param Employee $employee The employee
+     * @return Employee The updated employee
+     */
+    private function persistEmployee(Employee $employee): Employee
+    {
+        $this->entityManager->persist($employee);
+        /** @var ConfiguredWorktime $worktime */
+        foreach ($employee->getConfiguredWorktimes()->toArray() as $worktime) {
+            $worktime->setEmployee($employee);
+            $this->entityManager->persist($worktime);
+        }
+        if ($employee->isTimeEmployed()) {
+            $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
+        } else {
+            $employee->setTargetWorkingHours(null);
+        }
+
+        $this->entityManager->persist($employee);
+        $this->entityManager->flush();
+        return $employee;
     }
 
     /**

@@ -12,6 +12,7 @@ use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorktimeSpecialDayService
 {
@@ -22,6 +23,7 @@ class WorktimeSpecialDayService
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly WorktimeSpecialDayRepository $worktimeSpecialDayRepository,
+        private readonly TranslatorInterface $translator
     ){
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -38,10 +40,14 @@ class WorktimeSpecialDayService
     {
         $employee = $this->employeeRepository->find($id);
         if (!$employee) {
-            throw new Exception("Der Mitarbeiter existiert nicht.");
+            throw new Exception(
+                $this->translator->trans('messages.userDoesNotExist')
+            );
         }
         if (!$form->isSubmitted() || !$form->isValid()) {
-            throw new Exception("Das Formular ist ungültig");
+            throw new Exception(
+                $this->translator->trans('error.invalidForm')
+            );
         }
         $formData = $form->getData();
         $existingHolidays = $employee->getWorktimeSpecialDays()
@@ -78,7 +84,9 @@ class WorktimeSpecialDayService
             && $formData['startDate']->format("Y") === (new DateTime())->format("Y")
             && $employee->getHolidays() - $existingHolidays->count() <= 0
         ) {
-            throw new Exception("Nicht mehr ausreichend Urlaubstage verfügbar.");
+            throw new Exception(
+                $this->translator->trans('error.tooFewHolidays')
+            );
         }
         $day = new WorktimeSpecialDay();
         $day->setEmployee($employee);
@@ -102,7 +110,9 @@ class WorktimeSpecialDayService
     {
         $day = $this->worktimeSpecialDayRepository->find($id);
         if (!$day) {
-            throw new Exception("Der Sondertag existiert nicht.");
+            throw new Exception(
+                $this->translator->trans('error.specialDayDoesNotExist')
+            );
         }
         $day->getEmployee()->removeWorktimeSpecialDay($day);
         $this->entityManager->persist($day->getEmployee());

@@ -13,8 +13,6 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use TCPDF;
 use Twig\Environment;
@@ -40,7 +38,9 @@ class GeneratorService
     {
         $destructedPeriod = PeriodUtility::getYearAndMonthFromPeriod($period);
         if (count($destructedPeriod) !== 2) {
-            throw new Exception("Falsche Periode angebenen");
+            throw new Exception(
+                $this->translator->trans('messages.invalidPeriod')
+            );
         }
         [$year, $month] = $destructedPeriod;
         [$employees, $stats] = $this->getEmployeesAndStats($year, $month);

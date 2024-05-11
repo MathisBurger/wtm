@@ -15,7 +15,7 @@
                 {{ form_row(form.lastName) }}
                 {{ form_row(form.holidays) }}
                 {{ form_row(form.isTimeEmployed) }}
-                <h6>Arbeitszeiten</h6>
+                <h6>{{ 'form.employee.label.workTimes'|trans }}</h6>
                 <ul class="tags"
                     data-index="{{ form.configuredWorktimes|length > 0 ? form.configuredWorktimes|last.vars.name + 1 : 0 }}"
                     data-prototype="{{ form_widget(form.configuredWorktimes.vars.prototype)|e('html_attr') }}"
@@ -26,10 +26,10 @@
                         </li>
                     {% endfor %}
                 </ul>
-        <button type="button" class="btn btn-sm btn-primary add_item_link" data-collection-holder-class="tags" style="margin-bottom: 2em">Arbeitszeit hinzufügen</button>
+        <button type="button" class="btn btn-sm btn-primary add_item_link" data-collection-holder-class="tags" style="margin-bottom: 2em">{{ 'actions.addWorkTime'|trans }}</button>
         {{ form_end(form) }}
         {% if isUpdate %}
-            <a href="{{ path("employee_delete", {id: employee.getId()}) }}" class="btn btn-sm btn-danger">Löschen</a>
+            <a href="{{ path("employee_delete", {id: employee.getId()}) }}" class="btn btn-sm btn-danger">{{ 'actions.delete'|trans }}</a>
         {% endif %}
     </div>
     <script>

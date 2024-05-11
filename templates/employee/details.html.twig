@@ -4,29 +4,29 @@
     <div class="container mt-5">
         <h1>{{ employee.getFirstName() }} {{ employee.getLastName() }} ({{ employee.getUsername() }})</h1>
         <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
-            Sondertag anlegen
+            {{ 'actions.createSpecialDay'|trans }}
         </a>
         <ul class="nav nav-tabs mt-5">
             <li class="nav-item">
-                <a class="nav-link {{ tab == null ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}">Allgemein</a>
+                <a class="nav-link {{ tab == null ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}">{{ 'tab.general'|trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ tab == "holiday" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=holiday">Urlaub</a>
+                <a class="nav-link {{ tab == "holiday" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=holiday">{{ 'tab.holiday'|trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ tab == "illness" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=illness">Krankheit</a>
+                <a class="nav-link {{ tab == "illness" ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}?tab=illness">{{ 'tab.illness'|trans }}</a>
             </li>
         </ul>
         {% if tab == "holiday" %}
             <div class="mt-2">
-                <h1>Urlaubstage</h1>
+                <h1>{{ 'title.holidays'|trans }}</h1>
                 <table class="table">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Datum</th>
-                        <th scope="col">Notizen</th>
-                        <th scope="col">Aktionen</th>
+                        <th scope="col">{{ 'table.date'|trans }}</th>
+                        <th scope="col">{{ 'table.notes'|trans }}</th>
+                        <th scope="col">{{ 'table.actions'|trans }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -36,7 +36,7 @@
                             <td>{{ holiday.getDateString() }}</td>
                             <td>{{ holiday.getNotes() }}</td>
                             <td>
-                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">Löschen</a>
+                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">{{ 'actions.delete'|trans }}</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -45,14 +45,14 @@
             </div>
         {% elseif tab == "illness" %}
             <div class="mt-2">
-                <h1>Krankheitstage</h1>
+                <h1>{{ 'title.illnessDays'|trans }}</h1>
                 <table class="table">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Datum</th>
-                        <th scope="col">Notizen</th>
-                        <th scope="col">Aktionen</th>
+                        <th scope="col">{{ 'table.date'|trans }}</th>
+                        <th scope="col">{{ 'table.notes'|trans }}</th>
+                        <th scope="col">{{ 'table.actions'|trans }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -62,7 +62,7 @@
                             <td>{{ illnessDay.getDateString() }}</td>
                             <td>{{ illnessDay.getNotes() }}</td>
                             <td>
-                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">Löschen</a>
+                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">{{ 'actions.delete'|trans }}</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -72,34 +72,34 @@
         {% else %}
             <div class="row mt-2">
                 <div class="col-md-6">
-                    <h3>Allgemeine Informationen</h3>
+                    <h3>{{ 'title.generalInformation'|trans }}</h3>
                     <ul>
-                        <li><b>Urlaubstage:</b> {{ employee.getHolidays() }}</li>
+                        <li><b>{{ 'list.holidays'|trans }}:</b> {{ employee.getHolidays() }}</li>
                         {% if employee.getHolidaysLeft() %}
-                            <li><b>Übrige Urlaubstage:</b> {{ employee.getHolidaysLeft() }}</li>
+                            <li><b>{{ 'list.holidaysLeft'|trans }}:</b> {{ employee.getHolidaysLeft() }}</li>
                         {% endif %}
                         {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
-                            <li><b>Sollstunden (Woche):</b> {{ employee.getTargetWorkingHours() }}</li>
-                            <li><b>Überstunden (Übertrag):</b> {{ overtimeTransfer }}</li>
-                            <li><b>Überstunden (aktueller Monat):</b> {{ overtime }}</li>
-                            <li><b>Überstunden (Gesamt):</b> {{ overtimeSum }}</li>
+                            <li><b>{{ 'list.targetHours'|trans }}:</b> {{ employee.getTargetWorkingHours() }}</li>
+                            <li><b>{{ 'list.overtimeTransfer'|trans }}:</b> {{ overtimeTransfer }}</li>
+                            <li><b>{{ 'list.overtime'|trans }}:</b> {{ overtime }}</li>
+                            <li><b>{{ 'list.overtimeTotal'|trans }}:</b> {{ overtimeSum }}</li>
                         {% endif %}
                     </ul>
-                    <h5>Arbeitszeiten:</h5>
+                    <h5>{{ 'form.employee.label.workTimes'|trans }}:</h5>
                     {{ component('WorkTimePlan', {worktimes: employee.getConfiguredWorktimes()}) }}
                 </div>
                 <div class="col col-md-6">
-                    <h3>Arbeitszeiten (aktueller Monat)</h3>
+                    <h3>{{ 'list.workTimes'|trans }}</h3>
                     <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Datum</th>
-                            <th scope="col">Start</th>
-                            <th scope="col">Ende</th>
-                            <th scope="col">Gesamtzeit</th>
-                            <th scope="col">Login von</th>
-                            <th scope="col">Logout von</th>
+                            <th scope="col">{{ 'table.date'|trans }}</th>
+                            <th scope="col">{{ 'table.startTime'|trans }}</th>
+                            <th scope="col">{{ 'table.endTime'|trans }}</th>
+                            <th scope="col">{{ 'table.totalTime'|trans }}</th>
+                            <th scope="col">{{ 'table.loginFrom'|trans }}</th>
+                            <th scope="col">{{ 'table.logoffFrom'|trans }}</th>
                         </tr>
                         </thead>
                         <tbody>

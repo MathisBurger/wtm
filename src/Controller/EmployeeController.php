@@ -10,6 +10,8 @@ use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
 use App\Service\GeneratorService;
+use App\Utility\EmployeeUtility;
+use App\Utility\PeriodUtility;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller handling employee actions
@@ -29,7 +32,8 @@ class EmployeeController extends AbstractController
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
         private readonly EmployeeService $employeeService,
-        private readonly GeneratorService $generatorService
+        private readonly GeneratorService $generatorService,
+        private readonly TranslatorInterface $translator
     ) {}
 
     /**
@@ -45,26 +49,13 @@ class EmployeeController extends AbstractController
         $employee = $this->employeeRepository->find($id);
         if (!$employee) {
             return $this->render('general/message.html.twig', [
-                'message' => 'Unbekannter Nutzer',
+                'message' => $this->translator->trans('messages.unknownUser'),
                 'messageStatus' => 'alert-danger'
             ]);
         }
-        $periods = $employee->getPeriods()->filter(
-            fn (WorktimePeriod $p) => $p->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")
-        );
-        $sumWorkedHours = 0;
-        /** @var WorktimePeriod $item */
-        foreach ($periods->toArray() as $item) {
-            if ($item->getEndTime() !== null) {
-                $diff = $item->getStartTime()->diff($item->getEndTime());
-                $sumWorkedHours += $diff->h + ($diff->i / 60);
-            }
-        }
-        $overtime = $sumWorkedHours - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
-        $firstPeriodStartTime = new DateTime();
-        if ($periods->first()) {
-            $firstPeriodStartTime = $periods->first()->getStartTime();
-        }
+
+        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee);
+
         return $this->render('employee/details.html.twig', [
             'employee' => $employee,
             'tab' => $tab,
@@ -72,15 +63,8 @@ class EmployeeController extends AbstractController
             'overtime' => $overtime,
             'overtimeSum' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $overtime,
             'periods' => $periods,
-            'holidays' => $employee->getWorktimeSpecialDays()->filter(
-                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_HOLIDAY && (
-                    $d->getDate()->format("Y") === (new DateTime())->format("Y")
-                        || $d->getDate()->format("Y") === (new DateTime())->add(new DateInterval('P1Y'))->format("Y")
-                    )
-            ),
-            'illnessDays' => $employee->getWorktimeSpecialDays()->filter(
-                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === (new DateTime())->format("Y")
-            )
+            'holidays' => $holidays,
+            'illnessDays' => $illnessDays
         ]);
     }
 
@@ -100,7 +84,7 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => null,
-                'title' => 'Mitarbeiter anlegen',
+                'title' => $this->translator->trans('title.createEmployee'),
                 'isUpdate' => false
             ]);
         }
@@ -109,8 +93,8 @@ class EmployeeController extends AbstractController
             if ($result === null) {
                 return $this->render('employee/createUpdate.html.twig', [
                     'form' => $form,
-                    'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
-                    'title' => 'Mitarbeiter anlegen',
+                    'error' => $this->translator->trans('error.invalidForm'),
+                    'title' => $this->translator->trans('title.createEmployee'),
                     'isUpdate' => false
                 ]);
             }
@@ -119,7 +103,7 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => $e->getMessage(),
-                'title' => 'Mitarbeiter anlegen',
+                'title' => $this->translator->trans('title.createEmployee'),
                 'isUpdate' => false
             ]);
         }
@@ -139,7 +123,7 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => null,
-                'title' => 'Mitarbeiter bearbeiten',
+                'title' => $this->translator->trans('title.editEmployee'),
                 'isUpdate' => true,
                 'employee' => $exists
             ]);
@@ -149,8 +133,8 @@ class EmployeeController extends AbstractController
             if ($result === null) {
                 return $this->render('employee/createUpdate.html.twig', [
                     'form' => $form,
-                    'error' => 'Das Formular wurde nicht richtig ausgefüllt.',
-                    'title' => 'Mitarbeiter bearbeiten',
+                    'error' => $this->translator->trans('error.invalidForm'),
+                    'title' => $this->translator->trans('title.editEmployee'),
                     'isUpdate' => true,
                     'employee' => $exists
                 ]);
@@ -160,7 +144,7 @@ class EmployeeController extends AbstractController
             return $this->render('employee/createUpdate.html.twig', [
                 'form' => $form,
                 'error' => $e->getMessage(),
-                'title' => 'Mitarbeiter bearbeiten',
+                'title' => $this->translator->trans('title.editEmployee'),
                 'isUpdate' => true,
                 'employee' => $exists
             ]);

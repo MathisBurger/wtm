@@ -31,23 +31,23 @@ class EmployeeType extends AbstractType
                 'attr' => [
                     'id' => 'username'
                 ],
-                'label' => 'Benutzername',
+                'label' => 'form.employee.label.username',
             ])
             ->add('firstName', TextType::class, [
                 'required' => true,
-                'label' => 'Vorname',
+                'label' => 'form.employee.label.firstName',
             ])
             ->add('lastName', TextType::class, [
                 'required' => true,
-                'label' => 'Nachname',
+                'label' => 'form.employee.label.lastName',
             ])
             ->add('holidays', NumberType::class, [
                 'required' => true,
-                'label' => 'Urlaubstage (Jahr)',
+                'label' => 'form.employee.label.holidays',
             ])
             ->add('isTimeEmployed', CheckboxType::class, [
                 'required' => false,
-                'label' => 'ist Zeitangestellter',
+                'label' => 'form.employee.label.isTimeEmployed',
                 'attr' => ['class' => 'isTimeEmployed']
             ])
             ->add('configuredWorktimes', CollectionType::class, [
@@ -58,7 +58,7 @@ class EmployeeType extends AbstractType
                 'entry_options' => ['label' => false],
                 'prototype_data' => new ConfiguredWorktime(),
             ]);
-        $builder->add('submit', SubmitType::class, ['label' => 'Speichern']);
+        $builder->add('submit', SubmitType::class, ['label' => 'form.employee.label.submit']);
     }
 
 

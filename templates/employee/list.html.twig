@@ -9,11 +9,11 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Benutzername</th>
-                <th scope="col">Vorname</th>
-                <th scope="col">Nachname</th>
-                <th scope="col">Wochen-Soll (Stunden)</th>
-                <th scope="col">Aktionen</th>
+                <th scope="col">{{ 'table.username'|trans }}</th>
+                <th scope="col">{{ 'table.firstName'|trans }}</th>
+                <th scope="col">{{ 'table.lastName'|trans }}</th>
+                <th scope="col">{{ 'table.targetTimeWeek'|trans }}</th>
+                <th scope="col">{{ 'table.actions'|trans }}</th>
             </tr>
             </thead>
             <tbody>
@@ -27,13 +27,13 @@
                         {% if employee.isTimeEmployed() %}
                             {{ employee.getTargetWorkingHours() }}
                         {% else %}
-                            <p>nicht zeitangestellt</p>
+                            <p>{{ 'messages.notTimeEmployed' }}</p>
                         {% endif %}
                     </td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{ path("employee_details", {id: employee.getId()}) }}" class="btn btn-sm btn-primary">Details</a>
-                            <a href="{{ path("employee_update", {id: employee.getId()}) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
+                            <a href="{{ path("employee_details", {id: employee.getId()}) }}" class="btn btn-sm btn-primary">{{ 'actions.details'|trans }}</a>
+                            <a href="{{ path("employee_update", {id: employee.getId()}) }}" class="btn btn-sm btn-primary">{{ 'actions.edit'|trans }}</a>
                         </div>
                     </td>
                 </tr>

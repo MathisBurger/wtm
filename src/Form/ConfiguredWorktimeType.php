@@ -19,32 +19,32 @@ class ConfiguredWorktimeType extends AbstractType
         $builder
             ->add('dayName', ChoiceType::class, [
                 'choices' => [
-                    'Montag' => ConfiguredWorktime::MONDAY,
-                    'Dienstag' => ConfiguredWorktime::TUESDAY,
-                    'Mittwoch' => ConfiguredWorktime::WEDNESDAY,
-                    'Donnerstag' => ConfiguredWorktime::THURSDAY,
-                    'Freitag' => ConfiguredWorktime::FRIDAY,
-                    'Samstag' => ConfiguredWorktime::SATURDAY,
-                    'Sonntag' => ConfiguredWorktime::SUNDAY
+                    'form.configuredWorktime.dayName.monday' => ConfiguredWorktime::MONDAY,
+                    'form.configuredWorktime.dayName.tuesday' => ConfiguredWorktime::TUESDAY,
+                    'form.configuredWorktime.dayName.wednesday' => ConfiguredWorktime::WEDNESDAY,
+                    'form.configuredWorktime.dayName.thursday' => ConfiguredWorktime::THURSDAY,
+                    'form.configuredWorktime.dayName.friday' => ConfiguredWorktime::FRIDAY,
+                    'form.configuredWorktime.dayName.saturday' => ConfiguredWorktime::SATURDAY,
+                    'form.configuredWorktime.dayName.sunday' => ConfiguredWorktime::SUNDAY
                 ],
-                'label' => 'Tag',
+                'label' => 'form.configuredWorktime.label.day',
                 'row_attr' => ['class' => 'col-md-2']
             ])
             ->add('regularStartTime', TimeType::class, [
-                'label' => 'Startzeit',
+                'label' => 'form.configuredWorktime.label.regularStartTime',
                 'row_attr' => ['class' => 'col-md-2']
             ])
             ->add('regularEndTime', TimeType::class, [
-                'label' => 'Endzeit',
+                'label' => 'form.configuredWorktime.label.regularEndTime',
                 'row_attr' => ['class' => 'col-md-2']
             ])
             ->add('restrictedStartTime', TimeType::class, [
-                'label' => 'eingeschränkte Startzeit',
+                'label' => 'form.configuredWorktime.label.restrictedStartTime',
                 'row_attr' => ['class' => 'col-md-2 restrictedTime'],
                 'required' => false
             ])
             ->add('restrictedEndTime', TimeType::class, [
-                'label' => 'eingeschränkte Endzeit',
+                'label' => 'form.configuredWorktime.label.restrictedEndTime',
                 'row_attr' => ['class' => 'col-md-2 restrictedTime'],
                 'required' => false
             ]);

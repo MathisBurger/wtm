@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller for handling check in and out actions
@@ -15,7 +16,8 @@ class CheckInOutController extends AbstractController
 {
 
     public function __construct(
-        private readonly CheckInOutService $checkInOutService
+        private readonly CheckInOutService $checkInOutService,
+        private readonly TranslatorInterface $translator
     ){}
 
     /**
@@ -32,30 +34,30 @@ class CheckInOutController extends AbstractController
         switch ($resp) {
             case CheckInOutService::SUCCESS:
                 $args = [
-                    'message' => 'CheckIn erfolgreich',
+                    'message' => $this->translator->trans('messages.checkIn.successful'),
                     'messageStatus' => 'alert-success',
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::ALREADY_CHECKED_IN:
                 $args = [
-                    'message' => 'Sie sind bereits eingeloggt',
+                    'message' => $this->translator->trans('messages.checkIn.alreadyLoggedIn'),
                     'messageStatus' => 'alert-danger'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::USER_DOES_NOT_EXIST:
                 $args = [
-                    'message' => 'Der angegebene Nutzer existiert nicht',
+                    'message' => $this->translator->trans('messages.userDoesNotExist'),
                     'messageStatus' => 'alert-danger'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::EARLY_LOGIN:
                 $args = [
-                    'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor ihrer regulären Arbeitszeit einstempeln dürfen.',
+                    'message' => $this->translator->trans('messages.checkIn.earlyLogin'),
                     'messageStatus' => 'alert-danger'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
         }
-        $args = ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger'];
+        $args = ['message' => $this->translator->trans('messages.cannotProcess'), 'messageStatus' => 'alert-danger'];
         return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
     }
 
@@ -73,30 +75,30 @@ class CheckInOutController extends AbstractController
         switch ($resp) {
             case CheckInOutService::SUCCESS:
                 $args = [
-                    'message' => 'CheckOut erfolgreich',
+                    'message' => $this->translator->trans('messages.checkOut.successful'),
                     'messageStatus' => 'alert-success'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::NOT_CHECKED_IN:
                 $args = [
-                    'message' => 'Sie sind nicht eingeloggt',
+                    'message' => $this->translator->trans('messages.checkOut.notLoggedIn'),
                     'messageStatus' => 'alert-danger'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::USER_DOES_NOT_EXIST:
                 $args = [
-                    'message' => 'Der angegebene Nutzer existiert nicht',
+                    'message' => $this->translator->trans('messages.userDoesNotExist'),
                     'messageStatus' => 'alert-danger',
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
             case CheckInOutService::EARLY_LOGOUT:
                 $args = [
-                    'message' => 'Der Administrator hat festgelegt, dass sie sich nicht vor Ende ihrer regulären Arbeitszeit ausstempeln dürfen.',
+                    'message' => $this->translator->trans('messages.checkOut.earlyLogout'),
                     'messageStatus' => 'alert-danger'
                 ];
                 return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
         }
-        $args = ['message' => 'Anfrage konnte nicht verarbeitet werden', 'messageStatus' => 'alert-danger'];
+        $args = ['message' => $this->translator->trans('messages.cannotProcess'), 'messageStatus' => 'alert-danger'];
         return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
     }
 
@@ -118,7 +120,7 @@ class CheckInOutController extends AbstractController
     ): Response
     {
         $args = [
-            'message' => 'Sie können sich nicht aus dem Homeoffice anmelden.',
+            'message' => $this->translator->trans('messages.rdpNotAllowed'),
             'messageStatus' => 'alert-danger'
         ];
         return $format === "json" ? $this->json($args) : $this->render('general/message.html.twig', $args);
