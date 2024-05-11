@@ -73,6 +73,12 @@ class Employee extends AbstractEntity
     #[ORM\OneToMany(targetEntity: ConfiguredWorktime::class, mappedBy: 'employee', cascade: ["persist"])]
     private Collection $configuredWorktimes;
 
+    #[ORM\Column(options: ["default" => 0])]
+    private float $overtime = 0;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $overtimeLastUpdate = null;
+
     public function __construct() {
         $this->periods = new ArrayCollection();
         $this->worktimeSpecialDays = new ArrayCollection();
@@ -349,6 +355,50 @@ class Employee extends AbstractEntity
         if ($this->configuredWorktimes->contains($configuredWorktime)) {
             $this->configuredWorktimes->removeElement($configuredWorktime);
         }
+        return $this;
+    }
+
+    /**
+     * Gets the overtime
+     *
+     * @return float overtime
+     */
+    public function getOvertime(): float
+    {
+        return $this->overtime;
+    }
+
+    /**
+     * Sets the overtime
+     *
+     * @param float $overtime The new overtime
+     * @return $this The updated entity
+     */
+    public function setOvertime(float $overtime): self
+    {
+        $this->overtime = $overtime;
+        return $this;
+    }
+
+    /**
+     * Gets the overtime last update
+     *
+     * @return DateTimeInterface|null Last update
+     */
+    public function getOvertimeLastUpdate(): ?DateTimeInterface
+    {
+        return $this->overtimeLastUpdate;
+    }
+
+    /**
+     * Sets the last overtime update
+     *
+     * @param DateTimeInterface $lastUpdate The latest update
+     * @return $this The updated entity
+     */
+    public function setOvertimeLastUpdate(DateTimeInterface $lastUpdate): self
+    {
+        $this->overtimeLastUpdate = $lastUpdate;
         return $this;
     }
 }

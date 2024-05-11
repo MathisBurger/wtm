@@ -6,7 +6,9 @@
         <ul>
             <li>Arbeitsstunden: {{ stats[employee]["hoursWorked"] }}</li>
             {% if stats[employee]["overtime"] %}
-                <li>Überstunden: {{ stats[employee]["overtime"] }}</li>
+                <li>Überstunden (aktueller Monat): {{ stats[employee]["overtime"] }}</li>
+                <li>Überstunden (Übertrag): {{ stats[employee]["overtimeTransfer"] }}</li>
+                <li>Überstunden (Insgesamt): {{ stats[employee]["overtimeTotal"] }}</li>
             {% endif %}
             <li>Krankheitstage: {{ stats[employee]["illnessDays"] }}</li>
             <li>Urlaubstage: {{ stats[employee]["holidays"] }}</li>

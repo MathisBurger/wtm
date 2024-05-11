@@ -27,20 +27,13 @@ class WorktimeSpecialDayRepository extends ServiceEntityRepository
     /**
      * Finds all entries for period
      *
-     * @param string $period The period as string
+     * @param int $year The year
+     * @param int $month The month
      * @return array All entries
      */
-    public function findForPeriod(string $period): array
+    public function findForPeriod(int $year, int $month): array
     {
-        $spl = explode("-", $period);
-        if (count($spl) !== 2) {
-            return [];
-        }
-        $year = intval($spl[0]);
-        $month = intval($spl[1]);
-        if ($year === 0 || $month === 0) {
-            return [];
-        }
+
         $lowerBound = new DateTime();
         $lowerBound->setDate($year, $month, 1)->setTime(0, 0);
         $upperBound = new DateTime();

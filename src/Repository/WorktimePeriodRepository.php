@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Employee;
 use App\Entity\WorktimePeriod;
 use App\Utility\DateUtility;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -55,22 +57,52 @@ class WorktimePeriodRepository extends ServiceEntityRepository
     }
 
     /**
+     * Finds with username and date restrictions
+     *
+     * @param string $username The username
+     * @param DateTimeInterface $lower The lower bound
+     * @param DateTimeInterface $upper The upper bound
+     * @return array
+     */
+    public function findForUserWithRestriction(string $username, DateTimeInterface $lower, DateTimeInterface $upper): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->join('p.employee', 'e');
+        $qb->where($qb->expr()->eq('e.username', ':username'));
+        $qb->andWhere('p.startTime BETWEEN :from AND :to');
+        $qb->setParameter('username', $username);
+        $qb->setParameter('from', $lower);
+        $qb->setParameter('to', $upper);
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Finds with username and date restrictions
+     *
+     * @param string $username The username
+     * @param DateTimeInterface $upper The upper bound
+     * @return array
+     */
+    public function findForUserWithRestrictionUpperOnly(string $username, DateTimeInterface $upper): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->join('p.employee', 'e');
+        $qb->where($qb->expr()->eq('e.username', ':username'));
+        $qb->andWhere($qb->expr()->lt('p.startTime', ':to'));
+        $qb->setParameter('username', $username);
+        $qb->setParameter('to', $upper);
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Finds all entries for period
      *
-     * @param string $period The period as string
+     * @param int $year The year
+     * @param int $month The month
      * @return array All entries
      */
-    public function findForPeriod(string $period): array
+    public function findForPeriod(int $year, int $month): array
     {
-        $spl = explode("-", $period);
-        if (count($spl) !== 2) {
-            return [];
-        }
-        $year = intval($spl[0]);
-        $month = intval($spl[1]);
-        if ($year === 0 || $month === 0) {
-            return [];
-        }
         $lowerBound = new DateTime();
         $lowerBound->setDate($year, $month, 1)->setTime(0, 0);
         $upperBound = new DateTime();
