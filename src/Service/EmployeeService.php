@@ -47,7 +47,7 @@ class EmployeeService
                     $worktime->setEmployee($employee);
                     $this->entityManager->persist($worktime);
                 }
-                if (!$employee->isTimeEmployed()) {
+                if ($employee->isTimeEmployed()) {
                     $employee->setTargetWorkingHours(self::sumUpWeeklyWorktime($employee));
                 } else {
                     $employee->setTargetWorkingHours(null);
@@ -89,7 +89,7 @@ class EmployeeService
                     $worktime->setEmployee($employee);
                     $this->entityManager->persist($worktime);
                 }
-                if (!$exists->isTimeEmployed()) {
+                if ($exists->isTimeEmployed()) {
                     $exists->setTargetWorkingHours(self::sumUpWeeklyWorktime($exists));
                 } else {
                     $exists->setTargetWorkingHours(null);
