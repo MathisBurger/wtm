@@ -159,6 +159,13 @@ class GeneratorService
         return [$employees, $stats];
     }
 
+    /**
+     * Gets the overtime from last update in db to first element
+     *
+     * @param Employee $employee The employee
+     * @param DateTimeInterface $firstCurrent The first current
+     * @return float The overtime difference
+     */
     private function getOvertime(Employee $employee, DateTimeInterface $firstCurrent): float
     {
         $elementsToSum = [];
