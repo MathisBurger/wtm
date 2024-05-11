@@ -3,6 +3,11 @@
 {% block body %}
     {% for employee in employees %}
         <h1>{{ periods[employee][0]["fullName"] }}</h1>
+        <ul>
+            <li>Arbeitsstunden: {{ stats[employee]["hoursWorked"] }}</li>
+            <li>Krankheitstage: {{ stats[employee]["illnessDays"] }}</li>
+            <li>Urlaubstage: {{ stats[employee]["holidays"] }}</li>
+        </ul>
         <table border="1">
             <thead>
                 <tr>
