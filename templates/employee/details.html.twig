@@ -80,6 +80,9 @@
                         {% endif %}
                         {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
                             <li><b>Sollstunden (Woche):</b> {{ employee.getTargetWorkingHours() }}</li>
+                            <li><b>Überstunden (Übertrag):</b> {{ overtimeTransfer }}</li>
+                            <li><b>Überstunden (aktueller Monat):</b> {{ overtime }}</li>
+                            <li><b>Überstunden (Gesamt):</b> {{ overtimeSum }}</li>
                         {% endif %}
                     </ul>
                     <h5>Arbeitszeiten:</h5>

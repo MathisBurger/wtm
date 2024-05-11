@@ -67,6 +67,32 @@ class GeneratorService
     }
 
     /**
+     * Gets the overtime from last update in db to first element
+     *
+     * @param Employee $employee The employee
+     * @param DateTimeInterface $firstCurrent The first current
+     * @return float The overtime difference
+     */
+    public function getOvertime(Employee $employee, DateTimeInterface $firstCurrent): float
+    {
+        $elementsToSum = [];
+        if ($employee->getOvertimeLastUpdate() !== null) {
+            $elementsToSum = $this->periodRepository->findForUserWithRestriction($employee->getUsername(), $employee->getOvertimeLastUpdate(), $firstCurrent);
+        } else {
+            $elementsToSum = $this->periodRepository->findForUserWithRestrictionUpperOnly($employee->getUsername(), $firstCurrent);
+        }
+        $timeSum = 0;
+        foreach ($elementsToSum as $element) {
+            $diff = $element->getEndTime()->diff($element->getStartTime());
+            $timeSum += $diff->h + ($diff->i / 60);
+        }
+        if ($timeSum === 0) {
+            return 0;
+        }
+        return $timeSum - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
+    }
+
+    /**
      * Gets the employees and stats
      *
      * @param int $year The year
@@ -157,31 +183,5 @@ class GeneratorService
             ];
         }
         return [$employees, $stats];
-    }
-
-    /**
-     * Gets the overtime from last update in db to first element
-     *
-     * @param Employee $employee The employee
-     * @param DateTimeInterface $firstCurrent The first current
-     * @return float The overtime difference
-     */
-    private function getOvertime(Employee $employee, DateTimeInterface $firstCurrent): float
-    {
-        $elementsToSum = [];
-        if ($employee->getOvertimeLastUpdate() !== null) {
-            $elementsToSum = $this->periodRepository->findForUserWithRestriction($employee->getUsername(), $employee->getOvertimeLastUpdate(), $firstCurrent);
-        } else {
-            $elementsToSum = $this->periodRepository->findForUserWithRestrictionUpperOnly($employee->getUsername(), $firstCurrent);
-        }
-        $timeSum = 0;
-        foreach ($elementsToSum as $element) {
-            $diff = $element->getEndTime()->diff($element->getStartTime());
-            $timeSum += $diff->h + ($diff->i / 60);
-        }
-        if ($timeSum === 0) {
-            return 0;
-        }
-        return $timeSum - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
     }
 }

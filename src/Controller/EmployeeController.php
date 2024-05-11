@@ -9,7 +9,9 @@ use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
+use App\Service\GeneratorService;
 use DateInterval;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +28,13 @@ class EmployeeController extends AbstractController
 
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
-        private readonly EmployeeService $employeeService
+        private readonly EmployeeService $employeeService,
+        private readonly GeneratorService $generatorService
     ) {}
 
+    /**
+     * Renders all details of user
+     */
     #[Route('/employees/details/{id}', name: 'employee_details')]
     public function viewDetails(
         int $id,
@@ -43,20 +49,37 @@ class EmployeeController extends AbstractController
                 'messageStatus' => 'alert-danger'
             ]);
         }
+        $periods = $employee->getPeriods()->filter(
+            fn (WorktimePeriod $p) => $p->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")
+        );
+        $sumWorkedHours = 0;
+        /** @var WorktimePeriod $item */
+        foreach ($periods->toArray() as $item) {
+            if ($item->getEndTime() !== null) {
+                $diff = $item->getStartTime()->diff($item->getEndTime());
+                $sumWorkedHours += $diff->h + ($diff->i / 60);
+            }
+        }
+        $overtime = $sumWorkedHours - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
+        $firstPeriodStartTime = new DateTime();
+        if ($periods->first()) {
+            $firstPeriodStartTime = $periods->first()->getStartTime();
+        }
         return $this->render('employee/details.html.twig', [
             'employee' => $employee,
             'tab' => $tab,
-            'periods' => $employee->getPeriods()->filter(
-                fn (WorktimePeriod $p) => $p->getStartTime()->format("m") === (new \DateTime())->format("m")
-            ),
+            'overtimeTransfer' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime),
+            'overtime' => $overtime,
+            'overtimeSum' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $overtime,
+            'periods' => $periods,
             'holidays' => $employee->getWorktimeSpecialDays()->filter(
                 fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_HOLIDAY && (
-                    $d->getDate()->format("Y") === (new \DateTime())->format("Y")
-                        || $d->getDate()->format("Y") === (new \DateTime())->add(new DateInterval('P1Y'))->format("Y")
+                    $d->getDate()->format("Y") === (new DateTime())->format("Y")
+                        || $d->getDate()->format("Y") === (new DateTime())->add(new DateInterval('P1Y'))->format("Y")
                     )
             ),
             'illnessDays' => $employee->getWorktimeSpecialDays()->filter(
-                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === (new \DateTime())->format("Y")
+                fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === (new DateTime())->format("Y")
             )
         ]);
     }
