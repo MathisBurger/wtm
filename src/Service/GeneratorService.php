@@ -109,14 +109,16 @@ class GeneratorService
         /** @var WorktimePeriod $entry */
         foreach ($entries as $entry) {
 
+            // Init user stats if no existance
+            if (!isset($stats[$entry->getEmployee()->getUsername()])) {
+                $stats[$entry->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => null];
+            }
+
             // Handle general month statistics
             if ($entry->getEndTime() !== null) {
                 $diff = $entry->getEndTime()->diff($entry->getStartTime());
 
-                // Init user stats if no existance
-                if (!isset($stats[$entry->getEmployee()->getUsername()])) {
-                    $stats[$entry->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => null];
-                }
+
 
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
             }
