@@ -43,7 +43,7 @@ class GeneratorService
 
                 // Init user stats if no existance
                 if (!isset($stats[$entry->getEmployee()->getUsername()])) {
-                    $stats[$entry->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0];
+                    $stats[$entry->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => null];
                 }
 
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
@@ -59,6 +59,10 @@ class GeneratorService
                 'notes' => ''
             ];
         }
+        if ($entry && $entry->getEmployee()->getTargetWorkingHours()) {
+            $targetMonth = $entry->getEmployee()->getTargetWorkingHours() * 4.34524;
+            $stats[$entry->getEmployee()->getUsername()]['overtime'] = $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] - $targetMonth;
+        }
 
 
         $specialDays = $this->specialDayRepository->findForPeriod($period);
@@ -71,7 +75,7 @@ class GeneratorService
 
             // Init user stats if no existance
             if (!isset($stats[$specialDay->getEmployee()->getUsername()])) {
-                $stats[$specialDay->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0];
+                $stats[$specialDay->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => null];
             }
 
             if ($specialDay->getReason() === WorktimeSpecialDay::REASON_ILLNESS) {

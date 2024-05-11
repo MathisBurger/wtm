@@ -5,6 +5,9 @@
         <h1>{{ periods[employee][0]["fullName"] }}</h1>
         <ul>
             <li>Arbeitsstunden: {{ stats[employee]["hoursWorked"] }}</li>
+            {% if stats[employee]["overtime"] %}
+                <li>Überstunden: {{ stats[employee]["overtime"] }}</li>
+            {% endif %}
             <li>Krankheitstage: {{ stats[employee]["illnessDays"] }}</li>
             <li>Urlaubstage: {{ stats[employee]["holidays"] }}</li>
         </ul>
