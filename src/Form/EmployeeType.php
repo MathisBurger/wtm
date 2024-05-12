@@ -45,6 +45,10 @@ class EmployeeType extends AbstractType
                 'required' => true,
                 'label' => 'form.employee.label.holidays',
             ])
+            ->add('autoLogoutThreshold', TimeType::class, [
+                'required' => false,
+                'label' => 'form.employee.label.autoLogoutThreshold',
+            ])
             ->add('isTimeEmployed', CheckboxType::class, [
                 'required' => false,
                 'label' => 'form.employee.label.isTimeEmployed',

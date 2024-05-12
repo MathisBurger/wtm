@@ -76,7 +76,7 @@ class EmployeeUtility
         foreach ($periods->toArray() as $item) {
             if ($item->getEndTime() !== null) {
                 $diff = $item->getStartTime()->diff($item->getEndTime());
-                $sumWorkedHours += $diff->h + ($diff->i / 60);
+                $sumWorkedHours += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
             }
         }
         $overtime = $sumWorkedHours - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;

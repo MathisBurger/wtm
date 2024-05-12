@@ -103,6 +103,7 @@ form:
       isTimeEmployed: ist Zeitangestellter
       submit: Speichern
       workTimes: Arbeitszeiten
+      autoLogoutThreshold: Automatische Abmeldung
   specialDay:
     label:
       reason: Grund

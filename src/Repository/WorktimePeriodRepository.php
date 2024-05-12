@@ -8,6 +8,7 @@ use App\Utility\DateUtility;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,6 +30,22 @@ class WorktimePeriodRepository extends ServiceEntityRepository
     }
 
     /**
+     * Finds all active to auto logout
+     *
+     * @return array The auto logout data
+     */
+    public function findToAutoLogoutByThreshold(): array
+    {
+        $date = new DateTime();
+        $qb = $this->createQueryBuilder('p');
+        $qb->join('p.employee', 'e');
+        $qb->where($qb->expr()->isNull('p.endTime'));
+        $qb->andWhere($qb->expr()->lt('e.autoLogoutThreshold', ':lessDate'));
+        $qb->setParameter('lessDate', $date, Types::TIME_MUTABLE);
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Finds all available periods (month + year)
      *
      * @return array
@@ -42,8 +59,12 @@ class WorktimePeriodRepository extends ServiceEntityRepository
         $result = $qb->where(
             $qb->expr()->in('p.id', $minMax)
         )->getQuery()->getResult();
-        $start = DateTime::createFromInterface($result[1]->getStartTime());
-        $end = $result[0]->getStartTime()->format('Y-m');
+        usort(
+            $result,
+            fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->format('Y-m') <=> $b->getStartTime()->format('Y-m')
+        );
+        $start = DateTime::createFromInterface($result[0]->getStartTime());
+        $end = $result[1]->getStartTime()->format('Y-m');
         if ($start->format('Y-m') === $end) {
             return [$start];
         }
@@ -90,7 +111,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
         $qb->where($qb->expr()->eq('e.username', ':username'));
         $qb->andWhere($qb->expr()->lt('p.startTime', ':to'));
         $qb->setParameter('username', $username);
-        $qb->setParameter('to', $upper);
+        $qb->setParameter('to', $upper, Types::DATETIME_MUTABLE);
         return $qb->getQuery()->getResult();
     }
 

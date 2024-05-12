@@ -79,6 +79,9 @@ class Employee extends AbstractEntity
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $overtimeLastUpdate = null;
 
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $autoLogoutThreshold = null;
+
     public function __construct() {
         $this->periods = new ArrayCollection();
         $this->worktimeSpecialDays = new ArrayCollection();
@@ -399,6 +402,28 @@ class Employee extends AbstractEntity
     public function setOvertimeLastUpdate(DateTimeInterface $lastUpdate): self
     {
         $this->overtimeLastUpdate = $lastUpdate;
+        return $this;
+    }
+
+    /**
+     * Gets the auto logout threshold
+     *
+     * @return DateTimeInterface|null logout threshold
+     */
+    public function getAutoLogoutThreshold(): ?DateTimeInterface
+    {
+        return $this->autoLogoutThreshold;
+    }
+
+    /**
+     * Sets the auto logout threshold
+     *
+     * @param DateTimeInterface|null $dateTime The time
+     * @return $this The updated entity
+     */
+    public function setAutoLogoutThreshold(?DateTimeInterface $dateTime): self
+    {
+        $this->autoLogoutThreshold = $dateTime;
         return $this;
     }
 }

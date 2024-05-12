@@ -85,7 +85,7 @@ class GeneratorService
         $timeSum = 0;
         foreach ($elementsToSum as $element) {
             $diff = $element->getEndTime()->diff($element->getStartTime());
-            $timeSum += $diff->h + ($diff->i / 60);
+            $timeSum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
         }
         if ($timeSum === 0) {
             return 0;
