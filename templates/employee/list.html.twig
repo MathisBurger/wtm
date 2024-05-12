@@ -27,7 +27,7 @@
                         {% if employee.isTimeEmployed() %}
                             {{ employee.getTargetWorkingHours() }}
                         {% else %}
-                            <p>{{ 'messages.notTimeEmployed' }}</p>
+                            <p>{{ 'messages.notTimeEmployed'|trans }}</p>
                         {% endif %}
                     </td>
                     <td>

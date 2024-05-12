@@ -33,6 +33,9 @@ class Updater
             return false;
         }
         $latestRelease = $this->getLatestRelease();
+        if (!isset($latestRelease['tag_name'])) {
+            return false;
+        }
         return $latestRelease['tag_name'] != $this->getSoftwareVersionFromFile();
     }
 

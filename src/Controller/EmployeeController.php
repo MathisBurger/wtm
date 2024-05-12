@@ -42,7 +42,8 @@ class EmployeeController extends AbstractController
     #[Route('/employees/details/{id}', name: 'employee_details')]
     public function viewDetails(
         int $id,
-        #[MapQueryParameter] ?string $tab
+        #[MapQueryParameter] ?string $tab,
+        #[MapQueryParameter] ?string $timePeriod
     ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -54,7 +55,8 @@ class EmployeeController extends AbstractController
             ]);
         }
 
-        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee);
+        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab);
+        [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
 
         return $this->render('employee/details.html.twig', [
             'employee' => $employee,
@@ -64,7 +66,11 @@ class EmployeeController extends AbstractController
             'overtimeSum' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $overtime,
             'periods' => $periods,
             'holidays' => $holidays,
-            'illnessDays' => $illnessDays
+            'illnessDays' => $illnessDays,
+            'workTimePeriods' => $workTimePeriods,
+            'holidayPeriods' => $holidayPeriods,
+            'illnessPeriods' => $illnessPeriods,
+            'timePeriod' => $timePeriod
         ]);
     }
 

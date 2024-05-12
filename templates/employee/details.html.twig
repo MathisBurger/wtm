@@ -20,58 +20,104 @@
         {% if tab == "holiday" %}
             <div class="mt-2">
                 <h1>{{ 'title.holidays'|trans }}</h1>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{{ 'table.date'|trans }}</th>
-                        <th scope="col">{{ 'table.notes'|trans }}</th>
-                        <th scope="col">{{ 'table.actions'|trans }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for holiday in holidays %}
-                        <tr>
-                            <th scope="row">{{ holiday.getId() }}</th>
-                            <td>{{ holiday.getDateString() }}</td>
-                            <td>{{ holiday.getNotes() }}</td>
-                            <td>
-                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">{{ 'actions.delete'|trans }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-md-11">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{{ 'table.date'|trans }}</th>
+                                <th scope="col">{{ 'table.notes'|trans }}</th>
+                                <th scope="col">{{ 'table.actions'|trans }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for holiday in holidays %}
+                                <tr>
+                                    <th scope="row">{{ holiday.getId() }}</th>
+                                    <td>{{ holiday.getDateString() }}</td>
+                                    <td>{{ holiday.getNotes() }}</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col col-md-1">
+                        <ul class="list-group">
+                            {% if holidayPeriods|length > 0 %}
+                                {% for period in holidayPeriods %}
+                                    <li
+                                            class="list-group-item {{ period == timePeriod or (timePeriod == null and period == holidayPeriods[0]) ? 'active' : '' }}"
+                                            style="width: fit-content; text-wrap: nowrap"
+                                    >
+                                        <a
+                                                type="button"
+                                                href="{{ path("employee_details", {id: employee.getId()}) }}?timePeriod={{ period }}&tab=holiday"
+                                                style="text-decoration: none"
+                                                class="{{ period == timePeriod or (timePeriod == null and period == holidayPeriods[0]) ? 'text-white' : 'text-dark' }}"
+                                        >{{ period }}</a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         {% elseif tab == "illness" %}
             <div class="mt-2">
                 <h1>{{ 'title.illnessDays'|trans }}</h1>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{{ 'table.date'|trans }}</th>
-                        <th scope="col">{{ 'table.notes'|trans }}</th>
-                        <th scope="col">{{ 'table.actions'|trans }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for illnessDay in illnessDays %}
-                        <tr>
-                            <th scope="row">{{ illnessDay.getId() }}</th>
-                            <td>{{ illnessDay.getDateString() }}</td>
-                            <td>{{ illnessDay.getNotes() }}</td>
-                            <td>
-                                <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">{{ 'actions.delete'|trans }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-md-11">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{{ 'table.date'|trans }}</th>
+                                <th scope="col">{{ 'table.notes'|trans }}</th>
+                                <th scope="col">{{ 'table.actions'|trans }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for illnessDay in illnessDays %}
+                                <tr>
+                                    <th scope="row">{{ illnessDay.getId() }}</th>
+                                    <td>{{ illnessDay.getDateString() }}</td>
+                                    <td>{{ illnessDay.getNotes() }}</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col col-md-1">
+                        <ul class="list-group">
+                            {% if illnessPeriods|length > 0 %}
+                                {% for period in illnessPeriods %}
+                                    <li
+                                            class="list-group-item {{ period == timePeriod or (timePeriod == null and period == illnessPeriods[0]) ? 'active' : '' }}"
+                                            style="width: fit-content; text-wrap: nowrap"
+                                    >
+                                        <a
+                                                type="button"
+                                                href="{{ path("employee_details", {id: employee.getId()}) }}?timePeriod={{ period }}&tab=illness"
+                                                style="text-decoration: none"
+                                                class="{{ period == timePeriod or (timePeriod == null and period == illnessPeriods[0]) ? 'text-white' : 'text-dark' }}"
+                                        >{{ period }}</a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         {% else %}
             <div class="row mt-2">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <h3>{{ 'title.generalInformation'|trans }}</h3>
                     <ul>
                         <li><b>{{ 'list.holidays'|trans }}:</b> {{ employee.getHolidays() }}</li>
@@ -110,12 +156,31 @@
                                 <td>{{ period.getStartTimeString() }}</td>
                                 <td>{{ period.getEndTimeString() }}</td>
                                 <td>{{ period.getTimeDiff() }}</td>
-                                <td>{{ period.getLoginDevice() }}</td>
-                                <td>{{ period.getLogoutDevice() }}</td>
+                                <td style="max-width: 105px; overflow: hidden">{{ period.getLoginDevice() }}</td>
+                                <td style="max-width: 105px; overflow: hidden">{{ period.getLogoutDevice() }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="col col-md-1">
+                    <ul class="list-group">
+                        {% if workTimePeriods|length > 0 %}
+                            {% for period in workTimePeriods %}
+                                <li
+                                        class="list-group-item {{ period == timePeriod or (timePeriod == null and period == workTimePeriods[0]) ? 'active' : '' }}"
+                                        style="width: fit-content; text-wrap: nowrap"
+                                >
+                                    <a
+                                            type="button"
+                                            href="{{ path("employee_details", {id: employee.getId()}) }}?timePeriod={{ period }}"
+                                            style="text-decoration: none"
+                                            class="{{ period == timePeriod or (timePeriod == null and period == workTimePeriods[0]) ? 'text-white' : 'text-dark' }}"
+                                    >{{ period }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         {% endif %}
