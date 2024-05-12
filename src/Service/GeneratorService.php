@@ -50,11 +50,12 @@ class GeneratorService
          * @var string $key
          * @var array $value
          */
-        foreach ($employees as $_ => $value) {
+        foreach ($employees as $k => $value) {
             usort(
                 $value,
                 fn (array $a, array $b) => $a['dateUnformatted']->getTimeStamp() <=> $b['dateUnformatted']->getTimeStamp()
             );
+            $employees[$k] = $value;
         }
         $html = $this->environment->render('generator/generator.html.twig', [
             'employees' => array_keys($employees),
