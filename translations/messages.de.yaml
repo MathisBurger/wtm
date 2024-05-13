@@ -32,6 +32,7 @@ actions:
   edit: Bearbeiten
   open: Öffnen
   updateSoftware: Software aktualisieren
+  createOvertimeDecrease: Überstundenabbau registrieren
 
 tab:
   general: Allgemein
@@ -68,8 +69,8 @@ list:
   holidays: Urlaubstage
   holidaysLeft: Übrige Urlaubstage
   targetHours: Sollstunden (Woche)
-  overtimeTransfer: Sollstunden (Übertrag)
-  overtime: Überstunden
+  overtimeTransfer: Überstunden (Übertrag)
+  overtime: Überstunden (aktueller Monat)
   overtimeTotal: Überstunden (Gesamt)
   workTimes: Arbeitszeiten (aktueller Monat)
 
@@ -78,6 +79,7 @@ error:
   alreadySetUp: Die Anwendung wurde bereits eingerichtet
   tooFewHolidays: Nicht mehr ausreichend Urlaubstage verfügbar.
   specialDayDoesNotExist: Der Sondertag existiert nicht.
+  notEnoughOvertime: Nicht genügend Überstunden
 
 form:
   configuredWorktime:
@@ -116,3 +118,9 @@ form:
     reasonOptions:
       holiday: Urlaub
       illness: Krankheit
+  overtimeDecrease:
+    label:
+      startDate: Startdatum
+      endDate: Enddatum
+      isMultiDay: Mehrtägig
+      submit: Anlegen

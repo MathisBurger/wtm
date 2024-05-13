@@ -7,6 +7,7 @@ use App\Entity\WorktimePeriod;
 use App\Entity\WorktimeSpecialDay;
 use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
+use App\Form\OvertimeDecreaseType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
 use App\Service\GeneratorService;
@@ -168,6 +169,9 @@ class EmployeeController extends AbstractController
         return $this->redirectToRoute('employee_list');
     }
 
+    /**
+     * Lists all employees
+     */
     #[Route('/employees', name: 'employee_list')]
     public function list(): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -175,6 +179,32 @@ class EmployeeController extends AbstractController
         return $this->render('employee/list.html.twig', [
             'employees' => $employees,
         ]);
+    }
+
+    /**
+     * Registers the overtime decrease for an employee
+     */
+    #[Route('/employee/registerOvertimeDecrease/{id}', name: 'register_overtime_decrease')]
+    public function registerOvertimeDecrease(Request $request, int $id): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $form = $this->createForm(OvertimeDecreaseType::class);
+        $form->handleRequest($request);
+        if (!$form->isSubmitted()) {
+            return $this->render('employee/overtimeDecrease.html.twig', [
+                'error' => null,
+                'form' => $form
+            ]);
+        }
+        try {
+            $this->employeeService->registerOvertime($id, $form);
+            return $this->redirectToRoute('employee_details', ['id' => $id]);
+        } catch (Exception $e) {
+            return $this->render('employee/overtimeDecrease.html.twig', [
+                'error' => $e->getMessage(),
+                'form' => $form
+            ]);
+        }
     }
 
 }

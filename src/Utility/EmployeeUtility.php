@@ -36,7 +36,6 @@ class EmployeeUtility
         /** @var WorktimeSpecialDay $specialDay */
         foreach ($employee->getWorktimeSpecialDays()->toArray() as $specialDay) {
             if ($specialDay->getReason() === WorktimeSpecialDay::REASON_HOLIDAY) {
-                var_dump($specialDay->getDate()->format('Y'));
                 if (!in_array($specialDay->getDate()->format('Y'), $holidayPeriods)) {
                     $holidayPeriods[] = $specialDay->getDate()->format('Y');
                 }

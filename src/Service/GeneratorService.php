@@ -69,6 +69,7 @@ class GeneratorService
 
     /**
      * Gets the overtime from last update in db to first element
+     * NOTE: Overtime entry is not updated in the database
      *
      * @param Employee $employee The employee
      * @param DateTimeInterface $firstCurrent The first current

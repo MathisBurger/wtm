@@ -6,6 +6,11 @@
         <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
             {{ 'actions.createSpecialDay'|trans }}
         </a>
+        {% if overtime > 0 and employee.isTimeEmployed() %}
+            <a class="btn btn-primary" href="{{ path("register_overtime_decrease", {id: employee.getId()}) }}">
+                {{ 'actions.createOvertimeDecrease'|trans }}
+            </a>
+        {% endif %}
         <ul class="nav nav-tabs mt-5">
             <li class="nav-item">
                 <a class="nav-link {{ tab == null ? 'active' : ''}}" href="{{ path("employee_details", {id: employee.getId()}) }}">{{ 'tab.general'|trans }}</a>
