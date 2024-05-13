@@ -74,15 +74,13 @@ class ImportHolidaysCommand extends Command
      */
     private function addDay(DateTime $date, Employee $employee, string $type)
     {
-        if ($type === "normal") {
+        if ($type === "Normal") {
             $period = new WorktimeSpecialDay();
             $period->setReason(WorktimeSpecialDay::REASON_HOLIDAY);
             $period->setDate($date);
             $period->setEmployee($employee);
             $this->entityManager->persist($period);
             $employee->addWorktimeSpecialDay($period);
-            $this->entityManager->persist($employee);
-            $this->entityManager->flush();
         } else {
             $period = new WorktimePeriod();
             $period->setOvertimeDecrease(true);
@@ -92,9 +90,9 @@ class ImportHolidaysCommand extends Command
             $period->setEmployee($employee);
             $this->entityManager->persist($period);
             $employee->addPeriod($period);
-            $this->entityManager->persist($employee);
-            $this->entityManager->flush();
         }
+        $this->entityManager->persist($employee);
+        $this->entityManager->flush();
 
     }
 }

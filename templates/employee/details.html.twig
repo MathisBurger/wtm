@@ -150,15 +150,27 @@
                         </thead>
                         <tbody>
                         {% for period in periods %}
-                            <tr>
-                                <th scope="row">{{ period.getId() }}</th>
-                                <td>{{ period.getDate() }}</td>
-                                <td>{{ period.getStartTimeString() }}</td>
-                                <td>{{ period.getEndTimeString() }}</td>
-                                <td>{{ period.getTimeDiff() }}</td>
-                                <td style="max-width: 105px; overflow: hidden">{{ period.getLoginDevice() }}</td>
-                                <td style="max-width: 105px; overflow: hidden">{{ period.getLogoutDevice() }}</td>
-                            </tr>
+                            {% if period.isOvertimeDecrease() %}
+                                <tr>
+                                    <th scope="row">{{ period.getId() }}</th>
+                                    <td>{{ period.getDate() }}</td>
+                                    <td>{{ 'messages.overtimeDecrease'|trans }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">{{ period.getId() }}</th>
+                                    <td>{{ period.getDate() }}</td>
+                                    <td>{{ period.getStartTimeString() }}</td>
+                                    <td>{{ period.getEndTimeString() }}</td>
+                                    <td>{{ period.getTimeDiff() }}</td>
+                                    <td style="max-width: 105px; overflow: hidden">{{ period.getLoginDevice() }}</td>
+                                    <td style="max-width: 105px; overflow: hidden">{{ period.getLogoutDevice() }}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>

@@ -24,12 +24,21 @@
             </thead>
             <tbody>
                 {% for entry in periods[employee] %}
-                    <tr>
-                        <td>{{ entry["date"] }}</td>
-                        <td>{{ entry["startTime"] }}</td>
-                        <td>{{ entry["endTime"] }}</td>
-                        <td>{{ entry["notes"] }}</td>
-                    </tr>
+                    {% if entry["isOvertimeDecrease"] %}
+                        <tr>
+                            <td>{{ entry["date"] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ entry["notes"] }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ entry["date"] }}</td>
+                            <td>{{ entry["startTime"] }}</td>
+                            <td>{{ entry["endTime"] }}</td>
+                            <td>{{ entry["notes"] }}</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>

@@ -131,7 +131,8 @@ class GeneratorService
                 'date' => $entry->getStartTime()->format('d.m.Y'),
                 'startTime' => $entry->getStartTime()->format('H:i'),
                 'endTime' => $entry->getEndTime() !== null ? $entry->getEndTime()->format('H:i') : '-',
-                'notes' => ''
+                'notes' => '',
+                'isOvertimeDecrease' => $entry->isOvertimeDecrease()
             ];
             $targetHours[$entry->getEmployee()->getUsername()] = $entry->getEmployee();
         }
@@ -182,7 +183,8 @@ class GeneratorService
                 'date' => $specialDay->getDate()->format('d.m.Y'),
                 'startTime' => '-',
                 'endTime' => '-',
-                'notes' => $notes
+                'notes' => $notes,
+                'isOvertimeDecrease' => false
             ];
         }
         return [$employees, $stats];

@@ -2,6 +2,7 @@ specialDay:
   HOLIDAY: Urlaub
   ILLNESS: Krankheit
 messages:
+  overtimeDecrease: Überstundenabbau
   unknownUserDesktop: Sie wurden noch nicht im System registriert. Bitte wenden sie sich an den Administrator.
   cannotProcess: Anfrage konnte nicht verarbeitet werden
   userDoesNotExist: Der angegebene Nutzer existiert nicht

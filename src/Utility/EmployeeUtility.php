@@ -7,6 +7,7 @@ use App\Entity\WorktimePeriod;
 use App\Entity\WorktimeSpecialDay;
 use DateInterval;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Handling utility actions
@@ -35,6 +36,7 @@ class EmployeeUtility
         /** @var WorktimeSpecialDay $specialDay */
         foreach ($employee->getWorktimeSpecialDays()->toArray() as $specialDay) {
             if ($specialDay->getReason() === WorktimeSpecialDay::REASON_HOLIDAY) {
+                var_dump($specialDay->getDate()->format('Y'));
                 if (!in_array($specialDay->getDate()->format('Y'), $holidayPeriods)) {
                     $holidayPeriods[] = $specialDay->getDate()->format('Y');
                 }
@@ -103,7 +105,19 @@ class EmployeeUtility
             fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === $specialDayTimePeriods[0]
         );
 
-        return [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays];
+        $periodsArray = $periods->toArray();
+        usort($periodsArray, fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->getTimestamp() <=> $b->getStartTime()->getTimestamp());
+        $periodsSorted = new ArrayCollection($periodsArray);
+
+        $holidaysArray = $holidays->toArray();
+        usort($holidaysArray, fn (WorktimeSpecialDay $a, WorktimeSpecialDay $b) => $a->getDate()->getTimestamp() <=> $b->getDate()->getTimestamp());
+        $holidaysSorted = new ArrayCollection($holidaysArray);
+
+        $illnessArray = $illnessDays->toArray();
+        usort($illnessArray, fn (WorktimeSpecialDay $a, WorktimeSpecialDay $b) => $a->getDate()->getTimestamp() <=> $b->getDate()->getTimestamp());
+        $illnessSorted = new ArrayCollection($illnessArray);
+
+        return [$periodsSorted, $overtime, $firstPeriodStartTime, $holidaysSorted, $illnessSorted];
     }
 
 }
