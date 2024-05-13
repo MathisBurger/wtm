@@ -19,4 +19,4 @@ composer install
 php bin/console cache:clear
 php bin/console assets:install public
 php bin/console importmap:install
-php bin/console doctrine:migrations:migrate --no-interaction
+php bin/console doctrine:schema:update --force

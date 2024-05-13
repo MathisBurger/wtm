@@ -47,6 +47,12 @@ class WorktimePeriod extends AbstractEntity
     private ?Employee $employee = null;
 
     /**
+     * Special notes about period
+     */
+    #[ORM\Column(nullable: true)]
+    private ?bool $isOvertimeDecrease = null;
+
+    /**
      * Gets the start time of period
      *
      * @return DateTimeInterface|null The start time
@@ -196,6 +202,28 @@ class WorktimePeriod extends AbstractEntity
     public function setLogoutDevice(?string $device): self
     {
         $this->logoutDevice = $device;
+        return $this;
+    }
+
+    /**
+     * Gets wheather overtime decrease
+     *
+     * @return bool|null Is overtime decrease
+     */
+    public function isOvertimeDecrease(): ?bool
+    {
+        return $this->isOvertimeDecrease;
+    }
+
+    /**
+     * Sets if is overtime decrease
+     *
+     * @param bool $isDecrease Is decrease
+     * @return $this The updated entity
+     */
+    public function setOvertimeDecrease(bool $isDecrease): self
+    {
+        $this->isOvertimeDecrease = $isDecrease;
         return $this;
     }
 }
