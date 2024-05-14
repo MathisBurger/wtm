@@ -42,7 +42,13 @@
     "updater": {
       "windows": {
         "installMode": "passive"
-      }
+        },
+        "active": true,
+        "endpoints": [
+          "https://raw.githubusercontent.com/MathisBurger/wtm/main/desktop/latest-release.json"
+        ],
+        "dialog": true,
+        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhBQUJGNzBFRkM3NThDM0MKUldROGpIWDhEdmVyaWo0bExMSXB3QlRWQU9rcVBiakFJWFJFMXBlK0M5RFBpMTZpMUg5K25hQXUK"
     }
   }
 }

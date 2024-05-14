@@ -1,0 +1,11 @@
+{
+  "version": "1.2.1",
+  "notes": "new release",
+  "pub_date": "2024-05-14T19:31:41.225Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVROGpIWDhEdmVyaW5CZExZK0loWnArSGlWWDBEMTJKSldjbVBreFFGSFBDZVJKTlFkZ1R2cVduZHlBR0dURE5OSS9xcHJsaVd2NUFaWkc2S2t5UnQ3Zmg2TWJTNVlZdmc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzE1NzEzNTUxCWZpbGU6WmVpdGVyZmFzc3VuZyAoV1RNKS5hcHAudGFyLmd6Cmx2NDMzT0lCZmxQVUFjbnpmY09jUzh2dDRva0pKYmRxYXBRUlV1THNwK1h2V0JRQUVUNzc2cFVjS0ZNVi8xRHJhZ0pSQUVoMXRXamJBc2c4NmdzVURnPT0K",
+      "url": "https://github.com/MathisBurger/wtm/releases/download/v1.2.1/Zeiterfassung (WTM).msi.zip"
+    }
+  }
+}

@@ -42,3 +42,8 @@ jobs:
           projectPath: ./desktop
           releaseId: ${{ steps.wtm.outputs.id }}
           args: ${{ matrix.args }}
+      - name: Create release file
+        run: |
+          cd desktop
+          node generate-release.cjs
+      - uses: stefanzweifel/git-auto-commit-action@v5
