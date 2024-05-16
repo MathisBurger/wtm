@@ -55,7 +55,7 @@ class EmployeeController extends AbstractController
                 'messageStatus' => 'alert-danger'
             ]);
         }
-        $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$timePeriod]);
+        $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$timePeriod ?? (new DateTime())->format("Y-m")]);
         [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
 

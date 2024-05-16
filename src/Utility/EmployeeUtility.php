@@ -9,6 +9,7 @@ use App\Entity\WorktimeSpecialDay;
 use App\RestApi\HolidayApiFactory;
 use DateInterval;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -62,7 +63,7 @@ class EmployeeUtility
      * @param string|null $timePeriod The time period that should be displayed
      * @return array The data array
      */
-    public static function getEmployeeData(Employee $employee, ?string $timePeriod = null, ?string $tab = null, float $regularWorktime): array
+    public static function getEmployeeData(Employee $employee, ?string $timePeriod = null, ?string $tab = null, ?float $regularWorktime = 0): array
     {
         $workTimePeriod = (new DateTime())->format("Y-m");
         if ($timePeriod !== null && $tab === null) {
@@ -129,10 +130,10 @@ class EmployeeUtility
      * Gets regular worktime for specific day
      *
      * @param Employee $employee The employee
-     * @param DateTime $dateTime The datetime
+     * @param DateTimeInterface $dateTime The datetime
      * @return float The worktime for that weekday
      */
-    public static function getWorktimeForDay(Employee $employee, DateTime $dateTime): float
+    public static function getWorktimeForDay(Employee $employee, DateTimeInterface $dateTime): float
     {
         $sum = 0;
         $workTimePeriod = strtoupper($dateTime->format("l"));
