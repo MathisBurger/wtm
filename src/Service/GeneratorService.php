@@ -23,6 +23,7 @@ class GeneratorService
     public function __construct(
         private readonly WorktimePeriodRepository $periodRepository,
         private readonly WorktimeSpecialDayRepository $specialDayRepository,
+        private readonly EmployeeService $employeeService,
         private readonly Environment $environment,
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $entityManager
@@ -91,7 +92,11 @@ class GeneratorService
         if ($timeSum === 0) {
             return 0;
         }
-        return $timeSum - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
+        if (!$employee->isTimeEmployed()) {
+            return 0;
+        }
+        $periods = PeriodUtility::getAllPeriodsFromDateToNow(DateTime::createFromInterface($firstCurrent));
+        return $timeSum - $this->employeeService->getWorktimeForPeriods($employee, $periods);
     }
 
     /**

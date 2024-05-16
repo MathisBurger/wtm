@@ -4,6 +4,7 @@ namespace App\Utility;
 
 use App\Entity\Employee;
 use App\Entity\WorktimePeriod;
+use DateInterval;
 use DateTime;
 
 /**
@@ -30,6 +31,25 @@ class PeriodUtility
             return [];
         }
         return [$year, $month];
+    }
+
+    /**
+     * Gets all periods until today
+     *
+     * @param DateTime $start The start date
+     * @return array All periods
+     */
+    public static function getAllPeriodsFromDateToNow(DateTime $start): array
+    {
+        $startCopy = $start;
+        $end = new DateTime();
+        $periods = [];
+        while ($start->format("Y-m") !== $end->format("Y-m")) {
+            $periods[] = $startCopy->format("Y-m");
+            $startCopy->add(new DateInterval('P1M'));
+        }
+        $periods[] = $end->format("Y-m");
+        return $periods;
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Utility;
 
+use App\Entity\ConfiguredWorktime;
 use App\Entity\Employee;
 use App\Entity\WorktimePeriod;
 use App\Entity\WorktimeSpecialDay;
@@ -60,7 +61,7 @@ class EmployeeUtility
      * @param string|null $timePeriod The time period that should be displayed
      * @return array The data array
      */
-    public static function getEmployeeData(Employee $employee, ?string $timePeriod = null, ?string $tab = null): array
+    public static function getEmployeeData(Employee $employee, ?string $timePeriod = null, ?string $tab = null, float $regularWorktime): array
     {
         $workTimePeriod = (new DateTime())->format("Y-m");
         if ($timePeriod !== null && $tab === null) {
@@ -80,7 +81,11 @@ class EmployeeUtility
                 $sumWorkedHours += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
             }
         }
-        $overtime = $sumWorkedHours - ($employee->getTargetWorkingHours() ?? 0) * 4.34524;
+        $workingHours = 0;
+        if ($employee->isTimeEmployed()) {
+            $workingHours = $regularWorktime;
+        }
+        $overtime = $sumWorkedHours - $workingHours;
         $firstPeriodStartTime = new DateTime();
         if ($periods->first()) {
             $firstPeriodStartTime = $periods->first()->getStartTime();
@@ -117,6 +122,27 @@ class EmployeeUtility
         $illnessSorted = new ArrayCollection($illnessArray);
 
         return [$periodsSorted, $overtime, $firstPeriodStartTime, $holidaysSorted, $illnessSorted];
+    }
+
+    /**
+     * Gets regular worktime for specific day
+     *
+     * @param Employee $employee The employee
+     * @param DateTime $dateTime The datetime
+     * @return float The worktime for that weekday
+     */
+    public static function getWorktimeForDay(Employee $employee, DateTime $dateTime): float
+    {
+        $sum = 0;
+        $workTimePeriod = strtoupper($dateTime->format("l"));
+        /** @var ConfiguredWorktime $configuredWorktime */
+        foreach ($employee->getConfiguredWorktimes()->toArray() as $configuredWorktime) {
+            if ($configuredWorktime->getDayName() === $workTimePeriod) {
+                $diff = $configuredWorktime->getRegularStartTime()->diff($configuredWorktime->getRegularEndTime());
+                $sum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+            }
+        }
+        return $sum;
     }
 
 }

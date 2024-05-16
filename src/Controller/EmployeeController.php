@@ -55,8 +55,8 @@ class EmployeeController extends AbstractController
                 'messageStatus' => 'alert-danger'
             ]);
         }
-
-        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab);
+        $worktime = $this->employeeService->getWorktimeForPeriods($employee, [$timePeriod]);
+        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
 
         return $this->render('employee/details.html.twig', [
