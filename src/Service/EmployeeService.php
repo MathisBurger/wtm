@@ -137,56 +137,6 @@ class EmployeeService
     }
 
     /**
-     * Gets the worktime for many periods
-     *
-     * @param Employee $employee The employee
-     * @param array $periods All periods
-     * @return float The sum of worktime
-     */
-    public function getWorktimeForPeriods(Employee $employee, array $periods): float
-    {
-        $sum = 0;
-        foreach ($periods as $period) {
-            [$year, $month] = PeriodUtility::getYearAndMonthFromPeriod($period);
-            $sum += $this->getWorktimeForPeriod($employee, $year, $month);
-        }
-        return $sum;
-    }
-
-
-    /**
-     * Gets the required worktime for period
-     *
-     * @param Employee $employee The employee
-     * @param int $year The year of the period
-     * @param int $month The month
-     * @return float The worktime
-     */
-    private function getWorktimeForPeriod(Employee $employee, int $year, int $month): float
-    {
-        $startDate = new DateTime();
-        $startDate->setDate($year, $month, 1);
-        $startDate->setTime(0, 0, 0);
-        $endDate = new DateTime();
-        $endDate->setDate($year, $month, DateUtility::getMonthMaxDay($year, $month));
-        $endDate->setTime(23, 59, 0);
-        $daysInPeriod = $this->holidayApi->getWithoutHolidays($startDate, $endDate);
-        $holidays = $employee->getWorktimeSpecialDays()->filter(
-            fn (WorktimeSpecialDay $specialDay) => $specialDay->getReason() === WorktimeSpecialDay::REASON_HOLIDAY && $specialDay->getDate()->format("Y-m") === $startDate->format("Y-m")
-        );
-        $sum = 0;
-        /** @var DateTime $day */
-        foreach ($daysInPeriod as $day) {
-            $sum += EmployeeUtility::getWorktimeForDay($employee, $day);
-        }
-        /** @var WorktimeSpecialDay $holiday */
-        foreach ($holidays as $holiday) {
-            $sum -= EmployeeUtility::getWorktimeForDay($employee, $holiday->getDate());
-        }
-        return $sum;
-    }
-
-    /**
      * Persists the employee
      *
      * @param Employee $employee The employee

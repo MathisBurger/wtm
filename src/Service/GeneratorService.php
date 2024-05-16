@@ -8,13 +8,13 @@ use App\Entity\WorktimeSpecialDay;
 use App\Generator\ReportPdf;
 use App\Repository\WorktimePeriodRepository;
 use App\Repository\WorktimeSpecialDayRepository;
+use App\Utility\EmployeeUtility;
 use App\Utility\PeriodUtility;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use TCPDF;
 use Twig\Environment;
 
 class GeneratorService
@@ -23,7 +23,6 @@ class GeneratorService
     public function __construct(
         private readonly WorktimePeriodRepository $periodRepository,
         private readonly WorktimeSpecialDayRepository $specialDayRepository,
-        private readonly EmployeeService $employeeService,
         private readonly Environment $environment,
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $entityManager
@@ -96,7 +95,7 @@ class GeneratorService
             return 0;
         }
         $periods = PeriodUtility::getAllPeriodsFromDateToNow(DateTime::createFromInterface($firstCurrent));
-        return $timeSum - $this->employeeService->getWorktimeForPeriods($employee, $periods);
+        return $timeSum - EmployeeUtility::getWorktimeForPeriods($employee, $periods);
     }
 
     /**
