@@ -12,7 +12,7 @@ let json = {
     platforms: {
         'windows-x86_64': {
             signature: sigContent,
-            url: `https://github.com/MathisBurger/wtm/releases/download/v${version}/Zeiterfassung (WTM).msi.zip`
+            url: `https://github.com/MathisBurger/wtm/releases/download/v${version}/Zeiterfassung.WTM._${version}_x64_en-US.msi.zip`
         }
     }
 }
