@@ -3,7 +3,7 @@ const fs = require("fs");
 
 
 let version = jsonConfig.package.version;
-let sigContent = fs.readFileSync('./src-tauri/target/release/bundle/macos/Zeiterfassung (WTM).app.zip.sig','utf8');
+let sigContent = fs.readFileSync(`src-tauri\\target\\release\\bundle\\msi\\Zeiterfassung (WTM)_${version}_x64_en-US.msi.zip.sig`,'utf8');
 
 let json = {
     version: version,
