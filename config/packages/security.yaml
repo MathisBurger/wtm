@@ -9,19 +9,39 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
+        ldap_user_provider:
+            ldap:
+                service: Symfony\Component\Ldap\Ldap
+                base_dn: '%env(LDAP_BASE_DN)%'
+                search_dn: '%env(LDAP_SEARCH_DN)%'
+                search_password: '%env(LDAP_SEARCH_PASSWORD)%'
+                default_roles: ROLE_USER
+                uid_key: '%env(LDAP_UID_KEY)%'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            provider: ldap_user_provider
             lazy: true
-            provider: app_user_provider
-            form_login:
-                login_path: app_login
+            form_login_ldap:
                 check_path: app_login
-                enable_csrf: true
+                login_path: app_login
+                service: Symfony\Component\Ldap\Ldap
+                dn_string: '%env(LDAP_AUTH_DN)%'
             logout:
                 path: app_logout
+        #main:
+            #lazy: true
+#           # provider: app_user_provider
+            #provider: ldap_user_provider
+            #form_login_ldap:
+            #form_login:
+            #    login_path: app_login
+            #    check_path: app_login
+            #    enable_csrf: true
+            #logout:
+            #    path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
 

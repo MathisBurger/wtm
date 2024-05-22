@@ -29,7 +29,7 @@
             </ul>
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-decoration-none text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ app.user.username }}
+                    {{ app.user.getUserIdentifier }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'actions.logout'|trans }}</a></li>
