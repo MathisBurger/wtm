@@ -16,11 +16,15 @@ class LdapAdminVoter extends Voter
     /**
      * If a user has admin permissions
      */
-    const ADMIN_ACCESS = 'ADMIN_ACCESS';
+    const ADMIN_ACCESS = 'LDAP_ADMIN_ACCESS';
     /**
      * If a user has default permissions
      */
-    const DEFAULT_ACCESS = 'DEFAULT_ACCESS';
+    const DEFAULT_ACCESS = 'LDAP_DEFAULT_ACCESS';
+    /**
+     * If a user has IT permissions
+     */
+    const IT_ACCESS = 'LDAP_IT_ACCESS';
 
     public function __construct(
        private readonly KernelInterface $kernel
@@ -28,7 +32,7 @@ class LdapAdminVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, [self::ADMIN_ACCESS, self::DEFAULT_ACCESS])) {
+        if (!in_array($attribute, [self::ADMIN_ACCESS, self::DEFAULT_ACCESS, self::IT_ACCESS])) {
             return false;
         }
         return true;
@@ -43,8 +47,12 @@ class LdapAdminVoter extends Voter
         $user = $token->getUser();
         $memberOf = $user->getEntry()->getAttribute('memberOf');
         $ldapAdminGroup = $this->kernel->getContainer()->getParameter('ldap_admin_group');
+        $ldapItGroup = $this->kernel->getContainer()->getParameter('ldap_it_group');
         if ($attribute === self::ADMIN_ACCESS) {
             return in_array($ldapAdminGroup, $memberOf);
+        }
+        if ($attribute === self::IT_ACCESS) {
+            return in_array($ldapItGroup, $memberOf);
         }
         return true;
     }
