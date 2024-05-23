@@ -48,7 +48,9 @@ class EmployeeController extends AbstractController
         #[MapQueryParameter] ?string $timePeriod
     ): Response
     {
-        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
+        if (!$this->isGranted(LdapAdminVoter::ADMIN_ACCESS) && !$this->isGranted(LdapAdminVoter::PERSONAL_STATS_ACCESS)) {
+            throw $this->createAccessDeniedException();
+        }
         $employee = $this->employeeRepository->find($id);
         if (!$employee) {
             return $this->render('general/message.html.twig', [

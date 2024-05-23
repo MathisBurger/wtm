@@ -2,6 +2,7 @@
 
 namespace App\Voter;
 
+use App\Repository\EmployeeRepository;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Ldap\Security\LdapUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -25,14 +26,19 @@ class LdapAdminVoter extends Voter
      * If a user has IT permissions
      */
     const IT_ACCESS = 'LDAP_IT_ACCESS';
+    /**
+     * If a user has access to view its own personal stats
+     */
+    const PERSONAL_STATS_ACCESS = 'LDAP_PERSONAL_STATS_ACCESS';
 
     public function __construct(
-       private readonly KernelInterface $kernel
+       private readonly KernelInterface $kernel,
+       private readonly EmployeeRepository $employeeRepository
     ) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, [self::ADMIN_ACCESS, self::DEFAULT_ACCESS, self::IT_ACCESS])) {
+        if (!in_array($attribute, [self::ADMIN_ACCESS, self::DEFAULT_ACCESS, self::IT_ACCESS, self::PERSONAL_STATS_ACCESS])) {
             return false;
         }
         return true;
@@ -53,6 +59,9 @@ class LdapAdminVoter extends Voter
         }
         if ($attribute === self::IT_ACCESS) {
             return in_array($ldapItGroup, $memberOf);
+        }
+        if ($attribute === self::PERSONAL_STATS_ACCESS) {
+            return null !== $this->employeeRepository->findOneBy(['username' => $user->getUserIdentifier()]);
         }
         return true;
     }

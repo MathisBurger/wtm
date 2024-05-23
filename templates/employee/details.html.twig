@@ -3,10 +3,12 @@
 {% block body %}
     <div class="container mt-5">
         <h1>{{ employee.getFirstName() }} {{ employee.getLastName() }} ({{ employee.getUsername() }})</h1>
-        <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
-            {{ 'actions.createSpecialDay'|trans }}
-        </a>
-        {% if overtime > 0 and employee.isTimeEmployed() %}
+        {% if is_granted('LDAP_ADMIN_ACCESS') %}
+            <a class="btn btn-primary" href="{{ path("worktime_specialday_create", {id: employee.getId()}) }}">
+                {{ 'actions.createSpecialDay'|trans }}
+            </a>
+        {% endif %}
+        {% if overtime > 0 and employee.isTimeEmployed() and is_granted('LDAP_ADMIN_ACCESS') %}
             <a class="btn btn-primary" href="{{ path("register_overtime_decrease", {id: employee.getId()}) }}">
                 {{ 'actions.createOvertimeDecrease'|trans }}
             </a>
@@ -43,7 +45,9 @@
                                     <td>{{ holiday.getDateString() }}</td>
                                     <td>{{ holiday.getNotes() }}</td>
                                     <td>
-                                        <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                        {% if is_granted('LDAP_ADMIN_ACCESS') %}
+                                            <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: holiday.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -92,7 +96,9 @@
                                     <td>{{ illnessDay.getDateString() }}</td>
                                     <td>{{ illnessDay.getNotes() }}</td>
                                     <td>
-                                        <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                        {% if is_granted('LDAP_ADMIN_ACCESS') %}
+                                            <a class="btn btn-sm btn-danger" href="{{ path("worktime_specialday_delete", {id: illnessDay.getId()}) }}">{{ 'actions.delete'|trans }}</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

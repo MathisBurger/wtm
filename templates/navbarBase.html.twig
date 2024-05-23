@@ -25,11 +25,17 @@
                         <a class="nav-link" href="{{ path("employee_list") }}">{{ 'title.employees'|trans }}</a>
                     </li>
                 {% endif %}
+                {% if is_granted('LDAP_PERSONAL_STATS_ACCESS') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path("employee_details", {id: getCurrentEmployeeId()}) }}">{{ 'title.personalStats'|trans }}</a>
+                    </li>
+                {% endif %}
                 {% if is_granted('LDAP_ADMIN_ACCESS') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path("reports_view") }}">{{ 'title.reports'|trans }}</a>
                     </li>
                 {% endif %}
+
             </ul>
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-decoration-none text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
