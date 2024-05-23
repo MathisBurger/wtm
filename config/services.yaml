@@ -4,8 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    ldap_admin_group: 'CN=Zu_IT,OU=Benutzer,DC=ad,DC=dreessen,DC=biz'
-    ldap_it_group: 'CN=Z_IT,OU=Benutzer,DC=ad,DC=dreessen,DC=biz'
+    ldap_admin_group: '%env(LDAP_ADMIN_GROUP)%'
+    ldap_it_group: '%env(LDAP_IT_GROUP)%'
 
 services:
     # default configuration for services in *this* file
