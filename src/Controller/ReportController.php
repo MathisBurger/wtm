@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\WorktimePeriodRepository;
 use App\Service\GeneratorService;
+use App\Voter\LdapAdminVoter;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ class ReportController extends AbstractController
     #[Route('/reports', name: 'reports_view')]
     public function getReportOptions(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $reports = $this->worktimePeriodRepository->findPeriods();
         return $this->render('reports/list.html.twig', [
             'reports' => array_reverse(array_map(
@@ -43,7 +44,7 @@ class ReportController extends AbstractController
     #[Route('/api/report/{period}', name: 'report_generate')]
     public function generateReport(string $period)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $this->generatorService->generateReport($period);
     }
 

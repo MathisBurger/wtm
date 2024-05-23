@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Updater\Updater;
+use App\Voter\LdapAdminVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -30,7 +31,7 @@ class SoftwareUpdateController extends AbstractController
     #[Route('/software/update', name: 'software_update_view')]
     public function updatePage(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         if (!$this->updater->getNewUpdateAvailable()) {
             return $this->render('general/message.html.twig', [
                 'message' => $this->translator->trans('messages.softwareAlreadyUpToDate'),
@@ -52,7 +53,7 @@ class SoftwareUpdateController extends AbstractController
     #[Route('/software/update/perform', name: 'software_update_perform')]
     public function performUpdate(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         if (!$this->updater->getNewUpdateAvailable()) {
             return $this->render('general/message.html.twig', [
                 'message' => $this->translator->trans('messages.softwareAlreadyUpToDate'),

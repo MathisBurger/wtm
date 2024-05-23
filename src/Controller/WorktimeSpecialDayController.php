@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\WorktimeSpecialDaySkeletonType;
 use App\Service\WorktimeSpecialDayService;
+use App\Voter\LdapAdminVoter;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class WorktimeSpecialDayController extends AbstractController
     #[Route('/employee/createSpecialDay/{id}', name: 'worktime_specialday_create')]
     public function createSpecialDay(int $id, Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $form = $this->createForm(WorktimeSpecialDaySkeletonType::class, array());
         $form->handleRequest($request);
         if (!$form->isSubmitted()) {
@@ -52,7 +53,7 @@ class WorktimeSpecialDayController extends AbstractController
     #[Route('/employee/deleteSpecialDay/{id}', name: 'worktime_specialday_delete')]
     public function deleteSpecialDay(int $id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         try {
             $employeeId = $this->worktimeSpecialDayService->deleteSpecialDays($id);
             return $this->redirectToRoute('employee_details', ['id' => $employeeId]);

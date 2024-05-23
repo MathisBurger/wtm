@@ -13,6 +13,7 @@ use App\Service\EmployeeService;
 use App\Service\GeneratorService;
 use App\Utility\EmployeeUtility;
 use App\Utility\PeriodUtility;
+use App\Voter\LdapAdminVoter;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,7 +48,7 @@ class EmployeeController extends AbstractController
         #[MapQueryParameter] ?string $timePeriod
     ): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $employee = $this->employeeRepository->find($id);
         if (!$employee) {
             return $this->render('general/message.html.twig', [
@@ -81,7 +82,7 @@ class EmployeeController extends AbstractController
     #[Route('/employees/create', name: 'employee_create', methods: ['GET', 'POST'])]
     public function createEmployee(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $form = $this->createForm(EmployeeType::class, new Employee(), [
             'action' => $this->generateUrl('employee_create'),
             'method' => 'POST',
@@ -122,7 +123,7 @@ class EmployeeController extends AbstractController
     #[Route('/employees/update/{id}', name: 'employee_update', methods: ['GET', 'POST'])]
     public function updateEmployee(Request $request, int $id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $exists = $this->employeeRepository->find($id);
         $form = $this->createForm(EmployeeType::class, new Employee(), ['data' => $exists]);
         $form->handleRequest($request);
@@ -164,7 +165,7 @@ class EmployeeController extends AbstractController
     #[Route('/employees/delete/{id}', name: 'employee_delete', methods: ['GET'])]
     public function deleteEmployee(int $id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $this->employeeService->deleteEmployee($id);
         return $this->redirectToRoute('employee_list');
     }
@@ -174,7 +175,7 @@ class EmployeeController extends AbstractController
      */
     #[Route('/employees', name: 'employee_list')]
     public function list(): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $employees = $this->employeeRepository->findAll();
         return $this->render('employee/list.html.twig', [
             'employees' => $employees,
@@ -187,7 +188,7 @@ class EmployeeController extends AbstractController
     #[Route('/employee/registerOvertimeDecrease/{id}', name: 'register_overtime_decrease')]
     public function registerOvertimeDecrease(Request $request, int $id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         $form = $this->createForm(OvertimeDecreaseType::class);
         $form->handleRequest($request);
         if (!$form->isSubmitted()) {
