@@ -74,6 +74,10 @@ class EmployeeUtility
             fn (WorktimePeriod $p) => $p->getStartTime()->format("Y-m") === $workTimePeriod
         );
 
+        $periodsArray = $periods->toArray();
+        usort($periodsArray, fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->getTimestamp() <=> $b->getStartTime()->getTimestamp());
+        $periods = new ArrayCollection($periodsArray);
+
         // Overtime
         $sumWorkedHours = 0;
         /** @var WorktimePeriod $item */

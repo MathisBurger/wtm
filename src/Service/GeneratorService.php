@@ -148,7 +148,7 @@ class GeneratorService
          */
         foreach ($targetHours as $key => $value) {
             if ($value->getTargetWorkingHours() && $value->isTimeEmployed()) {
-                $targetMonth = $value->getTargetWorkingHours() * 4.34524;
+                $targetMonth = EmployeeUtility::getWorktimeForPeriods($value, [$year . "-" . ($month < 10 ? "0" . $month : $month)]);
                 $overtime = $stats[$key]['hoursWorked'] - $targetMonth;
                 $stats[$key]['overtime'] = $overtime;
                 $overtimeTransferDiff = $this->getOvertime($value, $employees[$key][0]['dateUnformatted']);

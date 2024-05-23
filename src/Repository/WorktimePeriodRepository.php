@@ -91,6 +91,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
         $qb->join('p.employee', 'e');
         $qb->where($qb->expr()->eq('e.username', ':username'));
         $qb->andWhere('p.startTime BETWEEN :from AND :to');
+        $qb->orderBy('p.startTime', 'ASC');
         $qb->setParameter('username', $username);
         $qb->setParameter('from', $lower);
         $qb->setParameter('to', $upper);
@@ -110,6 +111,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
         $qb->join('p.employee', 'e');
         $qb->where($qb->expr()->eq('e.username', ':username'));
         $qb->andWhere($qb->expr()->lt('p.startTime', ':to'));
+        $qb->orderBy('p.startTime', 'ASC');
         $qb->setParameter('username', $username);
         $qb->setParameter('to', $upper, Types::DATETIME_MUTABLE);
         return $qb->getQuery()->getResult();
@@ -130,6 +132,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
         $upperBound->setDate($year, $month, DateUtility::getMonthMaxDay($year, $month))->setTime(23, 59);;
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.startTime BETWEEN :from AND :to');
+        $qb->orderBy('p.startTime', 'ASC');
         $qb->setParameter('from', $lowerBound);
         $qb->setParameter('to', $upperBound);
         return $qb->getQuery()->getResult();
