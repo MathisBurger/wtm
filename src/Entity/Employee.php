@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Container7vJ046a\get_Monolog_Command_ServerLog_LazyService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,6 +68,9 @@ class Employee extends AbstractEntity
     #[ORM\OneToMany(targetEntity: WorktimeSpecialDay::class, mappedBy: 'employee')]
     private Collection $worktimeSpecialDays;
 
+    #[ORM\OneToMany(targetEntity: SpecialDayRequest::class, mappedBy: 'employee')]
+    private Collection $specialDayRequests;
+
     /**
      * All configured worktimes
      */
@@ -86,6 +90,7 @@ class Employee extends AbstractEntity
         $this->periods = new ArrayCollection();
         $this->worktimeSpecialDays = new ArrayCollection();
         $this->configuredWorktimes = new ArrayCollection();
+        $this->specialDayRequests = new ArrayCollection();
     }
 
     /**
@@ -424,6 +429,42 @@ class Employee extends AbstractEntity
     public function setAutoLogoutThreshold(?DateTimeInterface $dateTime): self
     {
         $this->autoLogoutThreshold = $dateTime;
+        return $this;
+    }
+
+    /**
+     * Gets all special day requests
+     *
+     * @return Collection The requests
+     */
+    public function getSpecialDayRequests(): Collection
+    {
+        return $this->specialDayRequests;
+    }
+
+    /**
+     * Adds a new special day request
+     *
+     * @param SpecialDayRequest $request The request
+     * @return $this The updated entity
+     */
+    public function addSpecialDayRequest(SpecialDayRequest $request): self
+    {
+        $this->specialDayRequests->add($request);
+        return $this;
+    }
+
+    /**
+     * Removes a special day request
+     *
+     * @param SpecialDayRequest $request The request
+     * @return $this The updated entity
+     */
+    public function removeSpecialDayRequest(SpecialDayRequest $request): self
+    {
+        if ($this->specialDayRequests->contains($request)) {
+            $this->specialDayRequests->removeElement($request);
+        }
         return $this;
     }
 }
