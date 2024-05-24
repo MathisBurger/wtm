@@ -1,6 +1,9 @@
 specialDay:
   HOLIDAY: Urlaub
   ILLNESS: Krankheit
+# Kind of stupid to repeat them here, but it needed to be done fast
+HOLIDAY: Urlaub
+ILLNESS: Krankheit
 messages:
   overtimeDecrease: Überstundenabbau
   unknownUserDesktop: Sie wurden noch nicht im System registriert. Bitte wenden sie sich an den Administrator.
@@ -34,6 +37,8 @@ actions:
   updateSoftware: Software aktualisieren
   createOvertimeDecrease: Überstundenabbau registrieren
   createSpecialDayRequest: Sondertag Anfrage stellen
+  accept: Annehmen
+  deny: Ablehnen
 
 tab:
   general: Allgemein
@@ -124,6 +129,7 @@ form:
     reasonOptions:
       holiday: Urlaub
       illness: Krankheit
+
   overtimeDecrease:
     label:
       startDate: Startdatum

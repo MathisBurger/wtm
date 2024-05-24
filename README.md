@@ -16,3 +16,7 @@ Installation information
 
 Development information 
 
+## Code quality
+
+...
+

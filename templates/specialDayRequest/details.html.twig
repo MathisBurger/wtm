@@ -1,0 +1,25 @@
+{% extends 'navbarBase.html.twig' %}
+
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Sondertag Antrag ({{ request.getEmployee().getUsername() }})</h1>
+        <ul class="list-group">
+            <li class="list-group-item">{{ 'form.specialDay.label.reason'|trans }}: {{ request.getReason()|trans }}</li>
+            <li class="list-group-item">{{ 'form.specialDay.label.startDate'|trans }}: {{ request.getStartDateString() }}</li>
+            <li class="list-group-item">{{ 'form.specialDay.label.endDate'|trans }}: {{ request.getEndDateString() }}</li>
+            <li class="list-group-item">{{ 'form.specialDay.label.notes'|trans }}: {{ request.getNotes() }}</li>
+            <li class="list-group-item">
+                {{ 'form.specialDayRequest.document'|trans }}: <a href="{{ path("special_day_requests_downloadFile", {id: request.getId()}) }}">{{ 'actions.open'|trans }}</a>
+            </li>
+            {% if is_granted('LDAP_ADMIN_ACCESS') %}
+                <li class="list-group-item">
+                    <div class="btn-group">
+                        <a href="" type="button" class="btn btn-primary">{{ 'actions.accept'|trans }}</a>
+                        <a href="" type="button" class="btn btn-danger">{{ 'actions.deny'|trans }}</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

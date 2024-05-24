@@ -9,6 +9,7 @@ use App\Repository\EmployeeRepository;
 use App\Repository\SpecialDayRequestRepository;
 use App\RestApi\HolidayApiFactory;
 use App\RestApi\HolidayApiInterface;
+use App\Voter\SpecialDayRequestVoter;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -49,6 +51,17 @@ class SpecialDayRequestService
     public function getRequests(): array
     {
         return $this->requestRepository->findAll();
+    }
+
+    /**
+     * Gets a special day request
+     *
+     * @param int $id The ID
+     * @return SpecialDayRequest|null The request
+     */
+    public function getRequest(int $id): ?SpecialDayRequest
+    {
+        return $this->requestRepository->find($id);
     }
 
     /**
@@ -89,6 +102,25 @@ class SpecialDayRequestService
         $this->entityManager->persist($request);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
+    }
+
+
+    /**
+     * Gets the file path to download file
+     *
+     * @param int $id The ID of the request
+     * @return string|null The final path
+     */
+    public function downloadFile(int $id): ?string
+    {
+        $request = $this->requestRepository->find($id);
+        if (!$this->security->isGranted(SpecialDayRequestVoter::READ, $request)) {
+            throw new AccessDeniedException();
+        }
+        if ($request->getDocumentFileName() === null) {
+            throw new AccessDeniedException();
+        }
+        return $request->getDocumentFileName();
     }
 
     /**

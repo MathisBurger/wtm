@@ -10,6 +10,7 @@ use App\Voter\LdapAdminVoter;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,11 +31,30 @@ class SpecialDayRequestController extends AbstractController
      * Lists all special day requests
      */
     #[Route('/specialDayRequests', name: 'special_day_requests_list')]
-    public function listSpecialDayRequests()
+    public function listSpecialDayRequests(): Response
     {
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         return $this->render('specialDayRequest/list.html.twig', [
             'requests' => $this->requestService->getRequests()
         ]);
+    }
+
+    #[Route('/specialDayRequests/details/{id}', name: 'special_day_requests_details')]
+    public function specialDayRequestDetails(int $id): Response
+    {
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
+        return $this->render('specialDayRequest/details.html.twig', [
+            'request' => $this->requestService->getRequest($id)
+        ]);
+    }
+
+    /**
+     * Downloads the document of a request
+     */
+    #[Route('/specialDayRequests/downloadFile/{id}', name: 'special_day_requests_downloadFile')]
+    public function downloadFile(int $id): Response
+    {
+        return new BinaryFileResponse($this->requestService->downloadFile($id));
     }
 
     /**
