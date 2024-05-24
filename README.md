@@ -16,6 +16,10 @@ Installation information
 
 Development information 
 
+## Configuration
+
+Write about the .env configuration
+
 ## Code quality
 
 ...
