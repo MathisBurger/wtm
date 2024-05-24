@@ -51,6 +51,7 @@ title:
   generalInformation: Allgemeine Informationen
   login: Anmelden
   personalStats: Persönliche Daten
+  specialDayRequests: Sondertag Anträge
 
 table:
   date: Datum
@@ -58,6 +59,8 @@ table:
   actions: Aktionen
   startTime: Start
   endTime: Ende
+  startDate: Startdatum
+  endDate: Enddatum
   totalTime: Gesamtzeit
   loginFrom: Login von
   logoffFrom: Logout von

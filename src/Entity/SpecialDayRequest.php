@@ -173,12 +173,25 @@ class SpecialDayRequest extends AbstractEntity
      *
      * @return string The date string
      */
-    public function getDateString(): string
+    public function getStartDateString(): string
     {
-        if (null === $this->date) {
+        if (null === $this->startDate) {
             return "";
         }
-        return $this->date->format('d.m.y');
+        return $this->startDate->format('d.m.y');
+    }
+
+    /**
+     * Gets the date formatted as string
+     *
+     * @return string The date string
+     */
+    public function getEndDateString(): string
+    {
+        if (null === $this->endDate) {
+            return "";
+        }
+        return $this->endDate->format('d.m.y');
     }
 
     /**
