@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path("employee_details", {id: getCurrentEmployeeId()}) }}">{{ 'title.personalStats'|trans }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path("special_day_requests_list_personal") }}">{{ 'title.specialDayRequestsPersonal'|trans }}</a>
+                    </li>
                 {% endif %}
                 {% if is_granted('LDAP_ADMIN_ACCESS') %}
                     <li class="nav-item">

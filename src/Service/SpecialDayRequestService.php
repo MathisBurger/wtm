@@ -104,6 +104,16 @@ class SpecialDayRequestService
         $this->entityManager->flush();
     }
 
+    /**
+     * Gets all personal requests
+     *
+     * @return array All personal requests
+     */
+    public function getPersonalRequests(): array
+    {
+        return $this->employeeRepository->findOneBy(['username' => $this->security->getUser()->getUserIdentifier()])->getSpecialDayRequests()->toArray();
+    }
+
 
     /**
      * Gets the file path to download file

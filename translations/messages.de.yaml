@@ -57,6 +57,7 @@ title:
   login: Anmelden
   personalStats: Persönliche Daten
   specialDayRequests: Sondertag Anträge
+  specialDayRequestsPersonal: Anträge
 
 table:
   date: Datum

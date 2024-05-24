@@ -39,12 +39,28 @@ class SpecialDayRequestController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the details of a special day request
+     */
     #[Route('/specialDayRequests/details/{id}', name: 'special_day_requests_details')]
     public function specialDayRequestDetails(int $id): Response
     {
         $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
         return $this->render('specialDayRequest/details.html.twig', [
             'request' => $this->requestService->getRequest($id)
+        ]);
+    }
+
+
+    /**
+     * Lists all special day requests
+     */
+    #[Route('/specialDayRequests/personal', name: 'special_day_requests_list_personal')]
+    public function getPersonalRequestsList(): Response
+    {
+        $this->denyAccessUnlessGranted(LdapAdminVoter::PERSONAL_STATS_ACCESS);
+        return $this->render('specialDayRequest/list.html.twig', [
+            'requests' => $this->requestService->getPersonalRequests()
         ]);
     }
 
