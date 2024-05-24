@@ -33,6 +33,7 @@ actions:
   open: Öffnen
   updateSoftware: Software aktualisieren
   createOvertimeDecrease: Überstundenabbau registrieren
+  createSpecialDayRequest: Sondertag Anfrage stellen
 
 tab:
   general: Allgemein
@@ -81,6 +82,7 @@ error:
   tooFewHolidays: Nicht mehr ausreichend Urlaubstage verfügbar.
   specialDayDoesNotExist: Der Sondertag existiert nicht.
   notEnoughOvertime: Nicht genügend Überstunden
+  unsupportedFileType: "Es werden nur folgende Formate unterstützt: PDF, JPG, PNG"
 
 form:
   configuredWorktime:
@@ -125,3 +127,5 @@ form:
       endDate: Enddatum
       isMultiDay: Mehrtägig
       submit: Anlegen
+  specialDayRequest:
+    document: Dokument

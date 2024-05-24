@@ -6,6 +6,7 @@
 parameters:
     ldap_admin_group: '%env(LDAP_ADMIN_GROUP)%'
     ldap_it_group: '%env(LDAP_IT_GROUP)%'
+    documents_directory: '%kernel.project_dir%/public/uploads'
 
 services:
     # default configuration for services in *this* file

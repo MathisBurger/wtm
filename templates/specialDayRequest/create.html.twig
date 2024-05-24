@@ -1,0 +1,32 @@
+{% extends 'navbarBase.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>{{ 'actions.createSpecialDayRequest'|trans }}</h1>
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+        {{ form(form) }}
+    </div>
+    <script>
+        const logic = (e) => {
+            if (e.target.checked) {
+                document.getElementById('endDateLabel').style = "display: block";
+                document.getElementById('request_special_day_endDate').style = "display: block";
+                document.getElementById('request_special_day_endDate').required = true;
+            } else {
+                document.getElementById('endDateLabel').style = "display: none";
+                document.getElementById('request_special_day_endDate').style = "display: none";
+                document.getElementById('request_special_day_endDate').required = false;
+            }
+        };
+        document.getElementById('request_special_day_isMuliDay').addEventListener('change', logic);
+        if (document.getElementById('request_special_day_isMuliDay').checked) {
+            logic({target: {checked: true}});
+        } else {
+            logic({target: {checked: false}});
+        }
+    </script>
+{% endblock %}

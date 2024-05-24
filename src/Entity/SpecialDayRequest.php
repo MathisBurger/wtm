@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Worktime special day entity
+ *  Special day request entity
  */
 #[ORM\Entity(repositoryClass: SpecialDayRequestRepository::class)]
 class SpecialDayRequest extends AbstractEntity
@@ -31,10 +31,16 @@ class SpecialDayRequest extends AbstractEntity
     private ?string $reason = null;
 
     /**
-     * The date of the day
+     * The start date of the day
      */
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?DateTimeInterface $date = null;
+    private ?DateTimeInterface $startDate = null;
+
+    /**
+     * The start date of the day
+     */
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $endDate = null;
 
     /**
      * Notes of the day
@@ -46,7 +52,7 @@ class SpecialDayRequest extends AbstractEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'cascade')]
     private ?Employee $employee = null;
 
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $documentFileName = null;
 
     /**
@@ -73,24 +79,47 @@ class SpecialDayRequest extends AbstractEntity
     }
 
     /**
-     * Gets the date of the day
+     * Gets the start date of the day
      *
      * @return DateTimeInterface|null The date
      */
-    public function getDate(): ?DateTimeInterface
+    public function getStartDate(): ?DateTimeInterface
     {
-        return $this->date;
+        return $this->startDate;
     }
 
     /**
-     * Sets the date of the day
+     * Sets the start date of the day
      *
      * @param DateTimeInterface $date The new date
      * @return $this The updated entity
      */
-    public function setDate(DateTimeInterface $date): static
+    public function setStartDate(DateTimeInterface $date): static
     {
-        $this->date = $date;
+        $this->startDate = $date;
+
+        return $this;
+    }
+
+    /**
+     * Gets the end date of the day
+     *
+     * @return DateTimeInterface|null The date
+     */
+    public function getEndDate(): ?DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * Sets the end date of the day
+     *
+     * @param DateTimeInterface $date The new date
+     * @return $this The updated entity
+     */
+    public function setEndDate(DateTimeInterface $date): static
+    {
+        $this->endDate = $date;
 
         return $this;
     }

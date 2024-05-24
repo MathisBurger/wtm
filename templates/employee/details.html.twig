@@ -8,9 +8,14 @@
                 {{ 'actions.createSpecialDay'|trans }}
             </a>
         {% endif %}
-        {% if overtime > 0 and employee.isTimeEmployed() and is_granted('LDAP_ADMIN_ACCESS') %}
+        {% if overtime > 0 and employee.isTimeEmployed() and (is_granted('LDAP_ADMIN_ACCESS') or is_granted("LDAP_PERSONAL_STATS_ACCESS")) %}
             <a class="btn btn-primary" href="{{ path("register_overtime_decrease", {id: employee.getId()}) }}">
                 {{ 'actions.createOvertimeDecrease'|trans }}
+            </a>
+        {% endif %}
+        {% if is_granted("LDAP_PERSONAL_STATS_ACCESS") %}
+            <a class="btn btn-primary" href="{{ path("worktime_specialday_request_create") }}">
+                {{ 'actions.createSpecialDayRequest'|trans }}
             </a>
         {% endif %}
         <ul class="nav nav-tabs mt-5">

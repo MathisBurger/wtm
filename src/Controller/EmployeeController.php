@@ -190,7 +190,9 @@ class EmployeeController extends AbstractController
     #[Route('/employee/registerOvertimeDecrease/{id}', name: 'register_overtime_decrease')]
     public function registerOvertimeDecrease(Request $request, int $id): Response
     {
-        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
+        if (!$this->isGranted(LdapAdminVoter::ADMIN_ACCESS) && !$this->isGranted(LdapAdminVoter::PERSONAL_STATS_ACCESS)) {
+            throw $this->createAccessDeniedException();
+        }
         $form = $this->createForm(OvertimeDecreaseType::class);
         $form->handleRequest($request);
         if (!$form->isSubmitted()) {
