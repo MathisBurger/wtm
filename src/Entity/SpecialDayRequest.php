@@ -55,6 +55,9 @@ class SpecialDayRequest extends AbstractEntity
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $documentFileName = null;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $respondEmail = null;
+
     /**
      * Gets the reason for the special day
      *
@@ -213,6 +216,28 @@ class SpecialDayRequest extends AbstractEntity
     public function setDocumentFileName(?string $fileName): self
     {
         $this->documentFileName = $fileName;
+        return $this;
+    }
+
+    /**
+     * Gets the response email
+     *
+     * @return string|null The response email
+     */
+    public function getRespondEmail(): ?string
+    {
+        return $this->respondEmail;
+    }
+
+    /**
+     * Sets the email
+     *
+     * @param string $email The email
+     * @return $this The updated entity
+     */
+    public function setRespondEmail(string $email): self
+    {
+        $this->respondEmail = $email;
         return $this;
     }
 

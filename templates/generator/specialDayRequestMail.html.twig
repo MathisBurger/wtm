@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Ihre Anfrage wurde {{ actionStatus }}</h1>
+    <p>Art der Sondertage: {{ reason }}</p>
+    <p>Zeitraum: {{ startDate }} - {{ endDate }}</p>
+    <p>Notizen: {{ notes }}</p>
+{% endblock %}

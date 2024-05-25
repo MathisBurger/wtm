@@ -39,7 +39,8 @@ class SpecialDayRequestService
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
         private readonly KernelInterface $kernel,
-        private readonly WorktimeSpecialDayService $worktimeSpecialDayService
+        private readonly WorktimeSpecialDayService $worktimeSpecialDayService,
+        private readonly MailService $mailService
     ) {
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -157,11 +158,11 @@ class SpecialDayRequestService
                 'notes' => $request->getNotes()
             ];
             $this->worktimeSpecialDayService->createSpecialDays($request->getEmployee()->getId(), null, $formData);
-            // send accepted mail
+            $this->mailService->sendRequestHandleMail($request, $action);
             $this->entityManager->remove($request);
             $this->entityManager->flush();
         } else if ($action === 'deny') {
-            // send denied mail
+            $this->mailService->sendRequestHandleMail($request, $action);
             $this->entityManager->remove($request);
             $this->entityManager->flush();
         }
