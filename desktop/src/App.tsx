@@ -37,14 +37,21 @@ function App() {
     setCurrentAction(await invoke("get_current_action"));
   }
 
+  const openAdministration = async () => {
+    /*const webview = new WebviewWindow('Administration', {
+      url: 'http://localhost:8080'
+    });
+    webview.once('tauri://created', function () {});*/
+    await invoke("open_docs")
+  }
+
   useEffect(() => {
     getCurrentAction();
   }, []);
 
-  console.log(currentAction);
-
   return (
     <div className="container">
+      <button onClick={openAdministration} style={{background: '#cdcdcd', marginBottom: '30px'}}>Administration</button>
       {message && (
         <Message
           message={message.message}

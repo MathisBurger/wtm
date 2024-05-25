@@ -84,6 +84,15 @@ fn check_out() -> String {
     return text;
 }
 
+#[tauri::command]
+async fn open_docs(handle: tauri::AppHandle) {
+  let docs_window = tauri::WindowBuilder::new(
+    &handle,
+    "external",
+    tauri::WindowUrl::External(get_url().parse().unwrap())
+  ).build().unwrap();
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -91,6 +100,7 @@ fn main() {
             check_in,
             check_out,
             is_rdp,
+            open_docs
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
