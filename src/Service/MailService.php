@@ -41,7 +41,15 @@ class MailService
             'endDate' => $request->getEndDateString(),
             'notes' => $request->getNotes()
         ]);
-        $this->mailer->send(new RawMessage($html), new Envelope(new Address('wtm@ad.dreessen.biz'), array(new Address($request->getRespondEmail()))));
+        if ($request->getRespondEmail()) {
+            $this->mailer->send(
+                new RawMessage($html),
+                new Envelope(
+                    new Address('wtm@ad.dreessen.biz'),
+                    array(new Address($request->getRespondEmail()))
+                )
+            );
+        }
     }
 
 }

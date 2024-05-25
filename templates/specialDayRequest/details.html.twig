@@ -9,11 +9,14 @@
             <li class="list-group-item">{{ 'form.specialDay.label.startDate'|trans }}: {{ request.getStartDateString() }}</li>
             <li class="list-group-item">{{ 'form.specialDay.label.endDate'|trans }}: {{ request.getEndDateString() }}</li>
             <li class="list-group-item">{{ 'form.specialDay.label.notes'|trans }}: {{ request.getNotes() }}</li>
-            <li class="list-group-item">
-                {{ 'form.specialDayRequest.document'|trans }}: <a href="{{ path("special_day_requests_downloadFile", {id: request.getId()}) }}">{{ 'actions.open'|trans }}</a>
-            </li>
+            {% if request.getDocumentFileName() %}
+                <li class="list-group-item">
+                    {{ 'form.specialDayRequest.document'|trans }}: <a href="{{ path("special_day_requests_downloadFile", {id: request.getId()}) }}">{{ 'actions.open'|trans }}</a>
+                </li>
+            {% endif %}
             {% if is_granted('LDAP_ADMIN_ACCESS') %}
                 <li class="list-group-item">
+                    <h6>ACHTUNG: Die Anfrage wird nach Annahme oder Ablehnung gelöscht und die Daten sind nicht wiederherstellbar. Also die Dokumente herunterladen, falls benötigt.</h6>
                     <div class="btn-group">
                         <a href="{{ path("worktime_specialday_request_handle", {id: request.getId()}) }}?action=accept" type="button" class="btn btn-primary">{{ 'actions.accept'|trans }}</a>
                         <a href="{{ path("worktime_specialday_request_handle", {id: request.getId()}) }}?action=deny" type="button" class="btn btn-danger">{{ 'actions.deny'|trans }}</a>

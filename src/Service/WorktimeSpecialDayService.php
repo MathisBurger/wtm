@@ -58,7 +58,7 @@ class WorktimeSpecialDayService
                     $d->getDate()->format("Y") === (new DateTime())->format("Y")
                     && $d->getReason() === WorktimeSpecialDay::REASON_HOLIDAY
             );
-        if (isset($formData['isMuliDay']) && $formData['isMuliDay']) {
+        if (($form !== null && isset($formData['isMuliDay']) && $formData['isMuliDay']) || ($form === null && $formData['isMultiDay'])) {
             $holidays = $this->holidayApi->getWithoutHolidays($formData['startDate'], $formData['endDate']);
             if ($formData['reason'] === WorktimeSpecialDay::REASON_HOLIDAY) {
                 $thisYearHolidays = array_filter($holidays, function (DateTimeInterface $item) {
