@@ -15,8 +15,8 @@
             {% if is_granted('LDAP_ADMIN_ACCESS') %}
                 <li class="list-group-item">
                     <div class="btn-group">
-                        <a href="" type="button" class="btn btn-primary">{{ 'actions.accept'|trans }}</a>
-                        <a href="" type="button" class="btn btn-danger">{{ 'actions.deny'|trans }}</a>
+                        <a href="{{ path("worktime_specialday_request_handle", {id: request.getId()}) }}?action=accept" type="button" class="btn btn-primary">{{ 'actions.accept'|trans }}</a>
+                        <a href="{{ path("worktime_specialday_request_handle", {id: request.getId()}) }}?action=deny" type="button" class="btn btn-danger">{{ 'actions.deny'|trans }}</a>
                     </div>
                 </li>
             {% endif %}

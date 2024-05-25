@@ -13,6 +13,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -98,6 +99,17 @@ class SpecialDayRequestController extends AbstractController
         }
         $user = $this->employeeRepository->findOneBy(['username' => $this->security->getUser()->getUserIdentifier()]);
         return $this->redirectToRoute('employee_details', ['id' => $user->getId()]);
+    }
+
+    /**
+     * Handles special day request deny or grant
+     */
+    #[Route('/employee/handleSpecialDayRequest/{id}', name: 'worktime_specialday_request_handle')]
+    public function handleSpecialDayRequest(int $id, #[MapQueryParameter] string $action): Response
+    {
+        $this->denyAccessUnlessGranted(LdapAdminVoter::ADMIN_ACCESS);
+        $this->requestService->handleSpecialDayRequest($id, $action);
+        return $this->redirectToRoute("special_day_requests_list");
     }
 
 }

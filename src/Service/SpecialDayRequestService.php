@@ -38,7 +38,8 @@ class SpecialDayRequestService
         private readonly Security $security,
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
-        private readonly KernelInterface $kernel
+        private readonly KernelInterface $kernel,
+        private readonly WorktimeSpecialDayService $worktimeSpecialDayService
     ) {
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -131,6 +132,39 @@ class SpecialDayRequestService
             throw new AccessDeniedException();
         }
         return $request->getDocumentFileName();
+    }
+
+    /**
+     * Handles special day requests
+     *
+     * @param int $id The ID of the request
+     * @param string $action The action that should be performed
+     * @return void
+     * @throws Exception
+     */
+    public function handleSpecialDayRequest(int $id, string $action)
+    {
+        $request = $this->requestRepository->find($id);
+        if ($request === null) {
+            return;
+        }
+        if ($action === 'accept') {
+            $formData = [
+                'isMultiDay' => $request->getStartDateString() !== $request->getEndDateString(),
+                'startDate' => $request->getStartDate(),
+                'endDate' => $request->getEndDate(),
+                'reason' => $request->getReason(),
+                'notes' => $request->getNotes()
+            ];
+            $this->worktimeSpecialDayService->createSpecialDays($request->getEmployee()->getId(), null, $formData);
+            // send accepted mail
+            $this->entityManager->remove($request);
+            $this->entityManager->flush();
+        } else if ($action === 'deny') {
+            // send denied mail
+            $this->entityManager->remove($request);
+            $this->entityManager->flush();
+        }
     }
 
     /**

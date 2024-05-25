@@ -36,20 +36,22 @@ class WorktimeSpecialDayService
      * @return void
      * @throws Exception The exception thrown on error
      */
-    public function createSpecialDays(int $id, FormInterface $form): void
+    public function createSpecialDays(int $id, ?FormInterface $form = null, ?array $formData = null): void
     {
         $employee = $this->employeeRepository->find($id);
-        if (!$employee) {
-            throw new Exception(
-                $this->translator->trans('messages.userDoesNotExist')
-            );
+        if ($formData === null) {
+            if (!$employee) {
+                throw new Exception(
+                    $this->translator->trans('messages.userDoesNotExist')
+                );
+            }
+            if (!$form->isSubmitted() || !$form->isValid()) {
+                throw new Exception(
+                    $this->translator->trans('error.invalidForm')
+                );
+            }
+            $formData = $form->getData();
         }
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            throw new Exception(
-                $this->translator->trans('error.invalidForm')
-            );
-        }
-        $formData = $form->getData();
         $existingHolidays = $employee->getWorktimeSpecialDays()
             ->filter(
                 fn (WorktimeSpecialDay $d) =>
