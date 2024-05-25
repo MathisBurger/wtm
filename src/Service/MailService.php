@@ -41,7 +41,7 @@ class MailService
             'endDate' => $request->getEndDateString(),
             'notes' => $request->getNotes()
         ]);
-        if ($request->getRespondEmail()) {
+        if ($request->getRespondEmail() !== null) {
             $this->mailer->send(
                 new RawMessage($html),
                 new Envelope(

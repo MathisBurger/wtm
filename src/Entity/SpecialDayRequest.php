@@ -235,7 +235,7 @@ class SpecialDayRequest extends AbstractEntity
      * @param string $email The email
      * @return $this The updated entity
      */
-    public function setRespondEmail(string $email): self
+    public function setRespondEmail(?string $email): self
     {
         $this->respondEmail = $email;
         return $this;

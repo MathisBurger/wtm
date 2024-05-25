@@ -139,3 +139,4 @@ form:
       submit: Anlegen
   specialDayRequest:
     document: Dokument
+    email: Email (Für Benachrichtigungen)

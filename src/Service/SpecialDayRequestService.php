@@ -97,8 +97,12 @@ class SpecialDayRequestService
         } else {
             $request->setEndDate($formData['startDate']);
         }
+        if (isset($formData['email'])) {
+            $request->setRespondEmail($formData['email']);
+        }
         $request->setNotes($formData['notes']);
         $request->setReason($formData['reason']);
+
         $request->setDocumentFileName($this->processFile($formData));
         $employee->addSpecialDayRequest($request);
         $this->entityManager->persist($request);
