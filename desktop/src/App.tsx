@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import Message, { MessageProps } from "./Message";
+import {LogicalSize, WebviewWindow} from "@tauri-apps/api/window";
 
 function App() {
   const [currentAction, setCurrentAction] = useState("");
@@ -43,6 +44,8 @@ function App() {
     });
     webview.once('tauri://created', function () {});*/
     await invoke("open_docs")
+    WebviewWindow.getByLabel("external")?.setSize(new LogicalSize(1000, 600));
+    WebviewWindow.getByLabel("external")?.setTitle("Administration")
   }
 
   useEffect(() => {

@@ -14,45 +14,47 @@
     </head>
     <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ path("app_index") }}">{{ 'title.workTimeManagement'|trans }}</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-                {% if is_granted('LDAP_ADMIN_ACCESS') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path("employee_list") }}">{{ 'title.employees'|trans }}</a>
-                    </li>
-                {% endif %}
-                {% if is_granted('LDAP_PERSONAL_STATS_ACCESS') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path("employee_details", {id: getCurrentEmployeeId()}) }}">{{ 'title.personalStats'|trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path("special_day_requests_list_personal") }}">{{ 'title.specialDayRequestsPersonal'|trans }}</a>
-                    </li>
-                {% endif %}
-                {% if is_granted('LDAP_ADMIN_ACCESS') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path("reports_view") }}">{{ 'title.reports'|trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path("special_day_requests_list") }}">{{ 'title.specialDayRequests'|trans }}</a>
-                    </li>
-                {% endif %}
-
-            </ul>
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-decoration-none text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ app.user.getEntry().getAttribute('cn')[0] }}
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'actions.logout'|trans }}</a></li>
-                    {% if is_granted('LDAP_IT_ACCESS') %}
-                        {{ component('SoftwareUpdateComponent') }}
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ path("app_index") }}">{{ 'title.workTimeManagement'|trans }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="nav navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+                    {% if is_granted('LDAP_ADMIN_ACCESS') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("employee_list") }}">{{ 'title.employees'|trans }}</a>
+                        </li>
                     {% endif %}
+                    {% if is_granted('LDAP_PERSONAL_STATS_ACCESS') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("employee_details", {id: getCurrentEmployeeId()}) }}">{{ 'title.personalStats'|trans }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("special_day_requests_list_personal") }}">{{ 'title.specialDayRequestsPersonal'|trans }}</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('LDAP_ADMIN_ACCESS') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("reports_view") }}">{{ 'title.reports'|trans }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("special_day_requests_list") }}">{{ 'title.specialDayRequests'|trans }}</a>
+                        </li>
+                    {% endif %}
+
                 </ul>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-decoration-none text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ app.user.getEntry().getAttribute('cn')[0] }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'actions.logout'|trans }}</a></li>
+                        {% if is_granted('LDAP_IT_ACCESS') %}
+                            {{ component('SoftwareUpdateComponent') }}
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>

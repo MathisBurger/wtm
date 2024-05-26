@@ -7,11 +7,15 @@
   },
   "package": {
     "productName": "Zeiterfassung (WTM)",
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "tauri": {
     "allowlist": {
       "all": false,
+      "window": {
+        "setSize": true,
+        "setTitle": true
+      },
       "shell": {
         "all": false,
         "open": true
