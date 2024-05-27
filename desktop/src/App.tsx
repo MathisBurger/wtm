@@ -50,6 +50,8 @@ function App() {
 
   useEffect(() => {
     getCurrentAction();
+    let intv = setInterval(() => getCurrentAction(), 5000);
+    return () => clearInterval(intv);
   }, []);
 
   return (
