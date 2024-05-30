@@ -21,7 +21,7 @@
         "setTitle": true
       },
       "shell": {
-        "execute": false,
+        "execute": true,
         "open": false
       }
     },

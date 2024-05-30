@@ -2,10 +2,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::env;
-use std::process::{Command, Stdio};
-use tauri::{CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, SystemTray};
-use tauri::SystemTrayEvent;
+use tauri::api::process::Command;
 use tauri::Manager;
+use tauri::SystemTrayEvent;
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
 
 fn get_url() -> String {
     if env::var("APP_MODE").is_ok() && env::var("APP_MODE").unwrap() == "dev" {
@@ -16,11 +16,8 @@ fn get_url() -> String {
 }
 
 fn get_hostname() -> String {
-    let output = Command::new("hostname")
-        .stdout(Stdio::piped())
-        .output()
-        .expect("Cannot check for hostname");
-    return String::from_utf8_lossy(&output.stdout).to_string();
+    let output = Command::new("hostname").output().unwrap();
+    return output.stdout;
 }
 
 /// Gets the username of the current system
@@ -48,10 +45,9 @@ fn is_rdp() -> bool {
     }
     let output = Command::new("qwinsta")
         .args(["/"])
-        .stdout(Stdio::piped())
         .output()
         .expect("Cannot check for rdp sessions");
-    let content = String::from_utf8_lossy(&output.stdout);
+    let content = output.stdout;
     return content.contains("rdp-tcp#");
 }
 
@@ -89,11 +85,13 @@ fn check_out() -> String {
 
 #[tauri::command]
 async fn open_docs(handle: tauri::AppHandle) {
-  let docs_window = tauri::WindowBuilder::new(
-    &handle,
-    "external",
-    tauri::WindowUrl::External(get_url().parse().unwrap())
-  ).build().unwrap();
+    let docs_window = tauri::WindowBuilder::new(
+        &handle,
+        "external",
+        tauri::WindowUrl::External(get_url().parse().unwrap()),
+    )
+    .build()
+    .unwrap();
 }
 
 fn main() {
@@ -101,63 +99,64 @@ fn main() {
     let action_name = match current_action.as_str() {
         "checkIn" => "Einstempeln",
         "checkOut" => "Ausstempeln",
-        _ => "Fehler"
+        _ => "Fehler",
     };
     let quit = CustomMenuItem::new("quit".to_string(), "Beenden");
     let hide = CustomMenuItem::new("hide".to_string(), "Ausblenden");
     let checkInOut = CustomMenuItem::new("checkInOut".to_string(), action_name);
     let adminOpen = CustomMenuItem::new("adminOpen".to_string(), "Administration");
     let tray_menu = SystemTrayMenu::new()
-      .add_item(quit)
-      .add_native_item(SystemTrayMenuItem::Separator)
-      .add_item(hide)
-      .add_item(checkInOut)
-      .add_item(adminOpen);
-    let system_tray = SystemTray::new()
-         .with_menu(tray_menu);
+        .add_item(quit)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(hide)
+        .add_item(checkInOut)
+        .add_item(adminOpen);
+    let system_tray = SystemTray::new().with_menu(tray_menu);
     tauri::Builder::default()
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {
-              SystemTrayEvent::MenuItemClick { id, .. } => {
-                  let item_handle = app.tray_handle().get_item(&id);
+            SystemTrayEvent::MenuItemClick { id, .. } => {
+                let item_handle = app.tray_handle().get_item(&id);
                 match id.as_str() {
-                  "quit" => {
-                    std::process::exit(0);
-                  }
-                  "hide" => {
-                    let window = app.get_window("main").unwrap();
-                    window.hide().unwrap();
-                  },
-                  "checkInOut" => {
-                    //let window = app.get_window("main").unwrap();
-                    //window.show().unwrap();
-                    let current_action = get_current_action();
-                    if current_action == "checkIn" {
-                        check_in();
-                    } else if current_action == "checkOut" {
-                        check_out();
+                    "quit" => {
+                        std::process::exit(0);
                     }
-                    let current_action2 = get_current_action();
-                    let action_name = match current_action2.as_str() {
-                        "checkIn" => "Einstempeln",
-                        "checkOut" => "Ausstempeln",
-                        _ => "Fehler"
-                    };
-                    item_handle.set_title(action_name).unwrap();
-                  },
-                  "adminOpen" => {
-                     let window = tauri::WindowBuilder::new(
-                         app,
-                         "external",
-                         tauri::WindowUrl::External(get_url().parse().unwrap())
-                       ).build().unwrap();
-                     window.set_title("Administration");
-                  }
-                  _ => {}
+                    "hide" => {
+                        let window = app.get_window("main").unwrap();
+                        window.hide().unwrap();
+                    }
+                    "checkInOut" => {
+                        //let window = app.get_window("main").unwrap();
+                        //window.show().unwrap();
+                        let current_action = get_current_action();
+                        if current_action == "checkIn" {
+                            check_in();
+                        } else if current_action == "checkOut" {
+                            check_out();
+                        }
+                        let current_action2 = get_current_action();
+                        let action_name = match current_action2.as_str() {
+                            "checkIn" => "Einstempeln",
+                            "checkOut" => "Ausstempeln",
+                            _ => "Fehler",
+                        };
+                        item_handle.set_title(action_name).unwrap();
+                    }
+                    "adminOpen" => {
+                        let window = tauri::WindowBuilder::new(
+                            app,
+                            "external",
+                            tauri::WindowUrl::External(get_url().parse().unwrap()),
+                        )
+                        .build()
+                        .unwrap();
+                        window.set_title("Administration");
+                    }
+                    _ => {}
                 }
-              }
-              _ => {}
-            })
+            }
+            _ => {}
+        })
         .invoke_handler(tauri::generate_handler![
             get_current_action,
             check_in,
