@@ -21,8 +21,8 @@
         "setTitle": true
       },
       "shell": {
-        "all": false,
-        "open": true
+        "execute": false,
+        "open": false
       }
     },
     "windows": [
