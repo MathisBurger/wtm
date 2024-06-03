@@ -6,7 +6,7 @@
                     <b>Montag</b>
                     <ul>
                         {% for element in this.getWorktimesForDay("MONDAY") %}
-                            <li>{{ this.getWorktimeString(element) }}</li>
+                            <li>{{ this.getWorktimeString(element) }} ({{ element.getBreakDuration() ? -element.getBreakDuration() : 0 }})</li>
                         {% endfor %}
                     </ul>
                 </div>

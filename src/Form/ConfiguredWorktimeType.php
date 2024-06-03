@@ -51,12 +51,12 @@ class ConfiguredWorktimeType extends AbstractType
             ])
             ->add('breakStart', TimeType::class, [
                 'label' => 'form.configuredWorktime.label.breakStart',
-                'row_attr' => ['class' => 'col-md-1'],
+                'row_attr' => ['class' => 'col-md-1 restrictedTime'],
                 'required' => false
             ])
             ->add('breakDuration', NumberType::class, [
                 'label' => 'form.configuredWorktime.label.breakDuration',
-                'row_attr' => ['class' => 'col-md-1'],
+                'row_attr' => ['class' => 'col-md-1 restrictedTime'],
                 'attr' => ['type' => 'number'],
                 'required' => false
             ]);

@@ -73,18 +73,23 @@ class EmployeeUtility
         $periods = $employee->getPeriods()->filter(
             fn (WorktimePeriod $p) => $p->getStartTime()->format("Y-m") === $workTimePeriod
         );
-
         $periodsArray = $periods->toArray();
         usort($periodsArray, fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->getTimestamp() <=> $b->getStartTime()->getTimestamp());
         $periods = new ArrayCollection($periodsArray);
 
         // Overtime
         $sumWorkedHours = 0;
+        $lastBreaks = null;
         /** @var WorktimePeriod $item */
         foreach ($periods->toArray() as $item) {
             if ($item->getEndTime() !== null) {
                 $diff = $item->getStartTime()->diff($item->getEndTime());
                 $sumWorkedHours += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                $newLastBreaks = EmployeeUtility::getBreaksForPeriod($item->getEmployee(), $item->getStartTime());
+                if ($lastBreaks !== null && self::breakArraysDoMatch($lastBreaks, $newLastBreaks)) {
+                    $sumWorkedHours -= EmployeeUtility::sumBreaksToSubtract($item);
+                }
+                $lastBreaks = $newLastBreaks;
             }
         }
         $workingHours = 0;
@@ -186,7 +191,7 @@ class EmployeeUtility
         foreach ($employee->getConfiguredWorktimes()->toArray() as $configuredWorktime) {
             if ($configuredWorktime->getDayName() === $workTimePeriod) {
                 if ($configuredWorktime->getBreakDuration() !== null) {
-                    $breaks[] = [$configuredWorktime->getBreakDuration(), $configuredWorktime->getBreakStart()];
+                    $breaks[] = [$configuredWorktime->getBreakDuration(), $configuredWorktime->getBreakStart(), $configuredWorktime->getId()];
                 }
             }
         }
@@ -215,6 +220,25 @@ class EmployeeUtility
         return $timeSum;
     }
 
+    /**
+     * Checks if break arrays do match
+     *
+     * @param array $arr1 First array
+     * @param array $arr2 Second array
+     * @return bool if they match
+     */
+    public static function breakArraysDoMatch(array $arr1, array $arr2): bool
+    {
+        if (count($arr1) !== count($arr2)) {
+            return false;
+        }
+        for ($i = 0; $i < count($arr1); $i++) {
+            if ($arr1[$i][2] !== $arr2[$i][2]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Gets the required worktime for period

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\WorktimePeriodRepository;
+use App\Utility\EmployeeUtility;
+use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -14,6 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WorktimePeriodRepository::class)]
 class WorktimePeriod extends AbstractEntity
 {
+
+    /**
+     * Used for rendering in list
+     * NOTE: I know this is bad code. But fuck it, this project is already pretty shitty.
+     */
+    private static ?self $before = null;
 
     /**
      * The start time of worktime period
@@ -155,10 +163,23 @@ class WorktimePeriod extends AbstractEntity
 
     public function getTimeDiff(): string
     {
+        /** @var DateInterval $diff */
+        $diff = null;
         if ($this->endTime) {
-            return $this->startTime->diff($this->endTime)->format('%H:%I');
+            $diff = $this->startTime->diff($this->endTime);
+        } else {
+            $this->startTime->diff(new DateTime());
         }
-        return $this->startTime->diff(new DateTime())->format('%H:%I');
+        $sub = 0;
+        $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($diff)->getTimeStamp();
+        if (self::$before === null) {
+            $sub = EmployeeUtility::sumBreaksToSubtract($this) * 3600;
+        } else if (self::$before !== null && !EmployeeUtility::breakArraysDoMatch(EmployeeUtility::getBreaksForPeriod($this->getEmployee(), $this->getStartTime()), EmployeeUtility::getBreaksForPeriod(self::$before->getEmployee(), self::$before->getStartTime()))) {
+            $sub = EmployeeUtility::sumBreaksToSubtract($this) * 3600;
+        }
+        $intervalInSeconds -= $sub;
+        self::$before = $this;
+        return (new DateTime())->setTimeStamp($intervalInSeconds-3600)->format('H:i');
     }
 
     /**

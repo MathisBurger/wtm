@@ -3,20 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Employee;
-use App\Entity\WorktimePeriod;
-use App\Entity\WorktimeSpecialDay;
-use App\Exception\EmployeeException;
 use App\Form\EmployeeType;
 use App\Form\OvertimeDecreaseType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
 use App\Service\GeneratorService;
 use App\Utility\EmployeeUtility;
-use App\Utility\PeriodUtility;
 use App\Voter\LdapAdminVoter;
-use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
