@@ -84,9 +84,12 @@ class GeneratorService
             $elementsToSum = $this->periodRepository->findForUserWithRestrictionUpperOnly($employee->getUsername(), $firstCurrent);
         }
         $timeSum = 0;
+        /** @var WorktimePeriod $element */
         foreach ($elementsToSum as $element) {
             $diff = $element->getEndTime()->diff($element->getStartTime());
             $timeSum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+
+
         }
         if ($timeSum === 0) {
             return 0;
@@ -125,8 +128,9 @@ class GeneratorService
                 $diff = $entry->getEndTime()->diff($entry->getStartTime());
 
 
-
+                //var_dump($entry->getEmployee()->getUsername());
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
+                $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::sumBreaksToSubtract($entry);
             }
 
             // Add table element

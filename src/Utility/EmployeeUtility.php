@@ -146,6 +146,9 @@ class EmployeeUtility
             if ($configuredWorktime->getDayName() === $workTimePeriod) {
                 $diff = $configuredWorktime->getRegularStartTime()->diff($configuredWorktime->getRegularEndTime());
                 $sum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                if ($configuredWorktime->getBreakDuration() !== null) {
+                    $sum -= $configuredWorktime->getBreakDuration();
+                }
             }
         }
         return $sum;
@@ -166,6 +169,50 @@ class EmployeeUtility
             $sum += self::getWorktimeForPeriod($employee, $year, $month);
         }
         return $sum;
+    }
+
+    /**
+     * Gets the breaks for a specific day
+     *
+     * @param Employee $employee The employee
+     * @param DateTimeInterface $dateTime The datetime interface
+     * @return array All breaks
+     */
+    public static function getBreaksForPeriod(Employee $employee, DateTimeInterface $dateTime): array
+    {
+        $breaks = [];
+        $workTimePeriod = strtoupper($dateTime->format("l"));
+        /** @var ConfiguredWorktime $configuredWorktime */
+        foreach ($employee->getConfiguredWorktimes()->toArray() as $configuredWorktime) {
+            if ($configuredWorktime->getDayName() === $workTimePeriod) {
+                if ($configuredWorktime->getBreakDuration() !== null) {
+                    $breaks[] = [$configuredWorktime->getBreakDuration(), $configuredWorktime->getBreakStart()];
+                }
+            }
+        }
+        return $breaks;
+    }
+
+    /**
+     * Gets the sum of time to subtract for breaks
+     *
+     * @param WorktimePeriod $element The worktime period
+     * @return float The sum of breaks
+     */
+    public static function sumBreaksToSubtract(WorktimePeriod $element): float
+    {
+        $timeSum = 0;
+        $breaks = EmployeeUtility::getBreaksForPeriod($element->getEmployee(), $element->getStartTime());
+        foreach ($breaks as $break) {
+            /** @var DateTimeInterface $endTime */
+            $endDate = clone $element->getEndTime();
+            if ($endDate === null) continue;
+            $endTime = DateTime::createFromInterface($endDate)->setDate(1970, 1,1);
+            if ($break[1]->getTimestamp() < $endTime->getTimestamp()) {
+                $timeSum += $break[0] ?? 0;
+            }
+        }
+        return $timeSum;
     }
 
 
