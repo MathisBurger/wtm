@@ -55,13 +55,16 @@ class EmployeeController extends AbstractController
         $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$timePeriod ?? (new DateTime())->format("Y-m")]);
         [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
-
+        $adjustedOvertime = $overtime;
+        if ($periods->count() > 0 && $periods->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
+            $adjustedOvertime = 0;
+        }
         return $this->render('employee/details.html.twig', [
             'employee' => $employee,
             'tab' => $tab,
-            'overtimeTransfer' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime),
-            'overtime' => $overtime,
-            'overtimeSum' => $employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $overtime,
+            'overtimeTransfer' => number_format($employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime), 2),
+            'overtime' => number_format($overtime, 2),
+            'overtimeSum' => number_format($employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $adjustedOvertime, 2),
             'periods' => $periods,
             'holidays' => $holidays,
             'illnessDays' => $illnessDays,
@@ -204,6 +207,11 @@ class EmployeeController extends AbstractController
                 'form' => $form
             ]);
         }
+    }
+
+    private static function getOvertimeForPeriod()
+    {
+
     }
 
 }
