@@ -114,6 +114,7 @@ class GeneratorService
         $targetHours = [];
         $stats = [];
 
+        $beforeEntry = null;
         /** @var WorktimePeriod $entry */
         foreach ($entries as $entry) {
 
@@ -129,7 +130,8 @@ class GeneratorService
 
                 //var_dump($entry->getEmployee()->getUsername());
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
-                $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::sumBreaksToSubtract($entry);
+                $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::getBreakSumToSubstract($entry, $beforeEntry);
+                $beforeEntry = $entry;
             }
 
             // Add table element

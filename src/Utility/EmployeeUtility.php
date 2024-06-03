@@ -136,6 +136,27 @@ class EmployeeUtility
     }
 
     /**
+     * Gets the break sums to substract dependent on before entry
+     *
+     * @param WorktimePeriod $entry Current entry
+     * @param WorktimePeriod|null $beforeEntry Before entry
+     * @return float The time to substract
+     */
+    public static function getBreakSumToSubstract(WorktimePeriod $entry, ?WorktimePeriod $beforeEntry): float
+    {
+        if (
+            $beforeEntry === null
+            || !EmployeeUtility::breakArraysDoMatch(
+                EmployeeUtility::getBreaksForPeriod($entry->getEmployee(), $entry->getStartTime()),
+                EmployeeUtility::getBreaksForPeriod($beforeEntry->getEmployee(), $beforeEntry->getStartTime())
+            )
+        ) {
+            return EmployeeUtility::sumBreaksToSubtract($entry);
+        }
+        return 0;
+    }
+
+    /**
      * Gets regular worktime for specific day
      *
      * @param Employee $employee The employee

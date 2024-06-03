@@ -172,12 +172,7 @@ class WorktimePeriod extends AbstractEntity
         }
         $sub = 0;
         $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($diff)->getTimeStamp();
-        if (self::$before === null) {
-            $sub = EmployeeUtility::sumBreaksToSubtract($this) * 3600;
-        } else if (self::$before !== null && !EmployeeUtility::breakArraysDoMatch(EmployeeUtility::getBreaksForPeriod($this->getEmployee(), $this->getStartTime()), EmployeeUtility::getBreaksForPeriod(self::$before->getEmployee(), self::$before->getStartTime()))) {
-            $sub = EmployeeUtility::sumBreaksToSubtract($this) * 3600;
-        }
-        $intervalInSeconds -= $sub;
+        $intervalInSeconds -= EmployeeUtility::getBreakSumToSubstract($this, self::$before) * 3600;
         self::$before = $this;
         return (new DateTime())->setTimeStamp($intervalInSeconds-3600)->format('H:i');
     }
