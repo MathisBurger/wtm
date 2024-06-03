@@ -51,8 +51,23 @@ class ConfiguredWorktime extends AbstractEntity
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $restrictedEndTime = null;
 
+    /**
+     * The employee assigned to a configured work time
+     */
     #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'configuredWorktimes')]
     private ?Employee $employee = null;
+
+    /**
+     * Break time
+     */
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $breakStart = null;
+
+    /**
+     * The duration of the break
+     */
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $breakDuration = null;
 
     /**
      * Gets the name of the day
@@ -188,6 +203,50 @@ class ConfiguredWorktime extends AbstractEntity
     public function setEmployee(Employee $employee): self
     {
         $this->employee = $employee;
+        return $this;
+    }
+
+    /**
+     * Gets the break start
+     *
+     * @return DateTimeInterface|null The break start
+     */
+    public function getBreakStart(): ?DateTimeInterface
+    {
+        return $this->breakStart;
+    }
+
+    /**
+     * Sets the break start
+     *
+     * @param DateTimeInterface $breakStart The new break start
+     * @return $this The updated entity
+     */
+    public function setBreakStart(?DateTimeInterface $breakStart): self
+    {
+        $this->breakStart = $breakStart;
+        return $this;
+    }
+
+    /**
+     * Gets the break duration
+     *
+     * @return float|null The break duration
+     */
+    public function getBreakDuration(): ?float
+    {
+        return $this->breakDuration;
+    }
+
+    /**
+     * Sets the break duration
+     *
+     * @param float|null $breakDuration The new break duration
+     * @return $this The updated entity
+     */
+    public function setBreakDuration(?float $breakDuration): self
+    {
+        $this->breakDuration = $breakDuration;
         return $this;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\ConfiguredWorktime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,11 +33,11 @@ class ConfiguredWorktimeType extends AbstractType
             ])
             ->add('regularStartTime', TimeType::class, [
                 'label' => 'form.configuredWorktime.label.regularStartTime',
-                'row_attr' => ['class' => 'col-md-2']
+                'row_attr' => ['class' => 'col-md-1']
             ])
             ->add('regularEndTime', TimeType::class, [
                 'label' => 'form.configuredWorktime.label.regularEndTime',
-                'row_attr' => ['class' => 'col-md-2']
+                'row_attr' => ['class' => 'col-md-1']
             ])
             ->add('restrictedStartTime', TimeType::class, [
                 'label' => 'form.configuredWorktime.label.restrictedStartTime',
@@ -46,6 +47,17 @@ class ConfiguredWorktimeType extends AbstractType
             ->add('restrictedEndTime', TimeType::class, [
                 'label' => 'form.configuredWorktime.label.restrictedEndTime',
                 'row_attr' => ['class' => 'col-md-2 restrictedTime'],
+                'required' => false
+            ])
+            ->add('breakStart', TimeType::class, [
+                'label' => 'form.configuredWorktime.label.breakStart',
+                'row_attr' => ['class' => 'col-md-1'],
+                'required' => false
+            ])
+            ->add('breakDuration', NumberType::class, [
+                'label' => 'form.configuredWorktime.label.breakDuration',
+                'row_attr' => ['class' => 'col-md-1'],
+                'attr' => ['type' => 'number'],
                 'required' => false
             ]);
     }

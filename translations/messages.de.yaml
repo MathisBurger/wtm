@@ -109,6 +109,8 @@ form:
       regularEndTime: Endzeit
       restrictedStartTime: Eingeschränkte Startzeit
       restrictedEndTime: Eingeschränkte Endzeit
+      breakStart: Pausenstart
+      breakDuration: Pausendauer
   employee:
     label:
       username: Benutzername
