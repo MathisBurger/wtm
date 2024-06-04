@@ -45,7 +45,7 @@ class AutoLogoutSchedulerCommand extends Command
             $date = new DateTime();
             $date->setTime(0,0,0);
             $threshold = $period->getEmployee()->getAutoLogoutThreshold();
-            $endDate = (new DateTime())->setTimestamp($date->getTimestamp() + $threshold->getTimestamp());
+            $endDate = (new DateTime())->setTimestamp($date->getTimestamp() + $threshold->getTimestamp()+3600);
             $period->setEndTime($endDate);
             $period->setLogoutDevice("SYSTEM");
             $this->entityManager->persist($period);

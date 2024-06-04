@@ -168,7 +168,7 @@ class WorktimePeriod extends AbstractEntity
         if ($this->endTime) {
             $diff = $this->startTime->diff($this->endTime);
         } else {
-            $this->startTime->diff(new DateTime());
+            $diff = $this->startTime->diff(new DateTime());
         }
         $sub = 0;
         $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($diff)->getTimeStamp();
