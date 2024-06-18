@@ -22,7 +22,7 @@ fn get_hostname() -> String {
         .creation_flags(CREATE_NO_WINDOW)
         .output()
         .unwrap();
-    return String::from_utf8_lossy(output.stdout);
+    return String::from_utf8_lossy(&output.stdout);
 }
 
 /// Gets the username of the current system
@@ -53,7 +53,7 @@ fn is_rdp() -> bool {
         .creation_flags(CREATE_NO_WINDOW)
         .output()
         .expect("Cannot check for rdp sessions");
-    let content = String::from_utf8_lossy(output.stdout);
+    let content = String::from_utf8_lossy(&output.stdout);
     return content.contains("rdp-tcp#");
 }
 
