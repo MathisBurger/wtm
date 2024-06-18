@@ -1,6 +1,5 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#![feature(windows_process_extensions_async_pipes)]
 use std::env;
 use std::os::windows::process::CommandExt;
 use std::process::Command;
@@ -23,7 +22,7 @@ fn get_hostname() -> String {
         .creation_flags(CREATE_NO_WINDOW)
         .output()
         .unwrap();
-    return output.stdout;
+    return String::from_utf8_lossy(output.stdout);
 }
 
 /// Gets the username of the current system
@@ -54,7 +53,7 @@ fn is_rdp() -> bool {
         .creation_flags(CREATE_NO_WINDOW)
         .output()
         .expect("Cannot check for rdp sessions");
-    let content = output.stdout;
+    let content = String::from_utf8_lossy(output.stdout);
     return content.contains("rdp-tcp#");
 }
 
