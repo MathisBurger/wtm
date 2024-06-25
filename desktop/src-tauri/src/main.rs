@@ -1,13 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use std::env;
-use std::os::windows::process::CommandExt;
-use std::process::Command;
+use tauri::api::process::Command;
 use tauri::Manager;
 use tauri::SystemTrayEvent;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
-
-const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 fn get_url() -> String {
     if env::var("APP_MODE").is_ok() && env::var("APP_MODE").unwrap() == "dev" {
@@ -18,11 +16,8 @@ fn get_url() -> String {
 }
 
 fn get_hostname() -> String {
-    let output = Command::new("hostname")
-        .creation_flags(CREATE_NO_WINDOW)
-        .output()
-        .unwrap();
-    return String::from_utf8_lossy(&output.stdout).to_string();
+    let output = Command::new("hostname").output().unwrap();
+    return output.stdout;
 }
 
 /// Gets the username of the current system
@@ -50,10 +45,9 @@ fn is_rdp() -> bool {
     }
     let output = Command::new("qwinsta")
         .args(["/"])
-        .creation_flags(CREATE_NO_WINDOW)
         .output()
         .expect("Cannot check for rdp sessions");
-    let content = String::from_utf8_lossy(&output.stdout).to_string();
+    let content = output.stdout;
     return content.contains("rdp-tcp#");
 }
 
