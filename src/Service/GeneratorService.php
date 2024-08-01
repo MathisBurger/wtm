@@ -86,7 +86,10 @@ class GeneratorService
         $timeSum = 0;
         /** @var WorktimePeriod $element */
         foreach ($elementsToSum as $element) {
-            $diff = $element->getEndTime()->diff($element->getStartTime());
+            $diff = (new DateTime())->diff($element->getStartTime());
+            if ($element->getEndTime() !== null) {
+                $diff = $element->getEndTime()->diff($element->getStartTime());
+            }
             $timeSum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
             $timeSum -= EmployeeUtility::sumBreaksToSubtract($element);
         }
