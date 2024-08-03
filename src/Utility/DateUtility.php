@@ -40,4 +40,16 @@ class DateUtility
         return new \DateTime($year . '-' . $month . '-' . DateUtility::getMonthMaxDay($year, $month) . ' 23:59:59');
     }
 
+    /**
+     * Gets the last day of last month
+     *
+     * @param DateTime $dateTime The date
+     * @return DateTime The last day of last month
+     */
+    public static function getLastDayOfBeforeMonth(DateTime $dateTime): DateTime
+    {
+        $cloned = clone $dateTime;
+        return $cloned->modify('last day of last month');
+    }
+
 }

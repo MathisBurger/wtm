@@ -97,10 +97,6 @@ class EmployeeUtility
             $workingHours = $regularWorktime;
         }
         $overtime = $sumWorkedHours - $workingHours;
-        $firstPeriodStartTime = new DateTime();
-        if ($periods->first()) {
-            $firstPeriodStartTime = $periods->first()->getStartTime();
-        }
 
         $specialDayTimePeriods = [(new DateTime())->format("Y"), (new DateTime())->add(new DateInterval('P1Y'))->format("Y")];
         if (($tab === "holiday" || $tab === "illness") && $timePeriod !== null) {
@@ -132,7 +128,7 @@ class EmployeeUtility
         usort($illnessArray, fn (WorktimeSpecialDay $a, WorktimeSpecialDay $b) => $a->getDate()->getTimestamp() <=> $b->getDate()->getTimestamp());
         $illnessSorted = new ArrayCollection($illnessArray);
 
-        return [$periodsSorted, $overtime, $firstPeriodStartTime, $holidaysSorted, $illnessSorted];
+        return [$periodsSorted, $overtime, $holidaysSorted, $illnessSorted];
     }
 
     /**

@@ -134,7 +134,7 @@ class GeneratorService
                 $diff = $entry->getEndTime()->diff($entry->getStartTime());
 
 
-                $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
+                $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::getBreakSumToSubstract($entry, $beforeEntry);
                 $beforeEntry = $entry;
             }
@@ -161,20 +161,21 @@ class GeneratorService
                 $period = $year . "-" . ($month < 10 ? "0" . $month : $month);
                 $targetMonth = EmployeeUtility::getWorktimeForPeriods($value, [$period]);
                 $overtime = $stats[$key]['hoursWorked'] - $targetMonth;
-                $stats[$key]['overtime'] = $overtime;
+                $stats[$key]['overtime'] = number_format($overtime, 2);
                 $transfers = $value->getOvertimeTransfers();
                 $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
-                $before = DateUtility::getOvertimeLastDayPeriod($year, $month-1);
+                $before = DateUtility::getLastDayOfBeforeMonth($newUpdatedAt);
+                $beforeOvertime = (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
                 if (!isset($transfers[$newUpdatedAt->format('Y-m')])) {
-                    // TODO: Get better diff determination
-                    $transfers[$newUpdatedAt->format('Y-m')] = $overtime + (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
+
+                    $transfers[$newUpdatedAt->format('Y-m')] = $overtime + $beforeOvertime;
                 }
 
                 $value->setOvertimeTransfers($transfers);
                 $this->entityManager->persist($value);
                 $this->entityManager->flush();
-                $stats[$key]['overtimeTransfer'] = (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
-                $stats[$key]['overtimeTotal'] = $overtime + (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
+                $stats[$key]['overtimeTransfer'] = number_format($beforeOvertime, 2);
+                $stats[$key]['overtimeTotal'] = number_format($overtime + $beforeOvertime, 2);
             }
         }
 
@@ -206,6 +207,10 @@ class GeneratorService
                 'notes' => $notes,
                 'isOvertimeDecrease' => false
             ];
+        }
+
+        foreach ($stats as $k => $_) {
+            $stats[$k]['hoursWorked'] = number_format($stats[$k]['hoursWorked'], 2);
         }
         return [$employees, $stats];
     }

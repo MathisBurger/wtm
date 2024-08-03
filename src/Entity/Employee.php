@@ -79,13 +79,13 @@ class Employee extends AbstractEntity
     /**
      * @deprecated Now $transfers is used for determination of overtime
      */
-    #[ORM\Column(options: ["default" => 0])]
+    #[ORM\Column(updatable: false, options: ["default" => 0])]
     private float $overtime = 0;
 
     /**
      * @deprecated Now $transfers is used for determination of overtime
      */
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, updatable: false)]
     private ?DateTimeInterface $overtimeLastUpdate = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]

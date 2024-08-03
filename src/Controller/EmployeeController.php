@@ -8,7 +8,9 @@ use App\Form\OvertimeDecreaseType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeService;
 use App\Service\GeneratorService;
+use App\Utility\DateUtility;
 use App\Utility\EmployeeUtility;
+use App\Utility\PeriodUtility;
 use App\Voter\LdapAdminVoter;
 use DateTime;
 use Exception;
@@ -52,19 +54,23 @@ class EmployeeController extends AbstractController
                 'messageStatus' => 'alert-danger'
             ]);
         }
-        $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$timePeriod ?? (new DateTime())->format("Y-m")]);
-        [$periods, $overtime, $firstPeriodStartTime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
+        $currentPeriod = $timePeriod ?? (new DateTime())->format("Y-m");
+        $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$currentPeriod]);
+        [$periods, $overtime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
         $adjustedOvertime = $overtime;
         if ($periods->count() > 0 && $periods->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
             $adjustedOvertime = 0;
         }
+        [$year, $month] = PeriodUtility::getYearAndMonthFromPeriod($currentPeriod);
+        $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
+        $lastMonthDay = DateUtility::getLastDayOfBeforeMonth($newUpdatedAt);
         return $this->render('employee/details.html.twig', [
             'employee' => $employee,
             'tab' => $tab,
-            'overtimeTransfer' => number_format($employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime), 2),
-            'overtime' => number_format($overtime, 2),
-            'overtimeSum' => number_format($employee->getOvertime() + $this->generatorService->getOvertime($employee, $firstPeriodStartTime) + $adjustedOvertime, 2),
+            'overtimeTransfer' => number_format($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0, 2),
+            'overtime' => number_format($adjustedOvertime, 2),
+            'overtimeSum' => number_format($adjustedOvertime + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0), 2),
             'periods' => $periods,
             'holidays' => $holidays,
             'illnessDays' => $illnessDays,
