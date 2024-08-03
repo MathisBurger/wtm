@@ -81,6 +81,7 @@ list:
   holidaysLeft: Übrige Urlaubstage
   targetHours: Sollstunden (Woche)
   overtimeTransfer: Überstunden (Übertrag)
+  overtimeDecreaseSum: Überstundenabbau (aktueller Monat)
   overtime: Überstunden (aktueller Monat)
   overtimeTotal: Überstunden (Gesamt)
   workTimes: Arbeitszeiten (aktueller Monat)

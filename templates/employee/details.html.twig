@@ -8,7 +8,7 @@
                 {{ 'actions.createSpecialDay'|trans }}
             </a>
         {% endif %}
-        {% if overtime > 0 and employee.isTimeEmployed() and (is_granted('LDAP_ADMIN_ACCESS') or is_granted("LDAP_PERSONAL_STATS_ACCESS")) %}
+        {% if overtimeSum > 0 and employee.isTimeEmployed() and (is_granted('LDAP_ADMIN_ACCESS') or is_granted("LDAP_PERSONAL_STATS_ACCESS")) %}
             <a class="btn btn-primary" href="{{ path("register_overtime_decrease", {id: employee.getId()}) }}">
                 {{ 'actions.createOvertimeDecrease'|trans }}
             </a>
@@ -143,6 +143,7 @@
                         {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
                             <li><b>{{ 'list.targetHours'|trans }}:</b> {{ employee.getTargetWorkingHours() }}</li>
                             <li><b>{{ 'list.overtimeTransfer'|trans }}:</b> {{ overtimeTransfer }}</li>
+                            <li><b>{{ 'list.overtimeDecreaseSum'|trans }}:</b> {{ overtimeDecreaseSum }}</li>
                             {% if overtime < 0 %}
                                 <li><b>{{ 'list.worktimeLeft'|trans }}:</b> {{ -overtime }}</li>
                             {% else %}

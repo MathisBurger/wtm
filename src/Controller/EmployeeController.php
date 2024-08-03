@@ -56,7 +56,7 @@ class EmployeeController extends AbstractController
         }
         $currentPeriod = $timePeriod ?? (new DateTime())->format("Y-m");
         $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$currentPeriod]);
-        [$periods, $overtime, $holidays, $illnessDays] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
+        [$periods, $overtime, $holidays, $illnessDays, $overtimeDecreaseSum] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
         $adjustedOvertime = $overtime;
         if ($periods->count() > 0 && $periods->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
@@ -70,7 +70,8 @@ class EmployeeController extends AbstractController
             'tab' => $tab,
             'overtimeTransfer' => number_format($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0, 2),
             'overtime' => number_format($adjustedOvertime, 2),
-            'overtimeSum' => number_format($adjustedOvertime + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0), 2),
+            'overtimeSum' => number_format($adjustedOvertime + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0) - $overtimeDecreaseSum, 2),
+            'overtimeDecreaseSum' => number_format($overtimeDecreaseSum, 2),
             'periods' => $periods,
             'holidays' => $holidays,
             'illnessDays' => $illnessDays,

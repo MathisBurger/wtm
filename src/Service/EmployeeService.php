@@ -173,9 +173,14 @@ class EmployeeService
             return 0;
         }
         $firstCurrentArray = $employee->getPeriods()->toArray();
-        usort($firstCurrentArray, fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->getTimestamp() <=> $b->getStartTime()->getTimestamp());
-        // Caution: getOvertime() does not update the overtime in database
-        return $this->generatorService->getOvertime($employee, $firstCurrentArray[count($firstCurrentArray)-1]);
+        /** @var WorktimePeriod $latestPeriod */
+        $latestPeriod =  $firstCurrentArray[count($firstCurrentArray)-1];
+        $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$latestPeriod->getStartTime()->format('Y-m')]);
+        $employeeData = EmployeeUtility::getEmployeeData($employee, $latestPeriod->getStartTime()->format('Y-m'), null, $worktime);
+        [$year, $month] = PeriodUtility::getYearAndMonthFromPeriod($latestPeriod->getStartTime()->format('Y-m'));
+        $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
+        $lastMonthDay = DateUtility::getLastDayOfBeforeMonth($newUpdatedAt);
+        return $employeeData[1] + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0) - $employeeData[4];
     }
 
     /**

@@ -79,9 +79,22 @@ class EmployeeUtility
 
         // Overtime
         $sumWorkedHours = 0;
+        $overtimeDecreaseSum = 0;
         $lastBreaks = null;
         /** @var WorktimePeriod $item */
         foreach ($periods->toArray() as $item) {
+            if ($item->isOvertimeDecrease() && $item->getId() !== null) {
+                /** @var list<ConfiguredWorktime> $configuredWorktime */
+                $configuredWorktimes = $item->getEmployee()->getConfiguredWorktimes()->filter(
+                    fn (ConfiguredWorktime $wt) => $wt->getDayName() === strtoupper($item->getStartTime()->format('l'))
+                );
+                foreach ($configuredWorktimes as $worktime) {
+                    $diff = $worktime->getRegularStartTime()->diff($worktime->getRegularEndTime());
+                    $overtimeDecreaseSum += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                    $overtimeDecreaseSum -= ($worktime->getBreakDuration() ?? 0);
+                }
+
+            }
             if ($item->getEndTime() !== null) {
                 $diff = $item->getStartTime()->diff($item->getEndTime());
                 $sumWorkedHours += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
@@ -91,6 +104,7 @@ class EmployeeUtility
                 }
                 $lastBreaks = $newLastBreaks;
             }
+
         }
         $workingHours = 0;
         if ($employee->isTimeEmployed()) {
@@ -128,7 +142,12 @@ class EmployeeUtility
         usort($illnessArray, fn (WorktimeSpecialDay $a, WorktimeSpecialDay $b) => $a->getDate()->getTimestamp() <=> $b->getDate()->getTimestamp());
         $illnessSorted = new ArrayCollection($illnessArray);
 
-        return [$periodsSorted, $overtime, $holidaysSorted, $illnessSorted];
+        $adjustedOvertime = $overtime;
+        if ($periods->count() > 0 && $periodsSorted->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
+            $adjustedOvertime = 0;
+        }
+
+        return [$periodsSorted, $adjustedOvertime, $holidaysSorted, $illnessSorted, $overtimeDecreaseSum];
     }
 
     /**

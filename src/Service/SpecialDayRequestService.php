@@ -192,7 +192,6 @@ class SpecialDayRequestService
                     $newFile = $file->move($documentsDir, $newFilename);
                     return $newFile->getRealPath();
                 } catch (FileException $e) {
-                    var_dump($e->getMessage());
                     return null;
                 }
             }
