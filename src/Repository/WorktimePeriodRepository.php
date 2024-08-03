@@ -74,7 +74,10 @@ class WorktimePeriodRepository extends ServiceEntityRepository
             $start->add(new \DateInterval('P1M'));
         }
         $periods[] = $start;
-        return $periods;
+        return array_filter(
+            $periods,
+            fn (DateTime $period) => $period->format("Y-m") !== (new DateTime())->format("Y-m")
+        );
     }
 
     /**
