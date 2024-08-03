@@ -8,6 +8,7 @@ use App\Entity\WorktimeSpecialDay;
 use App\Generator\ReportPdf;
 use App\Repository\WorktimePeriodRepository;
 use App\Repository\WorktimeSpecialDayRepository;
+use App\Utility\DateUtility;
 use App\Utility\EmployeeUtility;
 use App\Utility\PeriodUtility;
 use DateTime;
@@ -70,6 +71,7 @@ class GeneratorService
     /**
      * Gets the overtime from last update in db to first element
      * NOTE: Overtime entry is not updated in the database
+     * @deprecated This method is no longer used for overtime determination. A more lightweight method is now used
      *
      * @param Employee $employee The employee
      * @param DateTimeInterface $firstCurrent The first current
@@ -109,6 +111,7 @@ class GeneratorService
      * @param int $year The year
      * @param int $month The month
      * @return array[] Array with data
+     * @throws Exception Date period error
      */
     private function getEmployeesAndStats(int $year, int $month): array
     {
@@ -131,7 +134,6 @@ class GeneratorService
                 $diff = $entry->getEndTime()->diff($entry->getStartTime());
 
 
-                //var_dump($entry->getEmployee()->getUsername());
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60);
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::getBreakSumToSubstract($entry, $beforeEntry);
                 $beforeEntry = $entry;
@@ -156,18 +158,23 @@ class GeneratorService
          */
         foreach ($targetHours as $key => $value) {
             if ($value->getTargetWorkingHours() && $value->isTimeEmployed()) {
-                $targetMonth = EmployeeUtility::getWorktimeForPeriods($value, [$year . "-" . ($month < 10 ? "0" . $month : $month)]);
+                $period = $year . "-" . ($month < 10 ? "0" . $month : $month);
+                $targetMonth = EmployeeUtility::getWorktimeForPeriods($value, [$period]);
                 $overtime = $stats[$key]['hoursWorked'] - $targetMonth;
                 $stats[$key]['overtime'] = $overtime;
-                $overtimeTransferDiff = $this->getOvertime($value, $employees[$key][0]['dateUnformatted']);
-                if ($overtimeTransferDiff != 0) {
-                    $value->setOvertime($value->getOvertime() + $overtimeTransferDiff);
-                    $value->setOvertimeLastUpdate(new DateTime());
-                    $this->entityManager->persist($value);
-                    $this->entityManager->flush();
+                $transfers = $value->getOvertimeTransfers();
+                $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
+                $before = DateUtility::getOvertimeLastDayPeriod($year, $month-1);
+                if (!isset($transfers[$newUpdatedAt->format('Y-m')])) {
+                    // TODO: Get better diff determination
+                    $transfers[$newUpdatedAt->format('Y-m')] = $overtime + (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
                 }
-                $stats[$key]['overtimeTransfer'] = $value->getOvertime();
-                $stats[$key]['overtimeTotal'] = $overtime + $value->getOvertime();
+
+                $value->setOvertimeTransfers($transfers);
+                $this->entityManager->persist($value);
+                $this->entityManager->flush();
+                $stats[$key]['overtimeTransfer'] = (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
+                $stats[$key]['overtimeTotal'] = $overtime + (isset($transfers[$before->format('Y-m')]) ? $transfers[$before->format('Y-m')] : 0);
             }
         }
 

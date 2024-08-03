@@ -76,14 +76,23 @@ class Employee extends AbstractEntity
     #[ORM\OneToMany(targetEntity: ConfiguredWorktime::class, mappedBy: 'employee', cascade: ["persist"])]
     private Collection $configuredWorktimes;
 
+    /**
+     * @deprecated Now $transfers is used for determination of overtime
+     */
     #[ORM\Column(options: ["default" => 0])]
     private float $overtime = 0;
 
+    /**
+     * @deprecated Now $transfers is used for determination of overtime
+     */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $overtimeLastUpdate = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $autoLogoutThreshold = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $overtimeTransfers = [];
 
     public function __construct() {
         $this->periods = new ArrayCollection();
@@ -466,4 +475,16 @@ class Employee extends AbstractEntity
         }
         return $this;
     }
+
+    public function getOvertimeTransfers(): array
+    {
+        return $this->overtimeTransfers ?? [];
+    }
+
+    public function setOvertimeTransfers(array $overtimeTransfers): void
+    {
+        $this->overtimeTransfers = $overtimeTransfers;
+    }
+
+
 }
