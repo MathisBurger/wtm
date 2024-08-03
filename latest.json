@@ -1,0 +1,11 @@
+{
+  "version": "1.4.3",
+  "notes": "",
+  "pub_date": "2024-08-03T18:39:23.200Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVROGpIWDhEdmVyaWxuNm5YOWwrYWFLL3hjM25qNUtFZDRiVHR4VjAvVmpxdEhOZWNJMGJPNE5DSlhhTyttcG54enBDVjI5RjNiYUEzTk5zT0tHY1Z0ODFGdWpPM2w2eEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyNzEwMzYwCWZpbGU6WmVpdGVyZmFzc3VuZyAoV1RNKV8xLjQuM194NjRfZW4tVVMubXNpLnppcAppYTE4V3dwUk9FUHZZNTg2MEluQ04zMEdOMjNrdzNJMHdMclpxZ3NRK2pCbjE0TUhXc0lRWGp5VEtlTW45WExnclVRazN3cTMvVDJpL3BWaktGOThCdz09Cg==",
+      "url": "https://github.com/MathisBurger/wtm/releases/download/v1.4.4/Zeiterfassung.WTM._1.4.3_x64_en-US.msi.zip"
+    }
+  }
+}
