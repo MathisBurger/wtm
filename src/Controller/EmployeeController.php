@@ -216,9 +216,4 @@ class EmployeeController extends AbstractController
         }
     }
 
-    private static function getOvertimeForPeriod()
-    {
-
-    }
-
 }

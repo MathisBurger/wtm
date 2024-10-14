@@ -120,6 +120,41 @@ class GeneratorService
         $targetHours = [];
         $stats = [];
 
+        $specialDays = $this->specialDayRepository->findForPeriod($year, $month);
+        /** @var WorktimeSpecialDay $specialDay */
+        foreach ($specialDays as $specialDay) {
+            $notes = $this->translator->trans('specialDay.' . $specialDay->getReason());
+            if ($specialDay->getNotes() !== null) {
+                $notes = $notes .': ' . $specialDay->getNotes();
+            }
+
+            // Init user stats if no existance
+            if (!isset($stats[$specialDay->getEmployee()->getUsername()])) {
+                $stats[$specialDay->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => 0];
+            }
+
+            if ($specialDay->getReason() === WorktimeSpecialDay::REASON_ILLNESS) {
+                $stats[$specialDay->getEmployee()->getUsername()]['illnessDays']++;
+            } else if ($specialDay->getReason() === WorktimeSpecialDay::REASON_HOLIDAY) {
+                $stats[$specialDay->getEmployee()->getUsername()]['holidays']++;
+            }
+
+            // Removes minus overtime on worktime special days
+            if ($specialDay->getEmployee()->isTimeEmployed()) {
+                $stats[$specialDay->getEmployee()->getUsername()]['overtime'] += EmployeeUtility::getWorktimeForDay($specialDay->getEmployee(), $specialDay->getDate());
+            }
+
+            $employees[$specialDay->getEmployee()->getUsername()][] = [
+                'dateUnformatted' => $specialDay->getDate(),
+                'fullName' => $specialDay->getEmployee()->getFirstName() . " " . $specialDay->getEmployee()->getLastName() . ' (' . $specialDay->getEmployee()->getUsername() .')',
+                'date' => $specialDay->getDate()->format('d.m.Y'),
+                'startTime' => '-',
+                'endTime' => '-',
+                'notes' => $notes,
+                'isOvertimeDecrease' => false
+            ];
+        }
+
         $beforeEntry = null;
         /** @var WorktimePeriod $entry */
         foreach ($entries as $entry) {
@@ -132,8 +167,6 @@ class GeneratorService
             // Handle general month statistics
             if ($entry->getEndTime() !== null) {
                 $diff = $entry->getEndTime()->diff($entry->getStartTime());
-
-
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] += $diff->h + ($diff->i / 60) + ($diff->s / 3600);
                 $stats[$entry->getEmployee()->getUsername()]['hoursWorked'] -= EmployeeUtility::getBreakSumToSubstract($entry, $beforeEntry);
                 $beforeEntry = $entry;
@@ -160,7 +193,7 @@ class GeneratorService
             if ($value->getTargetWorkingHours() && $value->isTimeEmployed()) {
                 $period = $year . "-" . ($month < 10 ? "0" . $month : $month);
                 $targetMonth = EmployeeUtility::getWorktimeForPeriods($value, [$period]);
-                $overtime = $stats[$key]['hoursWorked'] - $targetMonth;
+                $overtime = $stats[$key]['hoursWorked'] - $targetMonth + $stats[$key]['overtime'];
                 $stats[$key]['overtime'] = number_format($overtime, 2);
                 $transfers = $value->getOvertimeTransfers();
                 $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
@@ -177,36 +210,6 @@ class GeneratorService
                 $stats[$key]['overtimeTransfer'] = number_format($beforeOvertime, 2);
                 $stats[$key]['overtimeTotal'] = number_format($overtime + $beforeOvertime, 2);
             }
-        }
-
-        $specialDays = $this->specialDayRepository->findForPeriod($year, $month);
-        /** @var WorktimeSpecialDay $specialDay */
-        foreach ($specialDays as $specialDay) {
-            $notes = $this->translator->trans('specialDay.' . $specialDay->getReason());
-            if ($specialDay->getNotes() !== null) {
-                $notes = $notes .': ' . $specialDay->getNotes();
-            }
-
-            // Init user stats if no existance
-            if (!isset($stats[$specialDay->getEmployee()->getUsername()])) {
-                $stats[$specialDay->getEmployee()->getUsername()] = ['hoursWorked' => 0, 'illnessDays' => 0, 'holidays' => 0, 'overtime' => null];
-            }
-
-            if ($specialDay->getReason() === WorktimeSpecialDay::REASON_ILLNESS) {
-                $stats[$specialDay->getEmployee()->getUsername()]['illnessDays']++;
-            } else if ($specialDay->getReason() === WorktimeSpecialDay::REASON_HOLIDAY) {
-                $stats[$specialDay->getEmployee()->getUsername()]['holidays']++;
-            }
-
-            $employees[$specialDay->getEmployee()->getUsername()][] = [
-                'dateUnformatted' => $specialDay->getDate(),
-                'fullName' => $specialDay->getEmployee()->getFirstName() . " " . $specialDay->getEmployee()->getLastName() . ' (' . $specialDay->getEmployee()->getUsername() .')',
-                'date' => $specialDay->getDate()->format('d.m.Y'),
-                'startTime' => '-',
-                'endTime' => '-',
-                'notes' => $notes,
-                'isOvertimeDecrease' => false
-            ];
         }
 
         foreach ($stats as $k => $_) {

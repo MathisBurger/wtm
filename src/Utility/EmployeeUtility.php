@@ -130,6 +130,13 @@ class EmployeeUtility
             fn (WorktimeSpecialDay $d) => $d->getReason() === WorktimeSpecialDay::REASON_ILLNESS && $d->getDate()->format("Y") === $specialDayTimePeriods[0]
         );
 
+        /** @var WorktimeSpecialDay $specialDay */
+        foreach ($employee->getWorktimeSpecialDays() as $specialDay) {
+            if ($specialDay->getDate()->format("Y-m") === $workTimePeriod) {
+                $overtime += EmployeeUtility::getWorktimeForDay($employee, $specialDay->getDate());
+            }
+        }
+
         $periodsArray = $periods->toArray();
         usort($periodsArray, fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->getTimestamp() <=> $b->getStartTime()->getTimestamp());
         $periodsSorted = new ArrayCollection($periodsArray);
