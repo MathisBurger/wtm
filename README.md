@@ -2,6 +2,8 @@
 
 [![](https://tokei.rs/b1/github/MathisBurger/wtm?category=lines)](https://github.com/XAMPPRocky/tokei).
 
+**NOTE: The code of this project is pretty bad. Its hard to maintain, because it was kind of an overnight project with no real architecture. Please do not blame it. I know it is bad. But I will not fix it. The functionality is fixed and as long as it runs as expected, I will not change anything!**
+
 This project is specifically built for a single company with the specific purpose of allowing the employees to track their 
 worktimes and manage holidays and illness. Furthermore, it provides the functionality to generate a PDF file that sums up the overtime
 and general worktime for each employee. It can also handle overtime transfer as well as overtime reduction days. Furthermore, the application is able to handle 

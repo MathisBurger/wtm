@@ -33,7 +33,6 @@ class EmployeeService
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly GeneratorService $generatorService,
         private readonly TranslatorInterface $translator
     ){
         $this->holidayApi = HolidayApiFactory::create();
