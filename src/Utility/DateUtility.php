@@ -52,4 +52,16 @@ class DateUtility
         return $cloned->modify('last day of last month');
     }
 
+    /**
+     * Gets the first day of next month
+     *
+     * @param DateTime $dateTime The date
+     * @return DateTime The first day of next month
+     */
+    public static function getNextMonth(DateTime $dateTime): DateTime
+    {
+        $cloned = clone $dateTime;
+        return $cloned->modify('first day of next month');
+    }
+
 }

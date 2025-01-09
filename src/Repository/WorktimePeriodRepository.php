@@ -73,11 +73,20 @@ class WorktimePeriodRepository extends ServiceEntityRepository
             $periods[] = clone $start;
             $start->add(new \DateInterval('P1M'));
         }
+        $latestPeriod = $this->getEntityManager()->getRepository(Employee::class)->findOneBy(['isTimeEmployed' => true])->getOvertimeTransfers();
         $periods[] = $start;
-        return array_filter(
+        $filteredPeriods =  array_filter(
             $periods,
-            fn (DateTime $period) => $period->format("Y-m") !== (new DateTime())->format("Y-m")
+            fn (DateTime $period) => isset($latestPeriod[$period->format("Y-m")])
         );
+
+        if (count($filteredPeriods) > 0) {
+            $lastPeriod = $filteredPeriods[array_keys($filteredPeriods)[count($filteredPeriods)-1]];
+            if ($lastPeriod != (new DateTime())->format("Y-m")) {
+                $filteredPeriods[] = DateUtility::getNextMonth($lastPeriod);
+            }
+        }
+        return $filteredPeriods;
     }
 
     /**
