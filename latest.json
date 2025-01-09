@@ -1,11 +1,11 @@
 {
   "version": "1.4.3",
   "notes": "",
-  "pub_date": "2024-10-14T09:29:30.018Z",
+  "pub_date": "2025-01-09T21:10:17.673Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVROGpIWDhEdmVyaWlNb2JvOEZDTTF5aTFVUldBNlh2VlZOOU8rbWRmbjhoWHFrRDcySGpQZTRES0d1cXJZNkpGNnpVY2pSRFk0MnZrN2VRSlh1VWpwTjhOa3ZzYUlGK3dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzI4ODk4MTY2CWZpbGU6WmVpdGVyZmFzc3VuZyAoV1RNKV8xLjQuM194NjRfZW4tVVMubXNpLnppcApqNjVNSk52WmNoYmJFcXU4MjA0UkJkL1N2Yk5DbXlKa0RKcGc1ZGd3alZDWDlXUmRYMG14aWdFb09UT1RsYXBHZTdtYXBOUzQwTzRHU29YdEYvVzNCZz09Cg==",
-      "url": "https://github.com/MathisBurger/wtm/releases/download/v1.4.5/Zeiterfassung.WTM._1.4.3_x64_en-US.msi.zip"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVROGpIWDhEdmVyaXAvdHZkSjl3dDFJcU1GWiswSE5iaEJTZ1AyV0kwT0JPcDJEb1cydUxObVM3c1FpTGdwSlFMbStTUE54U0l3THZLYjZ2QmtkTjF5L1VJSFJzWlZtSGcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM2NDU3MDE1CWZpbGU6WmVpdGVyZmFzc3VuZyAoV1RNKV8xLjQuM194NjRfZW4tVVMubXNpLnppcAoyUW0yRi9UWHJaSDBrdDVnWmpLa2ZENUZyVXNwZnB1RTVYdy9RMnBZRWpERTB2dUI1L3ZpejM0YTJyRmt2SE9CS012MllhNGQ2NERldysyMEcvd1hEUT09Cg==",
+      "url": "https://github.com/MathisBurger/wtm/releases/download/v1.4.6/Zeiterfassung.WTM._1.4.3_x64_en-US.msi.zip"
     }
   }
 }
