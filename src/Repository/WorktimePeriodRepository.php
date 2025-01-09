@@ -86,7 +86,10 @@ class WorktimePeriodRepository extends ServiceEntityRepository
                 $filteredPeriods[] = DateUtility::getNextMonth($lastPeriod);
             }
         }
-        return $filteredPeriods;
+        return array_filter(
+            $filteredPeriods,
+            fn (DateTime $period) => $period->format("Y-m") !== (new DateTime())->format("Y-m")
+        );
     }
 
     /**
