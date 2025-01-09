@@ -154,7 +154,7 @@ class EmployeeUtility
             $adjustedOvertime = 0;
         }
 
-        return [$periodsSorted, $adjustedOvertime, $holidaysSorted, $illnessSorted, $overtimeDecreaseSum];
+        return [$periodsSorted, $adjustedOvertime, $holidaysSorted, $illnessSorted, $overtimeDecreaseSum, $sumWorkedHours];
     }
 
     /**

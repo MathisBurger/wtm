@@ -86,6 +86,7 @@ list:
   overtimeTotal: Überstunden (Gesamt)
   workTimes: Arbeitszeiten (aktueller Monat)
   worktimeLeft: Verbleibende Arbeitsstunden
+  hoursWorked: Stunden gearbeitet (aktueller Monat)
 
 error:
   invalidForm: Das Formular wurde nicht richtig ausgefüllt.

@@ -151,6 +151,7 @@
                             {% endif %}
                             <li><b>{{ 'list.overtimeTotal'|trans }}:</b> {{ overtimeSum }}</li>
                         {% endif %}
+                        <li><b>{{ 'list.hoursWorked'|trans }}:</b> {{ timeWorked }}</li>
                     </ul>
                     <h5>{{ 'form.employee.label.workTimes'|trans }}:</h5>
                     {{ component('WorkTimePlan', {worktimes: employee.getConfiguredWorktimes()}) }}
