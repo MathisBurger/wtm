@@ -222,7 +222,7 @@ class SpecialDayRequestService
                 $thisYearHolidays = array_filter($holidays, function (DateTimeInterface $item) {
                     return $item->format('Y') === (new DateTime())->format('Y');
                 });
-                if ($employee->getHolidays() - $existingHolidays->count() - count($thisYearHolidays) < 0) {
+                if ($employee->getHolidays() + $employee->getHolidayTransfers() ?? 0 - $existingHolidays->count() - count($thisYearHolidays) < 0) {
                     throw new Exception("Zu viele Urlaubstage.");
                 }
             }
@@ -231,7 +231,7 @@ class SpecialDayRequestService
         if (
             $formData['reason'] === WorktimeSpecialDay::REASON_HOLIDAY
             && $formData['startDate']->format("Y") === (new DateTime())->format("Y")
-            && $employee->getHolidays() - $existingHolidays->count() <= 0
+            && $employee->getHolidays() ?? 0 + $employee->getHolidayTransfers() ?? 0 - $existingHolidays->count() <= 0
         ) {
             throw new Exception(
                 $this->translator->trans('error.tooFewHolidays')

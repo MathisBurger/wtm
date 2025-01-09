@@ -94,6 +94,9 @@ class Employee extends AbstractEntity
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $overtimeTransfers = [];
 
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $holidayTransfers = 0;
+
     public function __construct() {
         $this->periods = new ArrayCollection();
         $this->worktimeSpecialDays = new ArrayCollection();
@@ -486,5 +489,13 @@ class Employee extends AbstractEntity
         $this->overtimeTransfers = $overtimeTransfers;
     }
 
+    public function getHolidayTransfers(): ?float
+    {
+        return $this->holidayTransfers;
+    }
 
+    public function setHolidayTransfers(?float $holidayTransfers): void
+    {
+        $this->holidayTransfers = $holidayTransfers;
+    }
 }
