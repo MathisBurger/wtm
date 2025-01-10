@@ -14,6 +14,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -40,7 +41,8 @@ class SpecialDayRequestService
         private readonly SluggerInterface $slugger,
         private readonly KernelInterface $kernel,
         private readonly WorktimeSpecialDayService $worktimeSpecialDayService,
-        private readonly MailService $mailService
+        private readonly MailService $mailService,
+        private readonly LoggerInterface $logger,
     ) {
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -108,6 +110,7 @@ class SpecialDayRequestService
         $this->entityManager->persist($request);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
+        $this->logger->info('Added special day request for user ' . $employee->getUsername());
     }
 
     /**
@@ -165,10 +168,12 @@ class SpecialDayRequestService
             $this->mailService->sendRequestHandleMail($request, $action);
             $this->entityManager->remove($request);
             $this->entityManager->flush();
+            $this->logger->info('Accepted special day request for user ' . $request->getEmployee()->getUsername() . ' with startDate ' . $request->getStartDate()->format('Y-m-d') . ' and endDate ' . $request->getEndDate()->format('Y-m-d'));
         } else if ($action === 'deny') {
             $this->mailService->sendRequestHandleMail($request, $action);
             $this->entityManager->remove($request);
             $this->entityManager->flush();
+            $this->logger->info('Denied special day request for user ' . $request->getEmployee()->getUsername() . ' with startDate ' . $request->getStartDate()->format('Y-m-d') . ' and endDate ' . $request->getEndDate()->format('Y-m-d'));
         }
     }
 

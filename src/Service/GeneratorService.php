@@ -15,6 +15,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -26,7 +27,8 @@ class GeneratorService
         private readonly WorktimeSpecialDayRepository $specialDayRepository,
         private readonly Environment $environment,
         private readonly TranslatorInterface $translator,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly LoggerInterface $logger
     ){}
 
     /**
@@ -65,6 +67,7 @@ class GeneratorService
         ]);
         $pdf = new ReportPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->handleCreation($html, $period);
+        $this->logger->info('Created report for period ' . $period);
         $pdf->Output('Monatsbericht.pdf', 'I');
     }
 

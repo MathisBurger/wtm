@@ -10,6 +10,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -51,7 +52,8 @@ class CheckInOutService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EmployeeRepository $employeeRepository,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger
     ){}
 
     /**
@@ -82,6 +84,7 @@ class CheckInOutService
         $this->entityManager->persist($checkIn);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
+        $this->logger->info('User ' . $employee->getUsername() . 'logged in at ' . $checkIn->getStartTime()->format('Y-m-d H:i:s'));
         return self::SUCCESS;
     }
 
@@ -110,6 +113,7 @@ class CheckInOutService
         $currentCheckIn->setLogoutDevice($logoutDevice);
         $this->entityManager->persist($currentCheckIn);
         $this->entityManager->flush();
+        $this->logger->info('User ' . $employee->getUsername() . 'logged out at ' . $currentCheckIn->getEndTime()->format('Y-m-d H:i:s'));
         return self::SUCCESS;
     }
 

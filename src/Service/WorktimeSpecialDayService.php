@@ -11,6 +11,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,7 +24,8 @@ class WorktimeSpecialDayService
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly WorktimeSpecialDayRepository $worktimeSpecialDayRepository,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger
     ){
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -79,6 +81,7 @@ class WorktimeSpecialDayService
             }
             $this->entityManager->persist($employee);
             $this->entityManager->flush();
+            $this->logger->info('Created special days for user ' . $employee->getUsername());
             return;
         }
         if (
@@ -120,6 +123,7 @@ class WorktimeSpecialDayService
         $this->entityManager->persist($day->getEmployee());
         $this->entityManager->remove($day);
         $this->entityManager->flush();
+        $this->logger->info('Deleted special days for user ' . $day->getEmployee()->getUsername());
         return $day->getEmployee()->getId();
     }
 }

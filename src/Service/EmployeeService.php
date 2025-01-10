@@ -18,6 +18,7 @@ use DateTimeInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -33,7 +34,8 @@ class EmployeeService
     public function __construct(
         private readonly EmployeeRepository $employeeRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ){
         $this->holidayApi = HolidayApiFactory::create();
     }
@@ -56,6 +58,7 @@ class EmployeeService
                     $this->translator->trans('form.userAlreadyExists')
                 );
             }
+            $this->logger->info('Created new employee with username ' . $employee->getUsername());
             return $this->persistEmployee($employee);
         }
         throw new Exception($form->getErrors()[0]->getMessage());
@@ -83,6 +86,7 @@ class EmployeeService
             $exists->setFirstName($employee->getFirstName());
             $exists->setLastName($employee->getLastName());
             $exists->setIsTimeEmployed($employee->isTimeEmployed());
+            $this->logger->info('Updated employee with username ' . $employee->getUsername());
             return $this->persistEmployee($employee);
         }
         throw new Exception($form->getErrors()[0]->getMessage());
@@ -102,6 +106,7 @@ class EmployeeService
         }
         $this->entityManager->remove($employee);
         $this->entityManager->flush();
+        $this->logger->info('Deleted employee with username ' . $employee->getUsername());
     }
 
     /**
@@ -133,6 +138,7 @@ class EmployeeService
             throw new Exception($this->translator->trans('error.notEnoughOvertime'));
         }
         $this->entityManager->flush();
+        $this->logger->info('Register overtime of ' . $totalOvertime . ' hours with username ' . $employee->getUsername());
     }
 
     /**
