@@ -148,3 +148,4 @@ form:
 
 notice:
   reports: Es muss zuerst der Bericht des Vormonats generiert werden, damit der des Folgemonats verfügbar ist. Der Bericht des laufenden Monats ist zum 01. den Folgemonats einsehbar.
+  employeeOvertime: Die vollständigen Informationen zu den Überstunden können erst nach Generierung des zugehörigen Monatsbericht eingesehen werden.

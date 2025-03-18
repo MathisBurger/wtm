@@ -36,6 +36,7 @@ class EmployeeController extends AbstractController
 
     /**
      * Renders all details of user
+     * @throws Exception
      */
     #[Route('/employees/details/{id}', name: 'employee_details')]
     public function viewDetails(
@@ -79,7 +80,8 @@ class EmployeeController extends AbstractController
             'workTimePeriods' => $workTimePeriods,
             'holidayPeriods' => $holidayPeriods,
             'illnessPeriods' => $illnessPeriods,
-            'timePeriod' => $timePeriod
+            'timePeriod' => $timePeriod,
+            'overtimeDisplayable' => isset($employee->getOvertimeTransfers()[$timePeriod])
         ]);
     }
 

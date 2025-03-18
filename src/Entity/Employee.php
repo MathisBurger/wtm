@@ -378,50 +378,6 @@ class Employee extends AbstractEntity
     }
 
     /**
-     * Gets the overtime
-     *
-     * @return float overtime
-     */
-    public function getOvertime(): float
-    {
-        return $this->overtime;
-    }
-
-    /**
-     * Sets the overtime
-     *
-     * @param float $overtime The new overtime
-     * @return $this The updated entity
-     */
-    public function setOvertime(float $overtime): self
-    {
-        $this->overtime = $overtime;
-        return $this;
-    }
-
-    /**
-     * Gets the overtime last update
-     *
-     * @return DateTimeInterface|null Last update
-     */
-    public function getOvertimeLastUpdate(): ?DateTimeInterface
-    {
-        return $this->overtimeLastUpdate;
-    }
-
-    /**
-     * Sets the last overtime update
-     *
-     * @param DateTimeInterface $lastUpdate The latest update
-     * @return $this The updated entity
-     */
-    public function setOvertimeLastUpdate(DateTimeInterface $lastUpdate): self
-    {
-        $this->overtimeLastUpdate = $lastUpdate;
-        return $this;
-    }
-
-    /**
      * Gets the auto logout threshold
      *
      * @return DateTimeInterface|null logout threshold
