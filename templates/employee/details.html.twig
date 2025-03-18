@@ -141,8 +141,8 @@
                             <li><b>{{ 'list.holidaysLeft'|trans }}:</b> {{ employee.getHolidaysLeft() }}</li>
                         {% endif %}
                         {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
+                            <li><b>{{ 'list.targetHours'|trans }}:</b> {{ employee.getTargetWorkingHours() }}</li>
                             {% if overtimeDisplayable %}
-                                <li><b>{{ 'list.targetHours'|trans }}:</b> {{ employee.getTargetWorkingHours() }}</li>
                                 <li><b>{{ 'list.overtimeTransfer'|trans }}:</b> {{ overtimeTransfer }}</li>
                                 <li><b>{{ 'list.overtimeDecreaseSum'|trans }}:</b> {{ overtimeDecreaseSum }}</li>
                                 {% if overtime < 0 %}
