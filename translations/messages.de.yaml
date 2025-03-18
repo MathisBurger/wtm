@@ -145,3 +145,6 @@ form:
   specialDayRequest:
     document: Dokument
     email: Email (Für Benachrichtigungen)
+
+notice:
+  reports: Es muss zuerst der Bericht des Vormonats generiert werden, damit der des Folgemonats verfügbar ist. Der Bericht des laufenden Monats ist zum 01. den Folgemonats einsehbar.
