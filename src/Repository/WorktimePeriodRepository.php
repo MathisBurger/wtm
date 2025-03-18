@@ -49,11 +49,11 @@ class WorktimePeriodRepository extends ServiceEntityRepository
      * Finds all available periods (month + year)
      *
      * @return array
+     * @throws \DateMalformedStringException
      */
     public function findPeriods(): array
     {
         $minMax = $this->getMinMaxQuery();
-
         $qb = $this->createQueryBuilder('p');
         /** @var WorktimePeriod[] $result */
         $result = $qb->where(
@@ -64,6 +64,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
             fn (WorktimePeriod $a, WorktimePeriod $b) => $a->getStartTime()->format('Y-m') <=> $b->getStartTime()->format('Y-m')
         );
         $start = DateTime::createFromInterface($result[0]->getStartTime());
+        $start->setDate($start->format('Y'), $start->format('m'), 1);
         $end = $result[1]->getStartTime()->format('Y-m');
         if ($start->format('Y-m') === $end) {
             return [$start];
@@ -73,6 +74,7 @@ class WorktimePeriodRepository extends ServiceEntityRepository
             $periods[] = clone $start;
             $start->add(new \DateInterval('P1M'));
         }
+
         $latestPeriod = $this->getEntityManager()->getRepository(Employee::class)->findOneBy(['isTimeEmployed' => true])->getOvertimeTransfers();
         $periods[] = $start;
         $filteredPeriods =  array_filter(
