@@ -142,14 +142,23 @@
                         {% endif %}
                         {% if employee.getTargetWorkingHours() != null and employee.getTargetWorkingHours() != 0  %}
                             <li><b>{{ 'list.targetHours'|trans }}:</b> {{ employee.getTargetWorkingHours() }}</li>
-                            <li><b>{{ 'list.overtimeTransfer'|trans }}:</b> {{ overtimeTransfer }}</li>
-                            <li><b>{{ 'list.overtimeDecreaseSum'|trans }}:</b> {{ overtimeDecreaseSum }}</li>
-                            {% if overtime < 0 %}
-                                <li><b>{{ 'list.worktimeLeft'|trans }}:</b> {{ -overtime }}</li>
+                            {% if overtimeDisplayable %}
+                                <li><b>{{ 'list.overtimeTransfer'|trans }}:</b> {{ overtimeTransfer }}</li>
+                                <li><b>{{ 'list.overtimeDecreaseSum'|trans }}:</b> {{ overtimeDecreaseSum }}</li>
+                                {% if overtime < 0 %}
+                                    <li><b>{{ 'list.worktimeLeft'|trans }}:</b> {{ -overtime }}</li>
+                                {% else %}
+                                    <li><b>{{ 'list.overtime'|trans }}:</b> {{ overtime }}</li>
+                                {% endif %}
+                                <li><b>{{ 'list.overtimeTotal'|trans }}:</b> {{ overtimeSum }}</li>
                             {% else %}
-                                <li><b>{{ 'list.overtime'|trans }}:</b> {{ overtime }}</li>
+                                <div class="alert alert-warning">{{ 'notice.employeeOvertime'|trans }}</div>
+                                {% if overtime < 0 %}
+                                    <li><b>{{ 'list.worktimeLeft'|trans }}:</b> {{ -overtime }}</li>
+                                {% elseif overtime > 0 %}
+                                    <li><b>{{ 'list.overtime'|trans }}:</b> {{ overtime }}</li>
+                                {% endif %}
                             {% endif %}
-                            <li><b>{{ 'list.overtimeTotal'|trans }}:</b> {{ overtimeSum }}</li>
                         {% endif %}
                         <li><b>{{ 'list.hoursWorked'|trans }}:</b> {{ timeWorked }}</li>
                     </ul>

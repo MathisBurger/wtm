@@ -149,12 +149,7 @@ class EmployeeUtility
         usort($illnessArray, fn (WorktimeSpecialDay $a, WorktimeSpecialDay $b) => $a->getDate()->getTimestamp() <=> $b->getDate()->getTimestamp());
         $illnessSorted = new ArrayCollection($illnessArray);
 
-        $adjustedOvertime = $overtime;
-        if ($periods->count() > 0 && $periodsSorted->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
-            $adjustedOvertime = 0;
-        }
-
-        return [$periodsSorted, $adjustedOvertime, $holidaysSorted, $illnessSorted, $overtimeDecreaseSum, $sumWorkedHours];
+        return [$periodsSorted, $overtime, $holidaysSorted, $illnessSorted, $overtimeDecreaseSum, $sumWorkedHours];
     }
 
     /**

@@ -36,6 +36,7 @@ class EmployeeController extends AbstractController
 
     /**
      * Renders all details of user
+     * @throws Exception
      */
     #[Route('/employees/details/{id}', name: 'employee_details')]
     public function viewDetails(
@@ -58,10 +59,6 @@ class EmployeeController extends AbstractController
         $worktime = EmployeeUtility::getWorktimeForPeriods($employee, [$currentPeriod]);
         [$periods, $overtime, $holidays, $illnessDays, $overtimeDecreaseSum, $timeWorked] = EmployeeUtility::getEmployeeData($employee, $timePeriod, $tab, $worktime);
         [$workTimePeriods, $holidayPeriods, $illnessPeriods] = EmployeeUtility::getTimePeriodsWithData($employee);
-        $adjustedOvertime = $overtime;
-        if ($periods->count() > 0 && $periods->last()->getStartTime()->format("Y-m") === (new DateTime())->format("Y-m")) {
-            $adjustedOvertime = 0;
-        }
         [$year, $month] = PeriodUtility::getYearAndMonthFromPeriod($currentPeriod);
         $newUpdatedAt = DateUtility::getOvertimeLastDayPeriod($year, $month);
         $lastMonthDay = DateUtility::getLastDayOfBeforeMonth($newUpdatedAt);
@@ -70,8 +67,8 @@ class EmployeeController extends AbstractController
             'tab' => $tab,
             'timeWorked' => number_format($timeWorked, 2),
             'overtimeTransfer' => number_format($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0, 2),
-            'overtime' => number_format($adjustedOvertime, 2),
-            'overtimeSum' => number_format($adjustedOvertime + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0) - $overtimeDecreaseSum, 2),
+            'overtime' => number_format($overtime, 2),
+            'overtimeSum' => number_format($overtime + ($employee->getOvertimeTransfers()[$lastMonthDay->format('Y-m')] ?? 0) - $overtimeDecreaseSum, 2),
             'overtimeDecreaseSum' => number_format($overtimeDecreaseSum, 2),
             'periods' => $periods,
             'holidays' => $holidays,
@@ -79,7 +76,8 @@ class EmployeeController extends AbstractController
             'workTimePeriods' => $workTimePeriods,
             'holidayPeriods' => $holidayPeriods,
             'illnessPeriods' => $illnessPeriods,
-            'timePeriod' => $timePeriod
+            'timePeriod' => $timePeriod,
+            'overtimeDisplayable' => isset($employee->getOvertimeTransfers()[$timePeriod])
         ]);
     }
 
